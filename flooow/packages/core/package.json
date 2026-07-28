@@ -1,0 +1,14 @@
+{
+  "name": "@flooow/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Flooow — cœur métier partagé (model + domain) : types, schéma zod, migrations, invariants, dérivations. Pur TS, sans dépendance UI. Consommé par app/ (Vite) et server/ (tsx) via l'alias @flooow/core.",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "yjs": "^13.6.31",
+    "zod": "^3.24.1"
+  }
+}

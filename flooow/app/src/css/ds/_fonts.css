@@ -1,0 +1,8 @@
+/* Design system — typographies.
+   Satoshi = police de marque (chargée dans index.html), IBM Plex Mono pour code/routes. */
+@theme {
+  --font-sans: Satoshi, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: Satoshi, ui-sans-serif, system-ui, sans-serif;
+  --font-sans2: Satoshi, ui-sans-serif, system-ui, sans-serif;
+  --font-mono2: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+}

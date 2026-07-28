@@ -1,0 +1,26 @@
+# Chiffrage — totaux
+
+Récapitulatif des estimations, tous modules confondus. Base de conversion :
+**1 J = 7 h**. Chaque estimation est rattachée à un **lot** (Prototype, V1,
+V1.1, V2+) ; le tableau permet d'inclure ou non chaque lot dans le **total
+retenu** — utile pour répondre à « combien coûte le prototype ? » ou « combien
+coûte la V1 ? » indépendamment.
+
+Les estimations se saisissent dans les pages de modules (clic sur la puce d'un
+poste) ; tout est stocké dans `estimations.json` (nécessite le serveur PHP,
+voir le README du dossier cadrage).
+
+<TotauxGlobaux />
+
+## Contenu des lots
+
+Le détail de ce que contient chaque lot (postes et options affectés).
+
+<ContenuLots />
+
+## Composition des lots
+
+Chaque lot regroupe des postes du catalogue ; le total retenu se compose en
+incluant ou non chaque lot. Un poste non affecté revient au lot V1.
+
+<Lots />

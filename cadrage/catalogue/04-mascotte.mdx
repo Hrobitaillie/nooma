@@ -1,0 +1,48 @@
+# 04, Mascotte
+
+[← Index](README.mdx)
+
+Côté app : les comportements. La production des sprites est dans
+[09 · Contenus](09-contenu-assets.mdx) (CNT-02), la voix dans
+[08 · Audio](08-audio.mdx). Design : brief §8, science de l'effet mascotte :
+[doc 03 §2.3](#/docs/03-game-design.md).
+
+| ID | Fonctionnalité | Lot | Périmètre | Dépend de | Est. |
+|----|----------------|-----|-----------|-----------|:----:|
+| MAS-01 | Machine à états + lecteur de clips | <Lot code="MAS-01"/> | App | CNT-02, SOC-06 | <Est code="MAS-01"/> |
+| MAS-02 | Feedback contingent (charte des dialogues) | <Lot code="MAS-02"/> | App + Data | MAS-01, AUD-02 | <Est code="MAS-02"/> |
+| MAS-03 | Langage évolutif (babillage → français) | <Lot code="MAS-03"/> | App | MAS-02, AUD-04 | <Est code="MAS-03"/> |
+| MAS-04 | Customisation (accessoires composables) | <Lot code="MAS-04"/> | App | MAS-01, REC-02 | <Est code="MAS-04"/> |
+| MAS-05 | Transformations de fin de biome | <Lot code="MAS-05"/> | App | MAS-01, MAP-06 | <Est code="MAS-05"/> |
+| MAS-06 | Rituels d'accueil et de clôture | <Lot code="MAS-06"/> | App | MAS-01 | <Est code="MAS-06"/> |
+
+---
+
+### [MAS-01] Machine à états + lecteur de clips
+- **Quoi** : enchaînement fluide des ~15 clips (pose neutre commune) : idle/scintillement, écoute, « hmm ? », célébration, éternuement, hoquet, apparition/disparition, pointer, tape-des-mains, parle ; déclenchement synchronisé avec l'audio (babillage sans lipsync, façon Animal Crossing).
+- **Est.** : <Est value="__TBD__" code="MAS-01" />
+
+### [MAS-02] Feedback contingent (charte des dialogues)
+- **Quoi** : la mascotte réagit à ce que l'enfant a réellement fait (spécifique, pas générique) ; règles d'écriture codées : éloge du processus jamais de la personne, enthousiasme calibré à la difficulté, jamais de son négatif, consolidation de fin de niveau en 10 secondes.
+- **Implique** : la charte des dialogues (livrable Data, relu par Florence) + le moteur de sélection des répliques.
+- **Est.** : <Est value="__TBD__" code="MAS-02" />
+
+### [MAS-03] Langage évolutif (babillage → français)
+- **Quoi** : ratio babillage/français par palier de progression (lié aux biomes validés) ; le babillage reste en signature affective en fin de parcours.
+- **Est.** : <Est value="__TBD__" code="MAS-03" />
+
+### [MAS-04] Customisation (accessoires composables)
+- **Quoi** : chapeaux, écharpes, couleurs de joues achetés en poussière d'étoile ; accessoires rendus séparément et composés sur les points d'accroche du rig (validé au Test A) ; portés partout (carte, jeux, célébrations).
+- **Est.** : <Est value="__TBD__" code="MAS-04" />
+
+### [MAS-05] Transformations de fin de biome
+- **Quoi** : nouvelle forme signature gagnée à chaque grande aventure, visible sur la carte ; galerie des formes dans la maison.
+- **Est.** : <Est value="__TBD__" code="MAS-05" />
+
+### [MAS-06] Rituels d'accueil et de clôture
+- **Quoi** : ouverture (elle dort, on la réveille, elle fait la fête) et clôture (elle baille, se couche, dit à demain **joyeusement**) ; règle absolue : jamais triste ou suppliante au départ de l'enfant ([doc 03 §5](#/docs/03-game-design.md)).
+- **Est.** : <Est value="__TBD__" code="MAS-06" />
+
+---
+
+<TotauxFichier />

@@ -1,0 +1,65 @@
+# 00, Socle applicatif
+
+[← Index](README.mdx)
+
+| ID | Fonctionnalité | Lot | Périmètre | Dépend de | Est. |
+|----|----------------|-----|-----------|-----------|:----:|
+| SOC-01 | Squelette app Flutter + navigation | <Lot code="SOC-01"/> | App | — | <Est code="SOC-01"/> |
+| SOC-02 | Base locale Drift : event log + projections | <Lot code="SOC-02"/> | App | — | <Est code="SOC-02"/> |
+| SOC-03 | Profil enfant (surnom, onboarding enfant) | <Lot code="SOC-03"/> | App | SOC-02 | <Est code="SOC-03"/> |
+| SOC-04 | Robustesse aux interruptions | <Lot code="SOC-04"/> | App | SOC-02 | <Est code="SOC-04"/> |
+| SOC-05 | Moteur audio (flutter_soloud, 3 canaux) | <Lot code="SOC-05"/> | App | — | <Est code="SOC-05"/> |
+| SOC-06 | Gestion des assets (atlas, chargement par biome) | <Lot code="SOC-06"/> | App | — | <Est code="SOC-06"/> |
+| SOC-07 | Moteur de mini-jeux générique | <Lot code="SOC-07"/> | App | SOC-05, SOC-06 | <Est code="SOC-07"/> |
+| SOC-08 | CI et garde-fous (tests, lints, audits) | <Lot code="SOC-08"/> | App | — | <Est code="SOC-08"/> |
+| SOC-09 | Export/import de sauvegarde | <Lot code="SOC-09"/> | App | SOC-02 | <Est code="SOC-09"/> |
+
+---
+
+### [SOC-01] Squelette app Flutter + navigation
+- **Quoi** : projet Flutter, routing (splash → profil → carte → jeu → retour), orientation portrait verrouillée, gestion du cycle de vie (pause moteur hors focus).
+- **Comprend** : structure de dossiers, Riverpod, thème de base, écran de chargement animé (jamais d'écran figé, budget doc 08 §6).
+- **Est.** : <Est value="__TBD__" code="SOC-01" />
+
+### [SOC-02] Base locale Drift : event log + projections
+- **Quoi** : schéma `learning_events` (append-only, avec seed du niveau) + `skill_progress` + profils + inventaire récompenses ; migrations versionnées.
+- **Implique** : transactionnel (une extinction brutale ne corrompt rien) ; rejeu du log pour recalculer les projections après changement d'algorithme.
+- **Réf** : [doc 06 §3](#/docs/06-architecture-technique.md).
+- **Est.** : <Est value="__TBD__" code="SOC-02" />
+
+### [SOC-03] Profil enfant (surnom, onboarding enfant)
+- **Quoi** : création guidée 100 % audio ; surnom choisi dans une liste (« petit renard »…) par défaut, prénom saisi par le parent possible ; première rencontre avec la mascotte.
+- **Réf** : vie privée [doc 07 §4](#/docs/07-securite-vie-privee.md). Multi-profils fratrie : voir MOD-06.
+- **Est.** : <Est value="__TBD__" code="SOC-03" />
+
+### [SOC-04] Robustesse aux interruptions
+- **Quoi** : sauvegarde d'état à chaque écran, reprise instantanée au milieu d'un niveau après appel/veille/batterie ; aucune dépendance réseau nulle part.
+- **Est.** : <Est value="__TBD__" code="SOC-04" />
+
+### [SOC-05] Moteur audio (flutter_soloud, 3 canaux)
+- **Quoi** : service audio unique : canal voix / effets / musique réglables séparément (espace parent), pools de SFX préchargés (latence tap→son quasi nulle), musique streamée par biome, priorités (une consigne coupe la musique, jamais l'inverse).
+- **Réf** : [doc 06 §1](#/docs/06-architecture-technique.md), budgets [doc 08 §4](#/docs/08-performances.md).
+- **Est.** : <Est value="__TBD__" code="SOC-05" />
+
+### [SOC-06] Gestion des assets (atlas, chargement par biome)
+- **Quoi** : chargement/déchargement des atlas par biome (budget RAM textures, doc 08 §3), préchargement pendant la carte, réaction à la pression mémoire, cap 30 fps + pause moteur sur écrans statiques.
+- **Est.** : <Est value="__TBD__" code="SOC-06" />
+
+### [SOC-07] Moteur de mini-jeux générique
+- **Quoi** : l'interface unique de toutes les mécaniques : une `NiveauSpec` en entrée, des `LearningEvents` en sortie ; cycle partagé consigne audio → interaction → feedback mascotte → récompense ; modelling (la mascotte montre d'abord), indiçage progressif, fin toujours en réussite.
+- **Implique** : c'est le cœur du code ; chaque mécanique du module 02 est un plugin de ce moteur.
+- **Est.** : <Est value="__TBD__" code="SOC-07" />
+
+### [SOC-08] CI et garde-fous (tests, lints, audits)
+- **Quoi** : pipeline CI : tests unitaires et par propriétés, lint du contenu pédagogique (audio manquant, image manquante, graphème non introduit), audit de dépendances bloquant (zéro SDK réseau), budget de poids par catégorie d'assets, `CLAUDE.md` racine.
+- **Réf** : [doc 06 §7](#/docs/06-architecture-technique.md) (vibe coding), [doc 07 §8](#/docs/07-securite-vie-privee.md).
+- **Est.** : <Est value="__TBD__" code="SOC-08" />
+
+### [SOC-09] Export/import de sauvegarde
+- **Quoi** : export d'un fichier JSON versionné depuis l'espace parent (partage système), import avec validation stricte (entrée non fiable) ; règles de backup auto OS (Android Auto Backup / iCloud).
+- **Réf** : [doc 06 §3](#/docs/06-architecture-technique.md), [doc 07 §4](#/docs/07-securite-vie-privee.md).
+- **Est.** : <Est value="__TBD__" code="SOC-09" />
+
+---
+
+<TotauxFichier />

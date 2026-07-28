@@ -1,0 +1,75 @@
+# Catalogue de fonctionnalités, Nooma
+
+Ce document répertorie l'**ensemble des fonctionnalités** de l'application Nooma,
+organisées par module. Pour chaque fonctionnalité : ce qu'elle recouvre, ses
+**dépendances**, son **lot** (phase de réalisation) et son **estimation**.
+
+La documentation projet détaillée (le « pourquoi » de chaque choix) vit dans
+l'espace **Docs projet** (bouton en haut de la barre latérale). Ce catalogue
+est le « quoi » : la décomposition fonctionnelle qui sert de référence de
+réalisation et de chiffrage.
+
+## Comment lire
+
+Chaque module (fichier `0X-…`) présente une **table de synthèse** suivie de
+**fiches** détaillées. Les estimations se saisissent directement dans la page
+(clic sur la puce), le total se lit dans [Chiffrage](chiffrage.mdx).
+
+**Périmètre / qui réalise** :
+
+| Tag | Qui |
+|-----|-----|
+| `App` | code Flutter/Flame (Hugo + IA, garde-fous doc 06 §7) |
+| `Blender` | production 3D / assets (Hugo, pipeline doc 14) |
+| `Audio` | enregistrements et traitement (Florence + Hugo) |
+| `Data` | contenu pédagogique en données (Hugo, relu par Florence) |
+| `Externe` | stores, RevenueCat, prestataires |
+
+**Lots** :
+
+- `Prototype (P2)` : le strict nécessaire pour le test enfants (juge de paix).
+- `V1 · Lancement` : la release publique (Phase 4 de la roadmap).
+- `V1.1 · Mises à jour` : les premières mises à jour post-lancement.
+- `V2+` : différé (co-jeu, reconnaissance vocale, backend…).
+
+## Modules
+
+| # | Module | Périmètre |
+|---|--------|-----------|
+| 00 | [Socle applicatif](00-socle.mdx) | app shell, données locales, audio, assets, moteur de mini-jeux, CI |
+| 01 | [Carte-monde et biomes](01-carte-monde.mdx) | carte globale, chemin qui pousse, nœuds, voyage, grande aventure |
+| 02 | [Mini-jeux](02-mini-jeux.mdx) | les 20 mécaniques (phono, grapho, décodage, compréhension, encodage) |
+| 03 | [Le Directeur](03-directeur.mdx) | graphe de compétences, maîtrise, génération de niveaux, rappels, QA |
+| 04 | [Mascotte](04-mascotte.mdx) | comportements, feedback contingent, langage évolutif, customisation |
+| 05 | [Récompenses et maison](05-recompenses.mdx) | autocollants, poussière d'étoile, maison de Nooma, dons |
+| 06 | [Modes et rendez-vous](06-modes.mdx) | histoires, cadeau hebdo, saisons, V2 (co-jeu, voix) |
+| 07 | [Espace parent](07-espace-parent.mdx) | gate, PIN, suivi, limite douce, sauvegarde, onboarding |
+| 08 | [Audio et voix](08-audio.mdx) | voix de Florence, phonèmes, babillages, sound design, musiques |
+| 09 | [Contenus et assets](09-contenu-assets.mdx) | studio Blender, mascotte, biomes, images-mots, pipeline |
+| 10 | [Lancement](10-lancement.mdx) | paiement, conformité stores, privacy, pages stores, beta |
+
+## Les grandes chaînes de dépendances
+
+- **Socle d'abord** : la base locale (`SOC-02`), le moteur audio (`SOC-05`) et le
+  moteur de mini-jeux (`SOC-07`) conditionnent tout le reste.
+- **Le Directeur est parallélisable tôt** : `DIR-01` à `DIR-05` et la simulation
+  `DIR-11` sont une bibliothèque pure sans UI, développable avant le premier écran
+  (Test D de la roadmap).
+- **Le contenu pédagogique est le chemin critique humain** : `DIR-01`/`DIR-02`
+  (graphe + banques, relus par Florence) alimentent tous les mini-jeux.
+- **La chaîne assets** : `CNT-01` (studio.blend) précède tous les autres lots
+  Blender ; les mini-jeux ont besoin de `CNT-05` (lettres/objets) et `CNT-04`
+  (images-mots) ; la carte a besoin de `CNT-03` (biomes).
+- **La chaîne audio** : `AUD-01` (protocole d'enregistrement) précède les lots
+  de voix ; chaque mini-jeu embarque ses consignes (`AUD-02`).
+- **Le paiement (`LAN-01`) est volontairement en dernier** : tout le produit
+  fonctionne sans lui jusqu'à la Phase 4.
+
+## Points à trancher avant chiffrage
+
+1. Le **nom définitif** (favori provisoire : Plouma) : bloque pages stores, site,
+   privacy policy (`LAN-03`, `LAN-04`), pas le développement.
+2. Le **périmètre exact du lot V1** : combien de biomes au lancement (proposition
+   roadmap : 7) et quelles mécaniques (proposition : 12 sur 20).
+3. Les **paramètres pédagogiques** du Directeur (seuils, intervalles) : valeurs
+   proposées dans la doc 02 §5, à valider avec Florence.

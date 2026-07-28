@@ -1,0 +1,5633 @@
+{
+ "meta": {
+  "name": "Nooma",
+  "formatVersion": 13,
+  "createdAt": "2026-07-28",
+  "updatedAt": "2026-07-28",
+  "pricing": {
+   "riskCoeff": 1.25,
+   "dailyRate": null
+  },
+  "homePageId": "p-splash"
+ },
+ "site": {
+  "attrs": {
+   "context": "App tablette d'apprentissage de la lecture (CP, 5-7 ans), enfant en autonomie, mascotte étoile clay. Réf : cadrage/ (catalogue) et docs/ dans ce repo.",
+   "constraints": [
+    "100 % offline v1, zéro SDK réseau",
+    "Consignes 100 % audio, jamais de texte seul",
+    "Anti dark patterns (doc 03 §5)",
+    "Flutter + Flame + flutter_soloud + Drift"
+   ],
+   "notes": "Lots : 1=Prototype (P2) · 2=V1 lancement · 3=V1.1 · 4=V2+. Graphe généré depuis le catalogue le 28/07/2026 — à faire vivre dans Flooow."
+  }
+ },
+ "services": [],
+ "featureFields": [
+  {
+   "id": "binding",
+   "label": "Branchement sur l'app",
+   "order": 0
+  },
+  {
+   "id": "perimeter",
+   "label": "Réalisé par",
+   "order": 1
+  }
+ ],
+ "featureOptions": [
+  {
+   "id": "opt-per-app",
+   "fieldId": "perimeter",
+   "name": "App (Flutter)"
+  },
+  {
+   "id": "opt-per-blender",
+   "fieldId": "perimeter",
+   "name": "Blender"
+  },
+  {
+   "id": "opt-per-audio",
+   "fieldId": "perimeter",
+   "name": "Audio (Florence)"
+  },
+  {
+   "id": "opt-per-data",
+   "fieldId": "perimeter",
+   "name": "Contenu pédagogique"
+  },
+  {
+   "id": "opt-per-ext",
+   "fieldId": "perimeter",
+   "name": "Externe / stores"
+  }
+ ],
+ "nodes": [
+  {
+   "id": "p-splash",
+   "parentId": null,
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "page",
+   "attrs": {
+    "name": "Splash / Accueil",
+    "slug": "",
+    "roles": [],
+    "description": "Chargement animé, jamais figé (doc 08 §6)",
+    "constraints": [],
+    "logic": "",
+    "notes": ""
+   }
+  },
+  {
+   "id": "p-profil",
+   "parentId": "p-splash",
+   "position": {
+    "x": 340,
+    "y": 0
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "page",
+   "attrs": {
+    "name": "Profil enfant",
+    "slug": "",
+    "roles": [],
+    "description": "Onboarding 100 % audio, surnom (SOC-03)",
+    "constraints": [],
+    "logic": "",
+    "notes": ""
+   }
+  },
+  {
+   "id": "p-carte",
+   "parentId": null,
+   "position": {
+    "x": 0,
+    "y": 300
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "page",
+   "attrs": {
+    "name": "Carte-monde",
+    "slug": "",
+    "roles": [],
+    "description": "Carte globale pan/zoom, biomes, brume (MAP-01)",
+    "constraints": [],
+    "logic": "",
+    "notes": ""
+   }
+  },
+  {
+   "id": "p-biome",
+   "parentId": "p-carte",
+   "position": {
+    "x": 340,
+    "y": 300
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "page",
+   "attrs": {
+    "name": "Vue biome",
+    "slug": "",
+    "roles": [],
+    "description": "Chemin de nœuds qui pousse, parallax (MAP-02/03)",
+    "constraints": [],
+    "logic": "",
+    "notes": ""
+   }
+  },
+  {
+   "id": "p-jeu",
+   "parentId": "p-biome",
+   "position": {
+    "x": 680,
+    "y": 300
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "page",
+   "attrs": {
+    "name": "Mini-jeu",
+    "slug": "",
+    "roles": [],
+    "description": "Moteur générique SOC-07, 20 mécaniques (module 02)",
+    "constraints": [],
+    "logic": "",
+    "notes": ""
+   }
+  },
+  {
+   "id": "p-aventure",
+   "parentId": "p-biome",
+   "position": {
+    "x": 680,
+    "y": 540
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "page",
+   "attrs": {
+    "name": "Grande aventure",
+    "slug": "",
+    "roles": [],
+    "description": "Fin de biome, cérémonie (MAP-08/06)",
+    "constraints": [],
+    "logic": "",
+    "notes": ""
+   }
+  },
+  {
+   "id": "p-maison",
+   "parentId": "p-carte",
+   "position": {
+    "x": 340,
+    "y": 540
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "page",
+   "attrs": {
+    "name": "Maison de Nooma",
+    "slug": "",
+    "roles": [],
+    "description": "Espace calme : album, customisation (REC-03)",
+    "constraints": [],
+    "logic": "",
+    "notes": ""
+   }
+  },
+  {
+   "id": "p-parent",
+   "parentId": null,
+   "position": {
+    "x": 0,
+    "y": 780
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "page",
+   "attrs": {
+    "name": "Espace parent",
+    "slug": "",
+    "roles": [],
+    "description": "Derrière gate + PIN (PAR-01/02)",
+    "constraints": [],
+    "logic": "",
+    "notes": ""
+   }
+  },
+  {
+   "id": "p-suivi",
+   "parentId": "p-parent",
+   "position": {
+    "x": 340,
+    "y": 780
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "page",
+   "attrs": {
+    "name": "Suivi progression",
+    "slug": "",
+    "roles": [],
+    "description": "Langage clair, par module (PAR-03)",
+    "constraints": [],
+    "logic": "",
+    "notes": ""
+   }
+  },
+  {
+   "id": "p-reglages",
+   "parentId": "p-parent",
+   "position": {
+    "x": 340,
+    "y": 1020
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "page",
+   "attrs": {
+    "name": "Réglages",
+    "slug": "",
+    "roles": [],
+    "description": "Audio 3 canaux, temps d'écran, sauvegarde (PAR-04/05)",
+    "constraints": [],
+    "logic": "",
+    "notes": ""
+   }
+  },
+  {
+   "id": "m-soc",
+   "parentId": null,
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "module",
+   "attrs": {
+    "name": "00 · Socle applicatif",
+    "description": "App shell, données locales, audio, assets, moteur de mini-jeux, CI.",
+    "notes": ""
+   }
+  },
+  {
+   "id": "m-map",
+   "parentId": null,
+   "position": {
+    "x": 1150,
+    "y": 0
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "module",
+   "attrs": {
+    "name": "01 · Carte-monde & biomes",
+    "description": "Carte globale, chemin qui pousse, nœuds, voyage, grande aventure.",
+    "notes": ""
+   }
+  },
+  {
+   "id": "m-jeu",
+   "parentId": null,
+   "position": {
+    "x": 2300,
+    "y": 0
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "module",
+   "attrs": {
+    "name": "02 · Mini-jeux",
+    "description": "Les 20 mécaniques : phono, grapho, décodage, compréhension, encodage.",
+    "notes": ""
+   }
+  },
+  {
+   "id": "m-dir",
+   "parentId": null,
+   "position": {
+    "x": 0,
+    "y": 1250
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "module",
+   "attrs": {
+    "name": "03 · Le Directeur",
+    "description": "Graphe de compétences, maîtrise, génération de niveaux, rappels, QA.",
+    "notes": ""
+   }
+  },
+  {
+   "id": "m-mas",
+   "parentId": null,
+   "position": {
+    "x": 1150,
+    "y": 1250
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "module",
+   "attrs": {
+    "name": "04 · Mascotte",
+    "description": "Comportements, feedback contingent, langage évolutif, customisation.",
+    "notes": ""
+   }
+  },
+  {
+   "id": "m-rec",
+   "parentId": null,
+   "position": {
+    "x": 2300,
+    "y": 1250
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "module",
+   "attrs": {
+    "name": "05 · Récompenses & maison",
+    "description": "Autocollants, poussière d'étoile, maison de Nooma, dons.",
+    "notes": ""
+   }
+  },
+  {
+   "id": "m-mod",
+   "parentId": null,
+   "position": {
+    "x": 0,
+    "y": 2500
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "module",
+   "attrs": {
+    "name": "06 · Modes & rendez-vous",
+    "description": "Histoires, cadeau hebdo, saisons ; V2 : co-jeu, voix.",
+    "notes": ""
+   }
+  },
+  {
+   "id": "m-par",
+   "parentId": null,
+   "position": {
+    "x": 1150,
+    "y": 2500
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "module",
+   "attrs": {
+    "name": "07 · Espace parent",
+    "description": "Gate, PIN, suivi, limite douce, sauvegarde, onboarding.",
+    "notes": ""
+   }
+  },
+  {
+   "id": "m-aud",
+   "parentId": null,
+   "position": {
+    "x": 2300,
+    "y": 2500
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "module",
+   "attrs": {
+    "name": "08 · Audio & voix",
+    "description": "Voix de Florence, phonèmes, babillages, sound design, musiques.",
+    "notes": ""
+   }
+  },
+  {
+   "id": "m-cnt",
+   "parentId": null,
+   "position": {
+    "x": 0,
+    "y": 3750
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "module",
+   "attrs": {
+    "name": "09 · Contenus & assets",
+    "description": "Studio Blender, mascotte, biomes, images-mots, pipeline.",
+    "notes": ""
+   }
+  },
+  {
+   "id": "m-lan",
+   "parentId": null,
+   "position": {
+    "x": 1150,
+    "y": 3750
+   },
+   "lot": null,
+   "type": "frame",
+   "kind": "module",
+   "attrs": {
+    "name": "10 · Lancement",
+    "description": "Paiement, conformité stores, privacy, pages stores, beta.",
+    "notes": ""
+   }
+  },
+  {
+   "id": "84531d0b-9a04-573c-bf38-6f6029d0d610",
+   "parentId": "m-soc",
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "SOC-01",
+    "name": "Squelette app Flutter + navigation",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Projet Flutter, routing splash→profil→carte→jeu, portrait verrouillé, cycle de vie (pause hors focus)."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 06 et cadrage/catalogue (fiche SOC-01)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "432ff628-82e7-5909-9343-b36123ce1a8f",
+   "parentId": "m-soc",
+   "position": {
+    "x": 270,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "SOC-02",
+    "name": "Base locale Drift : event log + projections",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "learning_events append-only (avec seed) + skill_progress + profils, transactionnel, migrations."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 06 §3 et cadrage/catalogue (fiche SOC-02)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "6ad967b5-50e6-52cf-b561-0677e2079692",
+   "parentId": "m-soc",
+   "position": {
+    "x": 540,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "SOC-03",
+    "name": "Profil enfant (surnom, onboarding)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Création guidée 100 % audio, surnom par défaut, première rencontre avec la mascotte."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 07 §4 et cadrage/catalogue (fiche SOC-03)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "fc82d9e4-ee51-5a78-adb8-c4f34d108e7c",
+   "parentId": "m-soc",
+   "position": {
+    "x": 0,
+    "y": 150
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "SOC-04",
+    "name": "Robustesse aux interruptions",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Sauvegarde d'état à chaque écran, reprise instantanée, zéro dépendance réseau."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "0ef14ede-9b05-5e32-b6ce-de6d73fb132b",
+   "parentId": "m-soc",
+   "position": {
+    "x": 270,
+    "y": 150
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "SOC-05",
+    "name": "Moteur audio (flutter_soloud, 3 canaux)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Canaux voix/effets/musique, pools SFX préchargés (latence quasi nulle), priorités."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 08 §4 et cadrage/catalogue (fiche SOC-05)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "1c88c2d0-de0d-5117-a71f-ae4f1754c5c2",
+   "parentId": "m-soc",
+   "position": {
+    "x": 540,
+    "y": 150
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "SOC-06",
+    "name": "Gestion des assets (atlas, par biome)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Chargement/déchargement des atlas par biome, préchargement, cap 30 fps, pression mémoire."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 08 §3 et cadrage/catalogue (fiche SOC-06)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "parentId": "m-soc",
+   "position": {
+    "x": 0,
+    "y": 300
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "SOC-07",
+    "name": "Moteur de mini-jeux générique",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Interface unique play(NiveauSpec)→events ; cycle consigne→interaction→feedback→récompense ; modelling, indiçage."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 06 §2 et cadrage/catalogue (fiche SOC-07)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "51d3c29c-fe36-584f-b5a2-f50217c12711",
+   "parentId": "m-soc",
+   "position": {
+    "x": 270,
+    "y": 300
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "SOC-08",
+    "name": "CI & garde-fous (tests, lints, audits)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Tests par propriétés, lint contenu pédagogique, audit dépendances bloquant, budgets de poids, CLAUDE.md."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 06 §7 et cadrage/catalogue (fiche SOC-08)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "393e0d83-67bd-58c3-b6a8-7f59898a5541",
+   "parentId": "m-soc",
+   "position": {
+    "x": 540,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "SOC-09",
+    "name": "Export/import de sauvegarde",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Fichier JSON versionné via partage système, import validé strictement, backups auto OS."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 07 §4 et cadrage/catalogue (fiche SOC-09)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "82d08c28-66d5-5ed2-a15e-b7e266588a07",
+   "parentId": "m-map",
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "MAP-01",
+    "name": "Carte globale (pan/zoom, biomes, brume)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Le monde vu de loin : biomes traversés, courant, futurs en silhouettes sous la brume."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 04 §6.1 et cadrage/catalogue (fiche MAP-01)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "fe722b3b-1d07-54ef-b5b9-d2cfaf405ba0",
+   "parentId": "m-map",
+   "position": {
+    "x": 270,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "MAP-02",
+    "name": "Vue biome : chemin de nœuds + parallax",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Scène principale : carte du biome en couches, nœuds tactiles larges, un seul niveau actif."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "5cb3f0b6-f299-5099-a819-41c1d30e1b10",
+   "parentId": "m-map",
+   "position": {
+    "x": 540,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "MAP-03",
+    "name": "Chemin qui pousse (génération visuelle)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Les 3-4 prochains nœuds poussent devant la mascotte sur des rails définis par biome."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "2de8b8ef-08dc-53a2-a4c4-91ef42d1373b",
+   "parentId": "m-map",
+   "position": {
+    "x": 0,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "MAP-04",
+    "name": "Types de nœuds lisibles",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Vocabulaire visuel : normal, cadeau, aventure, écho, rêve, défi."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "e9c33e6e-8c18-5726-9428-b7663cbb5a2f",
+   "parentId": "m-map",
+   "position": {
+    "x": 270,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "MAP-05",
+    "name": "Mascotte vivante sur la carte",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Idle, sautille de nœud en nœud, réagit au toucher."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "c1eeffeb-2da2-5e15-87f0-1467ea2c75c0",
+   "parentId": "m-map",
+   "position": {
+    "x": 540,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "MAP-06",
+    "name": "Voyage & cérémonie de changement de biome",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Validation du module → cérémonie (transformation, autocollant rare) → cinématique de voyage → palier de langage."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 04 §5 et cadrage/catalogue (fiche MAP-06)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "b9a3b21f-f04a-5c7e-9b6d-c1ff1ed9584a",
+   "parentId": "m-map",
+   "position": {
+    "x": 0,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "MAP-07",
+    "name": "Rejouer les niveaux passés",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Tout nœud passé rejouable ; le contenu rejoué re-sert des items à consolider."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "184e1e5a-8b5f-51d7-92ae-e8e4049143eb",
+   "parentId": "m-map",
+   "position": {
+    "x": 270,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "MAP-08",
+    "name": "Grande aventure de fin de biome",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Parcours scénarisé 5-6 min enchaînant 3-4 mécaniques connues ; une fête, jamais un examen."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "cfa9c1f0-8037-5c05-808d-d0ad7e8c953a",
+   "parentId": "m-map",
+   "position": {
+    "x": 540,
+    "y": 300
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "MAP-09",
+    "name": "Sentiers cachés (bonus découverts)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Rarement, un sentier caché : niveau ludique, souvenir à collectionner ; découvert, jamais annoncé."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "1c1bc79e-c0ec-5e26-b4b9-541548268345",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-01",
+    "name": "Tape la syllabe",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Segmentation syllabique : taper au rythme des syllabes, modelling de la mascotte. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-01)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "27a39dc7-07d4-5380-9c68-d87362d58e65",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 270,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-02",
+    "name": "Trouve la rime",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "3 images, un mot dit : toucher l'image qui rime ; difficulté = proximité des distracteurs. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-02)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "ff362c1c-8652-5b34-8612-98f5c994a05d",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 540,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-03",
+    "name": "Qui commence pareil ?",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Regrouper les images qui commencent par le même son d'attaque. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-03)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "7b6bc0c1-6b42-56b8-80c8-57b52d6236b4",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 0,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-04",
+    "name": "La boîte à sons",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Placer un jeton par son entendu dans les cases du mot (segmentation phonémique). Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-04)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "9ba397ed-71e2-5907-a85e-e1354c4494de",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 270,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-05",
+    "name": "Assemble les sons",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Fusionner deux sons entendus et choisir le mot correspondant. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-05)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "a1f97c49-dd7a-5b3d-8623-4a6646f521af",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 540,
+    "y": 150
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-06",
+    "name": "La lettre qui chante",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Une lettre clay chante son SON (jamais son nom) ; toucher l'image qui commence par ce son. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-06)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "d3bf38bb-96b8-5533-bd52-37e0d515666a",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 0,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-07",
+    "name": "Attrape le son",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Des graphèmes flottent en bulles ; attraper celui qui correspond au son prononcé. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-07)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "04e3d710-1286-5e99-85ac-f8972d469c45",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 270,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-08",
+    "name": "Les jumelles",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Paires majuscule/minuscule/cursive (memory simplifié 4-6 cartes). Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-08)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "fe14fcb6-7b42-53ac-a4eb-412e30ab6737",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 540,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-09",
+    "name": "La fabrique de syllabes",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Deux rouleaux consonne/voyelle : composer la syllabe prononcée. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-09)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "aa6753e4-0295-5e2d-b77e-24d45bbeb707",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 0,
+    "y": 450
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-10",
+    "name": "Le train des syllabes",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Accrocher les wagons-syllabes dans l'ordre pour former le mot. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-10)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "53c84dc3-ce4f-5643-9066-0207d26648ff",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 270,
+    "y": 450
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-11",
+    "name": "Lis et trouve",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Lire un mot écrit (sans audio d'abord) et toucher l'image ; aide progressive. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-11)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "272c8ae0-137b-5a7f-938d-79eaa1b1a3b8",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 540,
+    "y": 450
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-12",
+    "name": "La phrase mystère",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Lire une phrase courte et choisir la bonne scène parmi 3. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-12)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "d5602082-316d-5a87-9323-a09b4147c510",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 0,
+    "y": 600
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-13",
+    "name": "Vrai ou rigolo ?",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Lire une phrase et décider si elle est vraie ou farfelue. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-13)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "894ecbcc-21b0-5438-935e-7546a90b2cf7",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 270,
+    "y": 600
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-14",
+    "name": "Les histoires de Nooma",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Mini-histoire illustrée puis 1-2 questions ; devient partiellement à lire en fin d'année. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-14)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "0820a1ef-d89d-58b0-bc1d-85ee748c5ae1",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 540,
+    "y": 600
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-15",
+    "name": "L'intrus",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Chasser l'intrus sémantique parmi 4-5 images d'un thème. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-15)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "397e47c3-9fc4-5dc0-91ec-d2e0274d60a4",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 0,
+    "y": 750
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-16",
+    "name": "Qui fait quoi ?",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Toucher le personnage qui fait l'action dite/écrite (verbes, syntaxe). Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-16)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "571a78e0-6e4c-525e-a044-a7d56f255669",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 270,
+    "y": 750
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-17",
+    "name": "Le sac à mots",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Collectionner des mots-objets par thème de biome, réactivés par quiz espacés. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-17)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "842cf08c-1ef3-59b9-ab93-5fb19dc907ba",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 540,
+    "y": 750
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-18",
+    "name": "Dictée muette",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Encodage : une image, composer le mot avec des graphèmes mobiles clay. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-18)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "d7f16bf4-c4d1-5287-8653-81f2c5d8bc97",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 0,
+    "y": 900
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-19",
+    "name": "La machine à mots",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Encodage : un mot entendu, assembler les graphèmes (un digraphe = une pièce). Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-19)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "a26fce2f-c19e-55fd-be9e-8e782a7a2a4c",
+   "parentId": "m-jeu",
+   "position": {
+    "x": 270,
+    "y": 900
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "JEU-20",
+    "name": "Les jumeaux presque pareils",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Paires minimales (p/b, f/v, ch/j…) — cœur ortho, à concevoir avec Florence. Tests brocoli + anti-devinette obligatoires."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §4 et cadrage/catalogue (fiche JEU-20)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "b6a5cc34-f670-561b-a25a-e756314b1fed",
+   "parentId": "m-dir",
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "DIR-01",
+    "name": "Graphe de compétences (données + lint)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Pilier→Module→Compétence→prérequis en données versionnées, éditables tableur, lint (cycles, manquants)."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §8 et cadrage/catalogue (fiche DIR-01)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-data",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "7d11b534-6284-5414-9504-5238bafc5ae8",
+   "parentId": "m-dir",
+   "position": {
+    "x": 270,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "DIR-02",
+    "name": "Banques d'items taguées",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Mots/sons/phrases tagués (syllabes, graphèmes, fréquence, distracteurs, assets). Règle d'or : jamais un graphème non introduit."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §2 et cadrage/catalogue (fiche DIR-02)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-data",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "27bcd148-483f-5c30-82e2-938eaf50ac6c",
+   "parentId": "m-dir",
+   "position": {
+    "x": 540,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "DIR-03",
+    "name": "Score de maîtrise + validation de module",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Moyenne glissante pondérée + décroissance ; validation sur succès répartis sur des jours distincts ; Elo en V1.1."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "d5fe488a-348b-5e53-8e0f-af4068c09f8b",
+   "parentId": "m-dir",
+   "position": {
+    "x": 0,
+    "y": 150
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "DIR-04",
+    "name": "Sélecteur pédagogique",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Compose la session (échauffement/cœur/dessert), cible 80-85 % de réussite, dents de scie."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "6362193a-3f7e-5990-abd2-ec4f1d20d38d",
+   "parentId": "m-dir",
+   "position": {
+    "x": 270,
+    "y": 150
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "DIR-05",
+    "name": "Générateur de niveaux contraint",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "generateLevel(profil, contenu, seed)→NiveauSpec ; constructif, seeds hiérarchiques, garde-fous (réponse unique…)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "ac921896-6857-5aec-9f27-d4acabca140e",
+   "parentId": "m-dir",
+   "position": {
+    "x": 540,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "DIR-06",
+    "name": "Règles de variété (anti-monotonie)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Jamais 2× la même mécanique d'affilée, alternance des modalités, une nouveauté par session."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "74c866c7-df3e-5508-a581-33e0c314db85",
+   "parentId": "m-dir",
+   "position": {
+    "x": 0,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "DIR-07",
+    "name": "Rappels espacés (Leitner) → niveaux échos",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "J+1→J+3→J+7→J+14, robuste aux jours manqués ; mix 70-80 % courant + 20-30 % rappels."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §5.4 et cadrage/catalogue (fiche DIR-07)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "81a74f5e-38bf-52b3-a624-4f289aa1535f",
+   "parentId": "m-dir",
+   "position": {
+    "x": 270,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "DIR-08",
+    "name": "Niveaux surprises (cadeaux, défis, rêves)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Cadeaux aléatoires contrôlés jamais annoncés, défis refusables, rêves en interleaving multi-biomes."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 04 §7 et cadrage/catalogue (fiche DIR-08)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "b3cb99a3-5589-5fe2-a247-259087883094",
+   "parentId": "m-dir",
+   "position": {
+    "x": 540,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "DIR-09",
+    "name": "Détection de stagnation",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Changer de mécanique pour la même compétence, redescendre, modelling ; signal discret côté parent."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "a10ee58d-48d5-5c4f-ae47-84b7f08f38fe",
+   "parentId": "m-dir",
+   "position": {
+    "x": 0,
+    "y": 450
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "DIR-10",
+    "name": "Pondération fatigue",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Dérive erreurs+latences en fin de session → proposer la fin ET pondérer à la baisse (fatigue ≠ lacune)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "cfa6e2ef-ae76-5787-982b-38c466482d56",
+   "parentId": "m-dir",
+   "position": {
+    "x": 270,
+    "y": 450
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "DIR-11",
+    "name": "Simulation enfants virtuels + QA CI (Test D)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "10 000 profils synthétiques : réussite ~80 %, zéro niveau impossible, sortie de biome 8-20 niveaux. Première brique à coder."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "d5ce28f5-1acd-5596-ac61-63cdfbd615e4",
+   "parentId": "m-mas",
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "MAS-01",
+    "name": "Machine à états + lecteur de clips",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Enchaînement fluide des ~15 clips (pose neutre commune), synchro audio, babillage sans lipsync."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "3d50b82d-c619-5bce-a866-33b03c153e4f",
+   "parentId": "m-mas",
+   "position": {
+    "x": 270,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "MAS-02",
+    "name": "Feedback contingent (charte dialogues)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Réactions spécifiques au geste réel de l'enfant ; éloge du processus, jamais de la personne ; consolidation 10 s."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 03 §2.4 et cadrage/catalogue (fiche MAS-02)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "3d50a8a6-febe-5369-8f1d-b41de04428e7",
+   "parentId": "m-mas",
+   "position": {
+    "x": 540,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "MAS-03",
+    "name": "Langage évolutif (babillage → français)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Ratio babillage/français par palier de biomes validés ; babillage = signature affective en fin de parcours."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "f2162f8f-44f6-5787-a153-3de67f686346",
+   "parentId": "m-mas",
+   "position": {
+    "x": 0,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "MAS-04",
+    "name": "Customisation (accessoires composables)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Chapeaux/écharpes achetés en poussière, composés sur points d'accroche du rig (validé Test A)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "90ea98c6-e9e6-5cdc-a357-72e43c75a40b",
+   "parentId": "m-mas",
+   "position": {
+    "x": 270,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "MAS-05",
+    "name": "Transformations de fin de biome",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Nouvelle forme signature à chaque grande aventure, portée sur la carte, galerie dans la maison."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "c3712990-5c5e-511b-9d5a-6e1edb189576",
+   "parentId": "m-mas",
+   "position": {
+    "x": 540,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "MAS-06",
+    "name": "Rituels d'accueil et de clôture",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Réveil festif, coucher joyeux. Règle absolue : jamais triste ou suppliante au départ de l'enfant."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 03 §5 et cadrage/catalogue (fiche MAS-06)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "66b6c71a-e25b-5447-9e35-4364188d4200",
+   "parentId": "m-rec",
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "REC-01",
+    "name": "Autocollants + album",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Un autocollant clay surprise par niveau terminé ; album à coller librement."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "61e834bb-7260-59f7-a04e-9b2965827922",
+   "parentId": "m-rec",
+   "position": {
+    "x": 270,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "REC-02",
+    "name": "Poussière d'étoile",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Collecte modeste en fin de niveau (jamais de near-miss), dépense en customisation et dons ; non achetable."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "e48f694b-c63f-544b-911b-e542f28dfa5d",
+   "parentId": "m-rec",
+   "position": {
+    "x": 540,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "REC-03",
+    "name": "La maison de Nooma (espace calme)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Sans objectif ni chrono : album, customisation, galerie, décoration."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "a42cd4ae-8b1b-53ef-afbb-51b1aa83fab2",
+   "parentId": "m-rec",
+   "position": {
+    "x": 0,
+    "y": 150
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "REC-04",
+    "name": "Offrir et décorer (dons aux habitants)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Dépenser pour les autres : cadeau à la mascotte, décor du biome, don à un habitant (modèle Khan Kids)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "38218490-ddb2-5aeb-98a9-bb53bc3019f6",
+   "parentId": "m-mod",
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "MOD-01",
+    "name": "Les histoires (audio-illustrées)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Mini-histoires 30-90 s débloquées par la progression, mode calme du soir ; à lire partiellement en fin d'année."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "6d774306-6d08-50ee-b2db-9d9a86d85011",
+   "parentId": "m-mod",
+   "position": {
+    "x": 270,
+    "y": 0
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "MOD-02",
+    "name": "Le cadeau de la semaine",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Rendez-vous hebdo non punitif (modèle Toca) : rien ne se perd jamais."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "26c735c9-eee8-5e1e-85b3-13ad9c298721",
+   "parentId": "m-mod",
+   "position": {
+    "x": 540,
+    "y": 0
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "MOD-03",
+    "name": "Événements saisonniers additifs",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Décors qui se parent (Noël, printemps…), visiteurs, autocollants récupérables ; le calendrier ajoute, ne retire jamais."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "49183190-c88b-5859-a0ba-ebd30e5799da",
+   "parentId": "m-mod",
+   "position": {
+    "x": 0,
+    "y": 150
+   },
+   "lot": 4,
+   "type": "feature",
+   "attrs": {
+    "code": "MOD-04",
+    "name": "Co-jeu parent-enfant (multi-touch)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Coopération joyeuse sur le même écran (inspiration Overcooked), jamais de versus ; conseils parent intégrés."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "idee",
+    "checklist": []
+   }
+  },
+  {
+   "id": "1a9c2040-0be6-5495-9876-90cb554b7a46",
+   "parentId": "m-mod",
+   "position": {
+    "x": 270,
+    "y": 150
+   },
+   "lot": 4,
+   "type": "feature",
+   "attrs": {
+    "code": "MOD-05",
+    "name": "Lecture à voix haute (reconnaissance vocale)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Lecture au micro, traitement 100 % local, rien conservé ; gap marché mais dossier conformité micro lourd."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "idee",
+    "checklist": []
+   }
+  },
+  {
+   "id": "59aef647-dcd5-52c5-ac6d-40f015c87459",
+   "parentId": "m-mod",
+   "position": {
+    "x": 540,
+    "y": 150
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "MOD-06",
+    "name": "Multi-profils (fratrie)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Plusieurs profils enfants, progression et personnalisation séparées."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "366ea360-d64c-51c7-8745-cb3cd28f044e",
+   "parentId": "m-par",
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "PAR-01",
+    "name": "Parental gate (calcul en lettres + cooldown)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Opération écrite en toutes lettres, régénérée, 3 échecs → 5 min ; consigne vocale (exigence Apple). Revue humaine obligatoire."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 07 §3 et cadrage/catalogue (fiche PAR-01)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "f3614f02-b769-57e1-84fb-c88a1dfa5328",
+   "parentId": "m-par",
+   "position": {
+    "x": 270,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "PAR-02",
+    "name": "PIN espace parent",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "PIN 4 chiffres de confort, combiné au gate pour les actions sensibles."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "ebb2ab96-15e9-57d0-9502-990f6865956e",
+   "parentId": "m-par",
+   "position": {
+    "x": 540,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "PAR-03",
+    "name": "Suivi de progression (langage clair)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Par module, non scolaire, formulations Florence ; signal de stagnation avec conseil ; l'enfant ne voit jamais de métrique."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "0c4e8087-57b6-5c03-b7d6-f2263cdec61b",
+   "parentId": "m-par",
+   "position": {
+    "x": 0,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "PAR-04",
+    "name": "Temps d'écran + limite douce",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Durée/jour ; limite racontée par la narration : la mascotte va dormir, l'enfant n'est jamais puni."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "a5a3e683-18c8-54f7-95c7-715fbb8a7228",
+   "parentId": "m-par",
+   "position": {
+    "x": 270,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "PAR-05",
+    "name": "Réglages (audio 3 canaux, profil)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Volumes voix/effets/musique séparés (inclusif), gestion du profil, export/import."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "601c6d5a-d23c-5996-a087-eb4e660c829a",
+   "parentId": "m-par",
+   "position": {
+    "x": 540,
+    "y": 150
+   },
+   "lot": 3,
+   "type": "feature",
+   "attrs": {
+    "code": "PAR-06",
+    "name": "Conseils d'accompagnement",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Par compétence en cours, un conseil concret hors écran ; contenu Florence, positionnement co-usage."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-data",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "53631774-0c01-59b4-b5f9-94ee42183b60",
+   "parentId": "m-par",
+   "position": {
+    "x": 0,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "PAR-07",
+    "name": "Onboarding parent (première ouverture)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "La promesse en 3 écrans (jeu d'abord, orthophoniste conseil, zéro donnée), profil, réglages. Moment de conversion clé."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-app",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "cfb34731-9744-51dd-98d5-eefad1a9d1e1",
+   "parentId": "m-aud",
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "AUD-01",
+    "name": "Kit et protocole d'enregistrement",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Micro correct, pièce/distance fixes, scripts par lots, retakes groupés ; préalable : autorisation écrite voix (lettre de mission)."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 05 §5 et cadrage/catalogue (fiche AUD-01)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-audio",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "a010c4c6-9cd1-56fe-bdbd-cc61e18dc50d",
+   "parentId": "m-aud",
+   "position": {
+    "x": 270,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "AUD-02",
+    "name": "Lot consignes et répliques",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Consignes par mécanique + feedbacks (charte) + indices ; centaines de fichiers courts Vorbis mono."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-audio",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "ee260e15-8237-5826-a34b-1119a6916151",
+   "parentId": "m-aud",
+   "position": {
+    "x": 540,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "AUD-03",
+    "name": "Lot phonèmes isolés",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Chaque phonème prononcé juste (fff, jamais feuh) — le lot pédagogiquement critique, expertise Florence."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 02 §3 et cadrage/catalogue (fiche AUD-03)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-audio",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "678ded87-0e76-5f0b-b3cb-86905481ee85",
+   "parentId": "m-aud",
+   "position": {
+    "x": 0,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "AUD-04",
+    "name": "Banque de babillages",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "30-50 gazouillis joués par Florence puis pitchés, classés par émotion, mixés aléatoirement."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-audio",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "8488ea5a-5ee5-5f00-aa64-9c7e2e65c10a",
+   "parentId": "m-aud",
+   "position": {
+    "x": 270,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "AUD-05",
+    "name": "Sound design (SFX)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Registre cocon : carillons, pops doux, son signature de réussite, jamais de son d'échec."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-audio",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "3bd8de27-0c12-522d-99f5-0c38474dadb3",
+   "parentId": "m-aud",
+   "position": {
+    "x": 540,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "AUD-06",
+    "name": "Musiques d'ambiance par biome",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Une boucle discrète par biome, coupable sans perte (canal séparé)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-audio",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "d8e5c450-b94d-5b4c-99f3-187feaec4907",
+   "parentId": "m-aud",
+   "position": {
+    "x": 0,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "AUD-07",
+    "name": "Pipeline audio",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "De-noise, normalisation loudness, découpe, Vorbis mono 48 kbps, nommage lié aux banques, lint CI."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-audio",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "702a86c2-a435-54a9-b359-4b031ffc3acc",
+   "parentId": "m-cnt",
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "CNT-01",
+    "name": "studio.blend (éclairage, matériaux, caméras)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Le fichier fondateur : plateau stop-motion, 5 matériaux Clay Doh, caméras préréglées. Se fige au Test A."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 14 §2 et cadrage/catalogue (fiche CNT-01)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-blender",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "034cb256-7162-58ac-a47f-df952e228d4f",
+   "parentId": "m-cnt",
+   "position": {
+    "x": 270,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "CNT-02",
+    "name": "Rig + clips mascotte (~15)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Armature + shape keys, clips bornés pose neutre, points d'accroche accessoires, rendu 2x."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-blender",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "b161c760-c566-5907-8521-5c9a617fa067",
+   "parentId": "m-cnt",
+   "position": {
+    "x": 540,
+    "y": 0
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "CNT-03",
+    "name": "Cartes de biomes (couches parallax)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Par biome : scène, 3-4 couches ~2048 px, éléments animés, rails du chemin. Estimer le coût unitaire."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-blender",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "cd60ef35-5017-56ca-aa29-d9cb52ac55f5",
+   "parentId": "m-cnt",
+   "position": {
+    "x": 0,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "CNT-04",
+    "name": "Images-mots (200-400)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Le chantier de volume : template item industrialisé 10-20 min/objet, complément IA si Test C ok."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-blender",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "120d1735-96d0-5ffd-a152-8821710519fb",
+   "parentId": "m-cnt",
+   "position": {
+    "x": 270,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "CNT-05",
+    "name": "Lettres/graphèmes clay + objets de jeu",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Alphabet + digraphes (une pièce par digraphe), police validée avec Florence ; jetons, wagons, rouleaux."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-blender",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "199e1cbe-afc6-56ac-86c2-403fd81fd55b",
+   "parentId": "m-cnt",
+   "position": {
+    "x": 540,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "CNT-06",
+    "name": "Autocollants (~10 par biome)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Thème local, quelques rares, déclinés des lots existants."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-blender",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "6e387a3e-10a2-5b3c-87cc-cdc87f3563a1",
+   "parentId": "m-cnt",
+   "position": {
+    "x": 0,
+    "y": 300
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "CNT-07",
+    "name": "UI clay (boutons, cadres, jauges)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Le moins possible, tout au studio, états pressé/désactivé."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-blender",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "455f5cdd-9a74-51d4-8d8e-356600148bbd",
+   "parentId": "m-cnt",
+   "position": {
+    "x": 270,
+    "y": 300
+   },
+   "lot": 1,
+   "type": "feature",
+   "attrs": {
+    "code": "CNT-08",
+    "name": "Pipeline automatisée (render → atlas → vérifs)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "blender -b par lot, packing LibGDX TexturePacker, vérifs padding/tailles/budgets, chargement fichiers en debug."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 14 §6 et cadrage/catalogue (fiche CNT-08)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-blender",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "01ba288a-b0d2-51d5-9942-4693730162da",
+   "parentId": "m-lan",
+   "position": {
+    "x": 0,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "LAN-01",
+    "name": "Paywall espace parent + achats (RevenueCat)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Freemium 2 biomes ; abonnement annuel+mensuel derrière gate ; RevenueCat anonyme ; limite narrée côté enfant. Revue humaine."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 09 §3 et cadrage/catalogue (fiche LAN-01)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-ext",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "92124b03-c698-51de-894f-ed132322f491",
+   "parentId": "m-lan",
+   "position": {
+    "x": 270,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "LAN-02",
+    "name": "Conformité stores (Kids/Families)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Audit binaire zéro SDK, labels Data Not Collected, questionnaires d'âge, test fermé 12 testeurs."
+        }
+       ]
+      },
+      {
+       "type": "heading",
+       "attrs": {
+        "level": 3
+       },
+       "content": [
+        {
+         "type": "text",
+         "text": "Réf"
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Voir doc 11 §5 et cadrage/catalogue (fiche LAN-02)."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-ext",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "c017aa2c-4a12-5d6f-af8e-ab5e6c954b5a",
+   "parentId": "m-lan",
+   "position": {
+    "x": 540,
+    "y": 0
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "LAN-03",
+    "name": "Privacy policy + site vitrine",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Policy hébergée (obligatoire), site une page, press kit. Dépend du nom déposé."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-ext",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "eaac7eb6-a4d2-59ff-99fd-097d36138086",
+   "parentId": "m-lan",
+   "position": {
+    "x": 0,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "LAN-04",
+    "name": "Pages stores (ASO, captures, vidéo)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Captures réelles, vidéo 30 s, textes parents, cluster « apprendre à lire CP », zéro vocabulaire médical."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-ext",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "40612d1f-9e06-5934-9440-35a0fcff35b7",
+   "parentId": "m-lan",
+   "position": {
+    "x": 270,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "LAN-05",
+    "name": "Beta fermée (TestFlight / Play)",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Familles beta, retours manuels (pas de télémétrie) ; couvre l'obligation Google 12 testeurs/14 jours."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-ext",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  },
+  {
+   "id": "75ed11e3-59d8-5c13-9a3d-ff7bffbf1dba",
+   "parentId": "m-lan",
+   "position": {
+    "x": 540,
+    "y": 150
+   },
+   "lot": 2,
+   "type": "feature",
+   "attrs": {
+    "code": "LAN-06",
+    "name": "Dossiers featuring + Teacher Approved",
+    "content": {
+     "type": "doc",
+     "content": [
+      {
+       "type": "paragraph",
+       "content": [
+        {
+         "type": "text",
+         "text": "Nomination App Store 3 semaines avant ; exemplarité Families pour le badge."
+        }
+       ]
+      }
+     ]
+    },
+    "fieldValues": {
+     "perimeter": "opt-per-ext",
+     "binding": null
+    },
+    "estimate": "à estimer",
+    "status": "cadree",
+    "checklist": []
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "ab5c3699-480c-576e-8279-5dd938eeb71a",
+   "type": "realizedBy",
+   "source": "84531d0b-9a04-573c-bf38-6f6029d0d610",
+   "target": "p-splash",
+   "attrs": {}
+  },
+  {
+   "id": "8921aaed-51db-5d11-a477-b6b4c9a1870c",
+   "type": "dependsOn",
+   "source": "6ad967b5-50e6-52cf-b561-0677e2079692",
+   "target": "432ff628-82e7-5909-9343-b36123ce1a8f",
+   "attrs": {}
+  },
+  {
+   "id": "7d3f877a-bb36-5e17-bf88-2851ab4ff38c",
+   "type": "realizedBy",
+   "source": "6ad967b5-50e6-52cf-b561-0677e2079692",
+   "target": "p-profil",
+   "attrs": {}
+  },
+  {
+   "id": "84b2334e-0821-5b25-8e57-1974649bb7a3",
+   "type": "dependsOn",
+   "source": "fc82d9e4-ee51-5a78-adb8-c4f34d108e7c",
+   "target": "432ff628-82e7-5909-9343-b36123ce1a8f",
+   "attrs": {}
+  },
+  {
+   "id": "59de8003-40bd-5f2a-9203-f5be1e1e7002",
+   "type": "dependsOn",
+   "source": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "target": "0ef14ede-9b05-5e32-b6ce-de6d73fb132b",
+   "attrs": {}
+  },
+  {
+   "id": "e4c7ffec-7fac-5f6e-b790-2c963c1f5dd6",
+   "type": "dependsOn",
+   "source": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "target": "1c88c2d0-de0d-5117-a71f-ae4f1754c5c2",
+   "attrs": {}
+  },
+  {
+   "id": "dc644c14-d2d1-5353-8bdd-a767c7093028",
+   "type": "dependsOn",
+   "source": "393e0d83-67bd-58c3-b6a8-7f59898a5541",
+   "target": "432ff628-82e7-5909-9343-b36123ce1a8f",
+   "attrs": {}
+  },
+  {
+   "id": "7bef6a74-0062-55a0-8de5-099b77976135",
+   "type": "realizedBy",
+   "source": "393e0d83-67bd-58c3-b6a8-7f59898a5541",
+   "target": "p-reglages",
+   "attrs": {}
+  },
+  {
+   "id": "1f7ce2e7-3872-5458-9dd8-57abebcfeb36",
+   "type": "dependsOn",
+   "source": "82d08c28-66d5-5ed2-a15e-b7e266588a07",
+   "target": "1c88c2d0-de0d-5117-a71f-ae4f1754c5c2",
+   "attrs": {}
+  },
+  {
+   "id": "3360a9d7-d276-5223-82ed-18edf10d39ca",
+   "type": "dependsOn",
+   "source": "82d08c28-66d5-5ed2-a15e-b7e266588a07",
+   "target": "b161c760-c566-5907-8521-5c9a617fa067",
+   "attrs": {}
+  },
+  {
+   "id": "694182fe-937e-52d7-bdc7-bd5b99fe08a7",
+   "type": "realizedBy",
+   "source": "82d08c28-66d5-5ed2-a15e-b7e266588a07",
+   "target": "p-carte",
+   "attrs": {}
+  },
+  {
+   "id": "c5a12e5c-07e6-5796-a135-402f11e9a59e",
+   "type": "dependsOn",
+   "source": "fe722b3b-1d07-54ef-b5b9-d2cfaf405ba0",
+   "target": "1c88c2d0-de0d-5117-a71f-ae4f1754c5c2",
+   "attrs": {}
+  },
+  {
+   "id": "566898d1-bd48-5aa0-8eef-4ce0f41b6dd4",
+   "type": "dependsOn",
+   "source": "fe722b3b-1d07-54ef-b5b9-d2cfaf405ba0",
+   "target": "b161c760-c566-5907-8521-5c9a617fa067",
+   "attrs": {}
+  },
+  {
+   "id": "a79261b0-3915-59cc-8744-4633227475c5",
+   "type": "realizedBy",
+   "source": "fe722b3b-1d07-54ef-b5b9-d2cfaf405ba0",
+   "target": "p-biome",
+   "attrs": {}
+  },
+  {
+   "id": "3fd4eb9f-1ef4-5d60-a0b2-0639c864456f",
+   "type": "dependsOn",
+   "source": "5cb3f0b6-f299-5099-a819-41c1d30e1b10",
+   "target": "fe722b3b-1d07-54ef-b5b9-d2cfaf405ba0",
+   "attrs": {}
+  },
+  {
+   "id": "a5fc1495-eb43-5edd-84aa-421f5203a2bc",
+   "type": "dependsOn",
+   "source": "5cb3f0b6-f299-5099-a819-41c1d30e1b10",
+   "target": "6362193a-3f7e-5990-abd2-ec4f1d20d38d",
+   "attrs": {}
+  },
+  {
+   "id": "16e7743c-f625-5157-afe9-ef2fae515bdb",
+   "type": "realizedBy",
+   "source": "5cb3f0b6-f299-5099-a819-41c1d30e1b10",
+   "target": "p-biome",
+   "attrs": {}
+  },
+  {
+   "id": "f297529a-605f-5f01-9ed3-4b308424d143",
+   "type": "dependsOn",
+   "source": "2de8b8ef-08dc-53a2-a4c4-91ef42d1373b",
+   "target": "5cb3f0b6-f299-5099-a819-41c1d30e1b10",
+   "attrs": {}
+  },
+  {
+   "id": "81b62f89-df8c-59a9-a062-09bcb26b112a",
+   "type": "realizedBy",
+   "source": "2de8b8ef-08dc-53a2-a4c4-91ef42d1373b",
+   "target": "p-biome",
+   "attrs": {}
+  },
+  {
+   "id": "1f5f45eb-d24f-57cc-bd8a-2895d45b092b",
+   "type": "dependsOn",
+   "source": "e9c33e6e-8c18-5726-9428-b7663cbb5a2f",
+   "target": "fe722b3b-1d07-54ef-b5b9-d2cfaf405ba0",
+   "attrs": {}
+  },
+  {
+   "id": "490bf780-117e-58f5-8be2-4aaf115dc9ab",
+   "type": "dependsOn",
+   "source": "e9c33e6e-8c18-5726-9428-b7663cbb5a2f",
+   "target": "034cb256-7162-58ac-a47f-df952e228d4f",
+   "attrs": {}
+  },
+  {
+   "id": "65e45a19-d098-57b7-ba6c-4b433a2dde5c",
+   "type": "realizedBy",
+   "source": "e9c33e6e-8c18-5726-9428-b7663cbb5a2f",
+   "target": "p-carte",
+   "attrs": {}
+  },
+  {
+   "id": "729f9ec8-e26f-5c21-b414-4f5650462e45",
+   "type": "dependsOn",
+   "source": "c1eeffeb-2da2-5e15-87f0-1467ea2c75c0",
+   "target": "27bcd148-483f-5c30-82e2-938eaf50ac6c",
+   "attrs": {}
+  },
+  {
+   "id": "1c5f8b62-22a8-5ebf-9756-529a4125e7ca",
+   "type": "dependsOn",
+   "source": "c1eeffeb-2da2-5e15-87f0-1467ea2c75c0",
+   "target": "90ea98c6-e9e6-5cdc-a357-72e43c75a40b",
+   "attrs": {}
+  },
+  {
+   "id": "c9fa79ed-3088-56ac-9f22-d9bb0c8113b4",
+   "type": "realizedBy",
+   "source": "c1eeffeb-2da2-5e15-87f0-1467ea2c75c0",
+   "target": "p-carte",
+   "attrs": {}
+  },
+  {
+   "id": "f1e0f5e3-b6cd-565a-b6a0-d757848698ec",
+   "type": "dependsOn",
+   "source": "b9a3b21f-f04a-5c7e-9b6d-c1ff1ed9584a",
+   "target": "5cb3f0b6-f299-5099-a819-41c1d30e1b10",
+   "attrs": {}
+  },
+  {
+   "id": "1be17390-0e53-5d77-b010-8cd583696974",
+   "type": "dependsOn",
+   "source": "b9a3b21f-f04a-5c7e-9b6d-c1ff1ed9584a",
+   "target": "74c866c7-df3e-5508-a581-33e0c314db85",
+   "attrs": {}
+  },
+  {
+   "id": "300a07b4-b36b-5f80-83d4-674ce50ffddb",
+   "type": "realizedBy",
+   "source": "b9a3b21f-f04a-5c7e-9b6d-c1ff1ed9584a",
+   "target": "p-biome",
+   "attrs": {}
+  },
+  {
+   "id": "e358b675-f5b2-57ff-9405-227757a2f107",
+   "type": "dependsOn",
+   "source": "184e1e5a-8b5f-51d7-92ae-e8e4049143eb",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "8eee5eb0-c9e0-5361-af42-624c073ec40d",
+   "type": "dependsOn",
+   "source": "184e1e5a-8b5f-51d7-92ae-e8e4049143eb",
+   "target": "c1eeffeb-2da2-5e15-87f0-1467ea2c75c0",
+   "attrs": {}
+  },
+  {
+   "id": "fc287e20-cc7b-57d3-9a6f-5c2008253c67",
+   "type": "realizedBy",
+   "source": "184e1e5a-8b5f-51d7-92ae-e8e4049143eb",
+   "target": "p-aventure",
+   "attrs": {}
+  },
+  {
+   "id": "56d73457-0602-5467-88a7-b1bbe1c3b2c8",
+   "type": "dependsOn",
+   "source": "cfa9c1f0-8037-5c05-808d-d0ad7e8c953a",
+   "target": "5cb3f0b6-f299-5099-a819-41c1d30e1b10",
+   "attrs": {}
+  },
+  {
+   "id": "3c2036e3-aecc-57d5-abd6-fcea265e0f85",
+   "type": "realizedBy",
+   "source": "cfa9c1f0-8037-5c05-808d-d0ad7e8c953a",
+   "target": "p-biome",
+   "attrs": {}
+  },
+  {
+   "id": "29f3bb85-182b-51a4-9548-1a8a9846acf9",
+   "type": "dependsOn",
+   "source": "1c1bc79e-c0ec-5e26-b4b9-541548268345",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "55bc9891-73b5-56af-beaa-9cebb026f721",
+   "type": "realizedBy",
+   "source": "1c1bc79e-c0ec-5e26-b4b9-541548268345",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "8ccb7a36-3741-5b04-a48d-0b1e732866a0",
+   "type": "dependsOn",
+   "source": "27a39dc7-07d4-5380-9c68-d87362d58e65",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "d7b97509-8cb5-55b7-abfb-4054c4bfcc4e",
+   "type": "realizedBy",
+   "source": "27a39dc7-07d4-5380-9c68-d87362d58e65",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "c89d9d4c-1d5b-5dc9-8ed6-fbcbebf58361",
+   "type": "dependsOn",
+   "source": "ff362c1c-8652-5b34-8612-98f5c994a05d",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "0eaa53fe-3c9f-571c-9284-6123d68f3b28",
+   "type": "realizedBy",
+   "source": "ff362c1c-8652-5b34-8612-98f5c994a05d",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "3becb7ac-afc8-5ae3-b55e-d0999fa6a0da",
+   "type": "dependsOn",
+   "source": "7b6bc0c1-6b42-56b8-80c8-57b52d6236b4",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "b8c40c1c-4d94-537c-b05b-c03b29b5dc19",
+   "type": "realizedBy",
+   "source": "7b6bc0c1-6b42-56b8-80c8-57b52d6236b4",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "54159dd4-5edf-5511-b724-39527757fbd8",
+   "type": "dependsOn",
+   "source": "9ba397ed-71e2-5907-a85e-e1354c4494de",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "d82d93db-fded-572a-978e-379fdb6b9ce9",
+   "type": "realizedBy",
+   "source": "9ba397ed-71e2-5907-a85e-e1354c4494de",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "6f7e7fbb-7523-5d94-99ff-faf43ce81eea",
+   "type": "dependsOn",
+   "source": "a1f97c49-dd7a-5b3d-8623-4a6646f521af",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "77ad4d2d-5d3f-5ac5-b079-54b3f8896b12",
+   "type": "dependsOn",
+   "source": "a1f97c49-dd7a-5b3d-8623-4a6646f521af",
+   "target": "120d1735-96d0-5ffd-a152-8821710519fb",
+   "attrs": {}
+  },
+  {
+   "id": "c83aed07-adba-5737-a6ec-21579298980f",
+   "type": "realizedBy",
+   "source": "a1f97c49-dd7a-5b3d-8623-4a6646f521af",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "4aeff17f-e26f-5a6c-9bdf-ff222755968c",
+   "type": "dependsOn",
+   "source": "d3bf38bb-96b8-5533-bd52-37e0d515666a",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "4ad14dd9-0fa3-546e-86e6-64bd3a426735",
+   "type": "dependsOn",
+   "source": "d3bf38bb-96b8-5533-bd52-37e0d515666a",
+   "target": "120d1735-96d0-5ffd-a152-8821710519fb",
+   "attrs": {}
+  },
+  {
+   "id": "8974542b-7d8a-5545-8fad-09f31f71c220",
+   "type": "realizedBy",
+   "source": "d3bf38bb-96b8-5533-bd52-37e0d515666a",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "39ce4dc7-8c30-5986-9b14-e94e38974890",
+   "type": "dependsOn",
+   "source": "04e3d710-1286-5e99-85ac-f8972d469c45",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "b8188421-d3cb-55f5-928e-764adb6811bf",
+   "type": "dependsOn",
+   "source": "04e3d710-1286-5e99-85ac-f8972d469c45",
+   "target": "120d1735-96d0-5ffd-a152-8821710519fb",
+   "attrs": {}
+  },
+  {
+   "id": "de4205d1-8106-5f54-8cf8-fd1aef31a899",
+   "type": "realizedBy",
+   "source": "04e3d710-1286-5e99-85ac-f8972d469c45",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "51bc6e96-e54e-5e28-988a-fb8487c9113f",
+   "type": "dependsOn",
+   "source": "fe14fcb6-7b42-53ac-a4eb-412e30ab6737",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "b5e12a5c-d8a3-5f1c-a447-8dd70b078f82",
+   "type": "dependsOn",
+   "source": "fe14fcb6-7b42-53ac-a4eb-412e30ab6737",
+   "target": "120d1735-96d0-5ffd-a152-8821710519fb",
+   "attrs": {}
+  },
+  {
+   "id": "4acd2a29-4106-5cda-96fa-6227c30a2605",
+   "type": "realizedBy",
+   "source": "fe14fcb6-7b42-53ac-a4eb-412e30ab6737",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "cd238024-e456-5bd8-8e54-0d13068d5f9b",
+   "type": "dependsOn",
+   "source": "aa6753e4-0295-5e2d-b77e-24d45bbeb707",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "a6977a4e-c6b9-5c1f-b2f4-ad65231aec4f",
+   "type": "realizedBy",
+   "source": "aa6753e4-0295-5e2d-b77e-24d45bbeb707",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "f0adbd62-e9a7-5bd1-ae18-9ca92c6425c8",
+   "type": "dependsOn",
+   "source": "53c84dc3-ce4f-5643-9066-0207d26648ff",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "c0aa903f-5aec-519c-b94b-f29b38ab6b67",
+   "type": "dependsOn",
+   "source": "53c84dc3-ce4f-5643-9066-0207d26648ff",
+   "target": "cd60ef35-5017-56ca-aa29-d9cb52ac55f5",
+   "attrs": {}
+  },
+  {
+   "id": "73a60d1f-43ec-50b8-98c2-cbdd033360ce",
+   "type": "realizedBy",
+   "source": "53c84dc3-ce4f-5643-9066-0207d26648ff",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "8636fbb6-4618-5f4a-8d87-5f2dd5267797",
+   "type": "dependsOn",
+   "source": "272c8ae0-137b-5a7f-938d-79eaa1b1a3b8",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "2f649f97-eb6b-5331-958f-91ae704450a2",
+   "type": "realizedBy",
+   "source": "272c8ae0-137b-5a7f-938d-79eaa1b1a3b8",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "6578b85c-089a-52f2-b631-b1b8972bd239",
+   "type": "dependsOn",
+   "source": "d5602082-316d-5a87-9323-a09b4147c510",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "6029d52a-1596-54ed-9b5a-7d40caa27d99",
+   "type": "realizedBy",
+   "source": "d5602082-316d-5a87-9323-a09b4147c510",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "84d97699-7edc-551d-b9fe-eff351917cac",
+   "type": "dependsOn",
+   "source": "894ecbcc-21b0-5438-935e-7546a90b2cf7",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "c06ad21e-bd03-5aa3-a205-4137a6ed0e11",
+   "type": "dependsOn",
+   "source": "894ecbcc-21b0-5438-935e-7546a90b2cf7",
+   "target": "a010c4c6-9cd1-56fe-bdbd-cc61e18dc50d",
+   "attrs": {}
+  },
+  {
+   "id": "ec1e8a50-2257-562b-9064-e4f4fb35311f",
+   "type": "realizedBy",
+   "source": "894ecbcc-21b0-5438-935e-7546a90b2cf7",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "c8df480b-658b-57b7-9f2f-85338d19a452",
+   "type": "dependsOn",
+   "source": "0820a1ef-d89d-58b0-bc1d-85ee748c5ae1",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "7a73bf09-5393-59fe-931e-77fc3a75beab",
+   "type": "dependsOn",
+   "source": "0820a1ef-d89d-58b0-bc1d-85ee748c5ae1",
+   "target": "cd60ef35-5017-56ca-aa29-d9cb52ac55f5",
+   "attrs": {}
+  },
+  {
+   "id": "cd971ec4-c21f-5403-8bcc-67365a37ec55",
+   "type": "realizedBy",
+   "source": "0820a1ef-d89d-58b0-bc1d-85ee748c5ae1",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "c4b427a4-a251-5c94-8fc8-6d2919aeeeba",
+   "type": "dependsOn",
+   "source": "397e47c3-9fc4-5dc0-91ec-d2e0274d60a4",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "8c5232f7-5d0d-5745-83a8-144c41652f78",
+   "type": "realizedBy",
+   "source": "397e47c3-9fc4-5dc0-91ec-d2e0274d60a4",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "c6526d94-2eba-5518-8f2f-6e133081d62f",
+   "type": "dependsOn",
+   "source": "571a78e0-6e4c-525e-a044-a7d56f255669",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "6a3cb3a2-b262-5daa-aad6-c0c8e9334359",
+   "type": "dependsOn",
+   "source": "571a78e0-6e4c-525e-a044-a7d56f255669",
+   "target": "74c866c7-df3e-5508-a581-33e0c314db85",
+   "attrs": {}
+  },
+  {
+   "id": "88430821-5da2-56f5-a1fd-7f7f044d055e",
+   "type": "realizedBy",
+   "source": "571a78e0-6e4c-525e-a044-a7d56f255669",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "9d8e693d-1cec-52e4-9001-4d4f3e7628d2",
+   "type": "dependsOn",
+   "source": "842cf08c-1ef3-59b9-ab93-5fb19dc907ba",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "963e2f87-5478-5622-81ce-d25fa1236dbc",
+   "type": "dependsOn",
+   "source": "842cf08c-1ef3-59b9-ab93-5fb19dc907ba",
+   "target": "120d1735-96d0-5ffd-a152-8821710519fb",
+   "attrs": {}
+  },
+  {
+   "id": "8eff9fdf-bce9-5bcf-9022-7eb54d16133d",
+   "type": "realizedBy",
+   "source": "842cf08c-1ef3-59b9-ab93-5fb19dc907ba",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "2eb34eed-9c59-5c83-afd4-ba30ea904e8d",
+   "type": "dependsOn",
+   "source": "d7f16bf4-c4d1-5287-8653-81f2c5d8bc97",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "bb5e489a-8639-5fe8-8b04-4402c65d527d",
+   "type": "dependsOn",
+   "source": "d7f16bf4-c4d1-5287-8653-81f2c5d8bc97",
+   "target": "120d1735-96d0-5ffd-a152-8821710519fb",
+   "attrs": {}
+  },
+  {
+   "id": "e9641d0f-a804-59cb-a9b2-f4506925ed57",
+   "type": "realizedBy",
+   "source": "d7f16bf4-c4d1-5287-8653-81f2c5d8bc97",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "13ea920f-4cec-5c84-965b-bfe28ce9e9a6",
+   "type": "dependsOn",
+   "source": "a26fce2f-c19e-55fd-be9e-8e782a7a2a4c",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "fe25f9b9-70f3-5888-b17d-90dcfd785a72",
+   "type": "realizedBy",
+   "source": "a26fce2f-c19e-55fd-be9e-8e782a7a2a4c",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "d0871e9f-d209-506a-b189-63bdaa0e1375",
+   "type": "dependsOn",
+   "source": "7d11b534-6284-5414-9504-5238bafc5ae8",
+   "target": "b6a5cc34-f670-561b-a25a-e756314b1fed",
+   "attrs": {}
+  },
+  {
+   "id": "30d9b010-1adc-5bac-b57d-892d0143040b",
+   "type": "dependsOn",
+   "source": "27bcd148-483f-5c30-82e2-938eaf50ac6c",
+   "target": "432ff628-82e7-5909-9343-b36123ce1a8f",
+   "attrs": {}
+  },
+  {
+   "id": "f5a7f7ae-488b-5ac2-af4a-da6268b78dce",
+   "type": "dependsOn",
+   "source": "d5fe488a-348b-5e53-8e0f-af4068c09f8b",
+   "target": "27bcd148-483f-5c30-82e2-938eaf50ac6c",
+   "attrs": {}
+  },
+  {
+   "id": "d6c0873a-1aa4-5e29-acc2-6ecfd0c808c5",
+   "type": "dependsOn",
+   "source": "6362193a-3f7e-5990-abd2-ec4f1d20d38d",
+   "target": "7d11b534-6284-5414-9504-5238bafc5ae8",
+   "attrs": {}
+  },
+  {
+   "id": "80c14775-1af9-599d-a9cb-9e8558bcf4c3",
+   "type": "dependsOn",
+   "source": "6362193a-3f7e-5990-abd2-ec4f1d20d38d",
+   "target": "d5fe488a-348b-5e53-8e0f-af4068c09f8b",
+   "attrs": {}
+  },
+  {
+   "id": "585fc838-d4aa-53db-b848-c759d37d33a3",
+   "type": "dependsOn",
+   "source": "ac921896-6857-5aec-9f27-d4acabca140e",
+   "target": "6362193a-3f7e-5990-abd2-ec4f1d20d38d",
+   "attrs": {}
+  },
+  {
+   "id": "769e564a-bb38-5489-afe8-4af8f03a00e4",
+   "type": "dependsOn",
+   "source": "74c866c7-df3e-5508-a581-33e0c314db85",
+   "target": "27bcd148-483f-5c30-82e2-938eaf50ac6c",
+   "attrs": {}
+  },
+  {
+   "id": "16ce2c1a-45f9-5a1c-9bba-7c40ed3623dc",
+   "type": "dependsOn",
+   "source": "81a74f5e-38bf-52b3-a624-4f289aa1535f",
+   "target": "6362193a-3f7e-5990-abd2-ec4f1d20d38d",
+   "attrs": {}
+  },
+  {
+   "id": "b56b1e98-d614-5ec6-af83-efdaafcaa251",
+   "type": "dependsOn",
+   "source": "b3cb99a3-5589-5fe2-a247-259087883094",
+   "target": "27bcd148-483f-5c30-82e2-938eaf50ac6c",
+   "attrs": {}
+  },
+  {
+   "id": "f74619c3-732a-5a86-955a-be424310e62b",
+   "type": "dependsOn",
+   "source": "a10ee58d-48d5-5c4f-ae47-84b7f08f38fe",
+   "target": "27bcd148-483f-5c30-82e2-938eaf50ac6c",
+   "attrs": {}
+  },
+  {
+   "id": "2287a43c-c8a4-52e2-aad9-052680295d7d",
+   "type": "dependsOn",
+   "source": "cfa6e2ef-ae76-5787-982b-38c466482d56",
+   "target": "6362193a-3f7e-5990-abd2-ec4f1d20d38d",
+   "attrs": {}
+  },
+  {
+   "id": "46a323df-01b5-5160-adac-d6ed14f8a9d9",
+   "type": "dependsOn",
+   "source": "d5ce28f5-1acd-5596-ac61-63cdfbd615e4",
+   "target": "034cb256-7162-58ac-a47f-df952e228d4f",
+   "attrs": {}
+  },
+  {
+   "id": "5e820990-2e47-5cca-8767-950f2e508218",
+   "type": "dependsOn",
+   "source": "d5ce28f5-1acd-5596-ac61-63cdfbd615e4",
+   "target": "1c88c2d0-de0d-5117-a71f-ae4f1754c5c2",
+   "attrs": {}
+  },
+  {
+   "id": "746a32c9-e3e9-5dbb-a67b-2742c3815218",
+   "type": "realizedBy",
+   "source": "d5ce28f5-1acd-5596-ac61-63cdfbd615e4",
+   "target": "p-jeu",
+   "attrs": {}
+  },
+  {
+   "id": "ca402793-510a-54a0-88f3-fae665935e3b",
+   "type": "dependsOn",
+   "source": "3d50b82d-c619-5bce-a866-33b03c153e4f",
+   "target": "d5ce28f5-1acd-5596-ac61-63cdfbd615e4",
+   "attrs": {}
+  },
+  {
+   "id": "76d549da-dd6d-574a-b258-1fb9758f874e",
+   "type": "dependsOn",
+   "source": "3d50b82d-c619-5bce-a866-33b03c153e4f",
+   "target": "a010c4c6-9cd1-56fe-bdbd-cc61e18dc50d",
+   "attrs": {}
+  },
+  {
+   "id": "adca3343-9181-5c15-9696-678c6f85c14e",
+   "type": "dependsOn",
+   "source": "3d50a8a6-febe-5369-8f1d-b41de04428e7",
+   "target": "3d50b82d-c619-5bce-a866-33b03c153e4f",
+   "attrs": {}
+  },
+  {
+   "id": "b72ef380-ecc6-51c7-b3e7-3abe2089d4de",
+   "type": "dependsOn",
+   "source": "3d50a8a6-febe-5369-8f1d-b41de04428e7",
+   "target": "678ded87-0e76-5f0b-b3cb-86905481ee85",
+   "attrs": {}
+  },
+  {
+   "id": "ef66e40d-d971-5ce8-bed3-d2413497cb60",
+   "type": "dependsOn",
+   "source": "f2162f8f-44f6-5787-a153-3de67f686346",
+   "target": "d5ce28f5-1acd-5596-ac61-63cdfbd615e4",
+   "attrs": {}
+  },
+  {
+   "id": "354fede0-5d87-5617-898e-535d22f65c21",
+   "type": "dependsOn",
+   "source": "f2162f8f-44f6-5787-a153-3de67f686346",
+   "target": "61e834bb-7260-59f7-a04e-9b2965827922",
+   "attrs": {}
+  },
+  {
+   "id": "921318db-197f-55b9-8b97-c9a8b9cf0d39",
+   "type": "realizedBy",
+   "source": "f2162f8f-44f6-5787-a153-3de67f686346",
+   "target": "p-maison",
+   "attrs": {}
+  },
+  {
+   "id": "e6b9b6ec-e61e-5829-91cf-4a6ec047ee3d",
+   "type": "dependsOn",
+   "source": "90ea98c6-e9e6-5cdc-a357-72e43c75a40b",
+   "target": "d5ce28f5-1acd-5596-ac61-63cdfbd615e4",
+   "attrs": {}
+  },
+  {
+   "id": "4e78b06e-9205-5fdd-9f0f-ad768fba0fb0",
+   "type": "dependsOn",
+   "source": "c3712990-5c5e-511b-9d5a-6e1edb189576",
+   "target": "d5ce28f5-1acd-5596-ac61-63cdfbd615e4",
+   "attrs": {}
+  },
+  {
+   "id": "eb5186bd-9064-56d0-b2d1-2f6d127388cc",
+   "type": "dependsOn",
+   "source": "66b6c71a-e25b-5447-9e35-4364188d4200",
+   "target": "199e1cbe-afc6-56ac-86c2-403fd81fd55b",
+   "attrs": {}
+  },
+  {
+   "id": "60b6f214-1a3c-5739-b38d-e0321c75663b",
+   "type": "realizedBy",
+   "source": "66b6c71a-e25b-5447-9e35-4364188d4200",
+   "target": "p-maison",
+   "attrs": {}
+  },
+  {
+   "id": "e96a09b1-3943-5d81-ab74-deac906bb731",
+   "type": "dependsOn",
+   "source": "61e834bb-7260-59f7-a04e-9b2965827922",
+   "target": "432ff628-82e7-5909-9343-b36123ce1a8f",
+   "attrs": {}
+  },
+  {
+   "id": "304355a5-aeb9-55b6-a613-70e360be1e3e",
+   "type": "dependsOn",
+   "source": "e48f694b-c63f-544b-911b-e542f28dfa5d",
+   "target": "66b6c71a-e25b-5447-9e35-4364188d4200",
+   "attrs": {}
+  },
+  {
+   "id": "af16ec8b-6239-5e6a-ad8f-e29ba738d29e",
+   "type": "dependsOn",
+   "source": "e48f694b-c63f-544b-911b-e542f28dfa5d",
+   "target": "f2162f8f-44f6-5787-a153-3de67f686346",
+   "attrs": {}
+  },
+  {
+   "id": "511ffed3-14d9-58b8-865a-036bc7e8578c",
+   "type": "realizedBy",
+   "source": "e48f694b-c63f-544b-911b-e542f28dfa5d",
+   "target": "p-maison",
+   "attrs": {}
+  },
+  {
+   "id": "41dcac5c-bb43-54cb-ac04-78642f2077ea",
+   "type": "dependsOn",
+   "source": "a42cd4ae-8b1b-53ef-afbb-51b1aa83fab2",
+   "target": "61e834bb-7260-59f7-a04e-9b2965827922",
+   "attrs": {}
+  },
+  {
+   "id": "e448e45e-e955-5368-82ec-fe5aef2bc6b9",
+   "type": "realizedBy",
+   "source": "a42cd4ae-8b1b-53ef-afbb-51b1aa83fab2",
+   "target": "p-biome",
+   "attrs": {}
+  },
+  {
+   "id": "9f497133-6dcc-5f63-9fee-49ba01d6493a",
+   "type": "dependsOn",
+   "source": "38218490-ddb2-5aeb-98a9-bb53bc3019f6",
+   "target": "a010c4c6-9cd1-56fe-bdbd-cc61e18dc50d",
+   "attrs": {}
+  },
+  {
+   "id": "d02cad74-8912-58f5-81f9-2b06566c3a67",
+   "type": "dependsOn",
+   "source": "38218490-ddb2-5aeb-98a9-bb53bc3019f6",
+   "target": "cd60ef35-5017-56ca-aa29-d9cb52ac55f5",
+   "attrs": {}
+  },
+  {
+   "id": "fc3a8680-0aa7-54c1-a33b-208a4f8d3287",
+   "type": "dependsOn",
+   "source": "6d774306-6d08-50ee-b2db-9d9a86d85011",
+   "target": "66b6c71a-e25b-5447-9e35-4364188d4200",
+   "attrs": {}
+  },
+  {
+   "id": "90d0957d-565a-5185-b37e-fbcbc9c85a0e",
+   "type": "dependsOn",
+   "source": "26c735c9-eee8-5e1e-85b3-13ad9c298721",
+   "target": "fe722b3b-1d07-54ef-b5b9-d2cfaf405ba0",
+   "attrs": {}
+  },
+  {
+   "id": "0fba0544-9619-5c93-b868-268eb07f91af",
+   "type": "dependsOn",
+   "source": "49183190-c88b-5859-a0ba-ebd30e5799da",
+   "target": "0249081c-c62a-5eda-856c-69083ce6930b",
+   "attrs": {}
+  },
+  {
+   "id": "0740049c-4c97-55cf-93b5-1388518ee547",
+   "type": "dependsOn",
+   "source": "59aef647-dcd5-52c5-ac6d-40f015c87459",
+   "target": "6ad967b5-50e6-52cf-b561-0677e2079692",
+   "attrs": {}
+  },
+  {
+   "id": "0d4eca16-9c5d-54d4-9831-35a1ae907b47",
+   "type": "realizedBy",
+   "source": "366ea360-d64c-51c7-8745-cb3cd28f044e",
+   "target": "p-parent",
+   "attrs": {}
+  },
+  {
+   "id": "6ba06988-0f9a-566e-957d-bc0086e0adc9",
+   "type": "dependsOn",
+   "source": "f3614f02-b769-57e1-84fb-c88a1dfa5328",
+   "target": "366ea360-d64c-51c7-8745-cb3cd28f044e",
+   "attrs": {}
+  },
+  {
+   "id": "c353d4a7-f75d-581d-a816-549c1c894f59",
+   "type": "realizedBy",
+   "source": "f3614f02-b769-57e1-84fb-c88a1dfa5328",
+   "target": "p-parent",
+   "attrs": {}
+  },
+  {
+   "id": "6d80fa4f-2fb8-5bb1-beae-3891b23f37e8",
+   "type": "dependsOn",
+   "source": "ebb2ab96-15e9-57d0-9502-990f6865956e",
+   "target": "27bcd148-483f-5c30-82e2-938eaf50ac6c",
+   "attrs": {}
+  },
+  {
+   "id": "a023b4c8-2576-5cb5-a81d-2fd2f1e7bbe2",
+   "type": "realizedBy",
+   "source": "ebb2ab96-15e9-57d0-9502-990f6865956e",
+   "target": "p-suivi",
+   "attrs": {}
+  },
+  {
+   "id": "d8af92dc-91b6-535a-90b7-8da36c4a4357",
+   "type": "dependsOn",
+   "source": "0c4e8087-57b6-5c03-b7d6-f2263cdec61b",
+   "target": "c3712990-5c5e-511b-9d5a-6e1edb189576",
+   "attrs": {}
+  },
+  {
+   "id": "514650f1-b1be-5391-ada8-5c343faa5296",
+   "type": "realizedBy",
+   "source": "0c4e8087-57b6-5c03-b7d6-f2263cdec61b",
+   "target": "p-reglages",
+   "attrs": {}
+  },
+  {
+   "id": "b1210cef-a348-5668-959e-b276690f1c91",
+   "type": "dependsOn",
+   "source": "a5a3e683-18c8-54f7-95c7-715fbb8a7228",
+   "target": "0ef14ede-9b05-5e32-b6ce-de6d73fb132b",
+   "attrs": {}
+  },
+  {
+   "id": "58adb3d2-6d5a-567a-b40b-95568d1bf8f3",
+   "type": "realizedBy",
+   "source": "a5a3e683-18c8-54f7-95c7-715fbb8a7228",
+   "target": "p-reglages",
+   "attrs": {}
+  },
+  {
+   "id": "94ac5b85-a9fa-59f7-98ad-5b7a94c2c2d8",
+   "type": "dependsOn",
+   "source": "601c6d5a-d23c-5996-a087-eb4e660c829a",
+   "target": "ebb2ab96-15e9-57d0-9502-990f6865956e",
+   "attrs": {}
+  },
+  {
+   "id": "c1555a9c-8491-5cdc-afe3-f12260c31322",
+   "type": "realizedBy",
+   "source": "601c6d5a-d23c-5996-a087-eb4e660c829a",
+   "target": "p-suivi",
+   "attrs": {}
+  },
+  {
+   "id": "e6de4164-a71f-55e0-9a45-39e52af2e6f2",
+   "type": "realizedBy",
+   "source": "53631774-0c01-59b4-b5f9-94ee42183b60",
+   "target": "p-parent",
+   "attrs": {}
+  },
+  {
+   "id": "e2c4601f-cd07-5a8f-ac79-2e492f5ef0b6",
+   "type": "dependsOn",
+   "source": "a010c4c6-9cd1-56fe-bdbd-cc61e18dc50d",
+   "target": "cfb34731-9744-51dd-98d5-eefad1a9d1e1",
+   "attrs": {}
+  },
+  {
+   "id": "929eab42-8806-527a-a9c6-1a79039effb2",
+   "type": "dependsOn",
+   "source": "ee260e15-8237-5826-a34b-1119a6916151",
+   "target": "cfb34731-9744-51dd-98d5-eefad1a9d1e1",
+   "attrs": {}
+  },
+  {
+   "id": "06ad7cce-34e4-595e-be1c-64c7f46dc9e7",
+   "type": "dependsOn",
+   "source": "678ded87-0e76-5f0b-b3cb-86905481ee85",
+   "target": "cfb34731-9744-51dd-98d5-eefad1a9d1e1",
+   "attrs": {}
+  },
+  {
+   "id": "e3eedd5d-9b00-50cf-87ce-de8d59056572",
+   "type": "dependsOn",
+   "source": "034cb256-7162-58ac-a47f-df952e228d4f",
+   "target": "702a86c2-a435-54a9-b359-4b031ffc3acc",
+   "attrs": {}
+  },
+  {
+   "id": "91a0622f-691e-5c0b-99a0-5d2b3406bb5d",
+   "type": "dependsOn",
+   "source": "b161c760-c566-5907-8521-5c9a617fa067",
+   "target": "702a86c2-a435-54a9-b359-4b031ffc3acc",
+   "attrs": {}
+  },
+  {
+   "id": "1f0aa7ec-d162-5299-9e10-74a3a923effc",
+   "type": "dependsOn",
+   "source": "cd60ef35-5017-56ca-aa29-d9cb52ac55f5",
+   "target": "702a86c2-a435-54a9-b359-4b031ffc3acc",
+   "attrs": {}
+  },
+  {
+   "id": "33b7e212-3971-5aee-a9fa-5db3e89f8d3b",
+   "type": "dependsOn",
+   "source": "cd60ef35-5017-56ca-aa29-d9cb52ac55f5",
+   "target": "7d11b534-6284-5414-9504-5238bafc5ae8",
+   "attrs": {}
+  },
+  {
+   "id": "3b782345-c950-59ee-9cf6-7578206bb754",
+   "type": "dependsOn",
+   "source": "120d1735-96d0-5ffd-a152-8821710519fb",
+   "target": "702a86c2-a435-54a9-b359-4b031ffc3acc",
+   "attrs": {}
+  },
+  {
+   "id": "436aa7c9-5eb5-5e53-89ee-8d5ee30de386",
+   "type": "dependsOn",
+   "source": "199e1cbe-afc6-56ac-86c2-403fd81fd55b",
+   "target": "702a86c2-a435-54a9-b359-4b031ffc3acc",
+   "attrs": {}
+  },
+  {
+   "id": "7668339a-7cc6-5e04-876d-1f92f0840ddd",
+   "type": "dependsOn",
+   "source": "6e387a3e-10a2-5b3c-87cc-cdc87f3563a1",
+   "target": "702a86c2-a435-54a9-b359-4b031ffc3acc",
+   "attrs": {}
+  },
+  {
+   "id": "77ee7569-281c-5b78-b5df-c9b7f83a66d2",
+   "type": "dependsOn",
+   "source": "01ba288a-b0d2-51d5-9942-4693730162da",
+   "target": "366ea360-d64c-51c7-8745-cb3cd28f044e",
+   "attrs": {}
+  },
+  {
+   "id": "cef9b5e1-eead-50e1-b66b-40414fff8b6d",
+   "type": "realizedBy",
+   "source": "01ba288a-b0d2-51d5-9942-4693730162da",
+   "target": "p-parent",
+   "attrs": {}
+  },
+  {
+   "id": "1b11d951-85a0-51b8-9b16-53c5c45e8b7f",
+   "type": "dependsOn",
+   "source": "92124b03-c698-51de-894f-ed132322f491",
+   "target": "51d3c29c-fe36-584f-b5a2-f50217c12711",
+   "attrs": {}
+  },
+  {
+   "id": "700b763f-5b50-52bb-b168-ad4684ba4266",
+   "type": "dependsOn",
+   "source": "40612d1f-9e06-5934-9440-35a0fcff35b7",
+   "target": "92124b03-c698-51de-894f-ed132322f491",
+   "attrs": {}
+  },
+  {
+   "id": "ab9e50cd-cc46-5091-a291-d75f2e163870",
+   "type": "dependsOn",
+   "source": "75ed11e3-59d8-5c13-9a3d-ff7bffbf1dba",
+   "target": "eaac7eb6-a4d2-59ff-99fd-097d36138086",
+   "attrs": {}
+  }
+ ],
+ "comments": []
+}

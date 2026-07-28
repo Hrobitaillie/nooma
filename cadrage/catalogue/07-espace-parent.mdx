@@ -1,0 +1,51 @@
+# 07, Espace parent
+
+[← Index](README.mdx)
+
+Références : sécurité et gate [doc 07 §3](#/docs/07-securite-vie-privee.md),
+conformité [doc 11](#/docs/11-conformite-stores.md).
+
+| ID | Fonctionnalité | Lot | Périmètre | Dépend de | Est. |
+|----|----------------|-----|-----------|-----------|:----:|
+| PAR-01 | Parental gate (calcul en lettres, régénéré, cooldown) | <Lot code="PAR-01"/> | App | — | <Est code="PAR-01"/> |
+| PAR-02 | PIN espace parent | <Lot code="PAR-02"/> | App | PAR-01 | <Est code="PAR-02"/> |
+| PAR-03 | Suivi de progression (langage clair) | <Lot code="PAR-03"/> | App | DIR-03 | <Est code="PAR-03"/> |
+| PAR-04 | Temps d'écran + limite douce | <Lot code="PAR-04"/> | App | MAS-06 | <Est code="PAR-04"/> |
+| PAR-05 | Réglages (audio 3 canaux, profil) | <Lot code="PAR-05"/> | App | SOC-05 | <Est code="PAR-05"/> |
+| PAR-06 | Conseils d'accompagnement | <Lot code="PAR-06"/> | Data | PAR-03, Florence | <Est code="PAR-06"/> |
+| PAR-07 | Onboarding parent (première ouverture) | <Lot code="PAR-07"/> | App | — | <Est code="PAR-07"/> |
+
+---
+
+### [PAR-01] Parental gate
+- **Quoi** : opération écrite en toutes lettres (« multiplie trois par quatre »), régénérée à chaque tentative, 3 échecs → cooldown 5 minutes ; protège espace parent, achats, tout lien sortant ; consigne vocale adaptée (exigence Apple pré-lecteurs).
+- **Implique** : zone à revue humaine obligatoire (vibe coding, doc 06 §7) ; testé avec un vrai enfant de 7 ans.
+- **Est.** : <Est value="__TBD__" code="PAR-01" />
+
+### [PAR-02] PIN espace parent
+- **Quoi** : PIN 4 chiffres de confort (accès rapide du parent) combiné au gate pour les actions sensibles ; récupération par le gate.
+- **Est.** : <Est value="__TBD__" code="PAR-02" />
+
+### [PAR-03] Suivi de progression
+- **Quoi** : progression par module en langage non scolaire (« les syllabes, c'est solide ; on explore les sons proches »), formulations écrites avec Florence ; signal discret de stagnation (DIR-09) avec conseil associé ; transparence totale (le parent voit tout, l'enfant ne voit jamais de métrique).
+- **Est.** : <Est value="__TBD__" code="PAR-03" />
+
+### [PAR-04] Temps d'écran + limite douce
+- **Quoi** : durée par jour visible parent ; limite optionnelle racontée par la narration : la mascotte se fatigue et va dormir, l'enfant n'est jamais « puni » ; session type 10-15 minutes à fin célébrée.
+- **Est.** : <Est value="__TBD__" code="PAR-04" />
+
+### [PAR-05] Réglages
+- **Quoi** : volumes séparés voix / effets / musique (inclusif : couper la musique sans perdre les consignes), gestion du profil (renommer, effacer), export/import de sauvegarde (SOC-09).
+- **Est.** : <Est value="__TBD__" code="PAR-05" />
+
+### [PAR-06] Conseils d'accompagnement (V1.1)
+- **Quoi** : par compétence en cours, un conseil concret d'accompagnement hors écran (jeux de rimes en voiture, syllabes en frappant dans les mains) ; contenu Florence, cohérent avec le positionnement co-usage.
+- **Est.** : <Est value="__TBD__" code="PAR-06" />
+
+### [PAR-07] Onboarding parent
+- **Quoi** : première ouverture : la promesse en 3 écrans (jeu d'abord, conçu avec une orthophoniste conseil, zéro donnée collectée), création du profil enfant, choix des réglages ; c'est LE moment de conversion future, à soigner.
+- **Est.** : <Est value="__TBD__" code="PAR-07" />
+
+---
+
+<TotauxFichier />

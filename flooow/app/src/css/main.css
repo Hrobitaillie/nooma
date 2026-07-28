@@ -1,0 +1,20 @@
+/* Point d'entrée CSS — organisation façon pib-starter-theme (Tailwind 4 CSS-first) :
+   ordre des @layer explicite, tokens du design system dans ds/, base applicative à part.
+   Les tokens @theme génèrent les utilitaires (bg-paper, font-sans2, duration-md, 3xl:…). */
+@layer theme, base, components, utilities;
+@import 'tailwindcss';
+
+@import './ds/_colors.css';
+@import './ds/_fonts.css';
+@import './base.css' layer(base);
+@import './rich.css' layer(components);
+
+@theme {
+  /* Breakpoint supplémentaire pour les écrans très larges (aligné pib-starter-theme). */
+  --breakpoint-3xl: 120rem;
+
+  /* Durées de transition nommées : duration-sm / duration-md / duration-lg. */
+  --transition-duration-sm: 200ms;
+  --transition-duration-md: 300ms;
+  --transition-duration-lg: 500ms;
+}

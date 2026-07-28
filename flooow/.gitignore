@@ -1,0 +1,25 @@
+node_modules
+
+# Caches / builds locaux
+.npm-cache/
+dist/
+coverage/
+.vite/
+*.local
+
+# Secrets & données runtime
+.env
+data/*
+!data/nooma
+
+# OS
+.DS_Store
+
+# Copies de travail locales (audits de sources externes)
+.audit/
+
+# Port Vite dynamique (dev)
+.vite_port
+
+# État de travail des sessions Claude (vivant, non versionné)
+.claude/travaux-en-cours.json

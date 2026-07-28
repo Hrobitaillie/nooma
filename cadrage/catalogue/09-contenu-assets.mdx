@@ -1,0 +1,56 @@
+# 09, Contenus et assets (production Blender)
+
+[← Index](README.mdx)
+
+Pipeline complet : [doc 14](#/docs/14-production-3d-blender.md) (Clay Doh,
+Cycles, studio partagé, automatisation). Budgets de poids :
+[doc 08 §8](#/docs/08-performances.md). Tout est produit par Hugo.
+
+| ID | Lot d'assets | Lot | Périmètre | Dépend de | Est. |
+|----|--------------|-----|-----------|-----------|:----:|
+| CNT-01 | studio.blend (éclairage, matériaux Clay Doh, caméras) | <Lot code="CNT-01"/> | Blender | palette validée | <Est code="CNT-01"/> |
+| CNT-02 | Rig + clips mascotte (~15 clips) | <Lot code="CNT-02"/> | Blender | CNT-01 | <Est code="CNT-02"/> |
+| CNT-03 | Cartes de biomes (couches parallax, par biome) | <Lot code="CNT-03"/> | Blender | CNT-01 | <Est code="CNT-03"/> |
+| CNT-04 | Images-mots (200-400) | <Lot code="CNT-04"/> | Blender | CNT-01, DIR-02 | <Est code="CNT-04"/> |
+| CNT-05 | Lettres/graphèmes clay + objets de jeu | <Lot code="CNT-05"/> | Blender | CNT-01, police validée | <Est code="CNT-05"/> |
+| CNT-06 | Autocollants (~10 par biome) | <Lot code="CNT-06"/> | Blender | CNT-01 | <Est code="CNT-06"/> |
+| CNT-07 | UI clay (boutons, cadres, jauges) | <Lot code="CNT-07"/> | Blender | CNT-01 | <Est code="CNT-07"/> |
+| CNT-08 | Pipeline automatisée (render CLI → atlas → vérifs) | <Lot code="CNT-08"/> | Blender + App | — | <Est code="CNT-08"/> |
+
+---
+
+### [CNT-01] studio.blend
+- **Quoi** : le fichier fondateur : éclairage plateau stop-motion, 5 matériaux Clay Doh calés sur la palette, caméras préréglées (map/sprite/item), réglages de rendu Cycles ; tous les assets en héritent. Se fige au Test A.
+- **Est.** : <Est value="__TBD__" code="CNT-01" />
+
+### [CNT-02] Rig + clips mascotte
+- **Quoi** : armature légère + shape keys, ~15 clips de 1-3 s bornés par la pose neutre, points d'accroche accessoires ; rendu 2x, sprite sheets ; inclut les variantes de transformation (MAS-05) au fil des biomes.
+- **Est.** : <Est value="__TBD__" code="CNT-02" />
+
+### [CNT-03] Cartes de biomes
+- **Quoi** : par biome : une scène, 3-4 couches ~2048 px, éléments animés du décor en petites sprite sheets, rails du chemin (données pour MAP-03) ; environ 4-8 Mo par biome. Estimer ici le coût unitaire d'UN biome ; multiplier au chiffrage selon le nombre retenu.
+- **Est.** : <Est value="__TBD__" code="CNT-03" />
+
+### [CNT-04] Images-mots
+- **Quoi** : le chantier de volume (200-400 images 512 px, fond transparent) ; template item industrialisé (10-20 min par objet max), complément IA claymation si le Test C valide l'homogénéité ; sinon vocabulaire illustré réduit au strict pédagogique.
+- **Est.** : <Est value="__TBD__" code="CNT-04" />
+
+### [CNT-05] Lettres/graphèmes clay + objets de jeu
+- **Quoi** : alphabet + digraphes en pâte à modeler (un digraphe = une pièce), formes validées avec Florence (police adaptée à l'apprentissage, doc 05 §7) ; jetons, wagons, rouleaux, bulles des mécaniques.
+- **Est.** : <Est value="__TBD__" code="CNT-05" />
+
+### [CNT-06] Autocollants
+- **Quoi** : ~10 par biome, thème local, quelques rares ; déclinés du travail CNT-03/04 autant que possible.
+- **Est.** : <Est value="__TBD__" code="CNT-06" />
+
+### [CNT-07] UI clay
+- **Quoi** : boutons, cadres, jauges, le moins possible, tout au studio ; états pressés/désactivés.
+- **Est.** : <Est value="__TBD__" code="CNT-07" />
+
+### [CNT-08] Pipeline automatisée
+- **Quoi** : rendu headless par lot (blender -b), packing atlas (LibGDX TexturePacker), vérifications (padding, tailles, budgets), chargement fichiers en debug pour itérer sans rebuild ; tout asset régénérable en une commande.
+- **Est.** : <Est value="__TBD__" code="CNT-08" />
+
+---
+
+<TotauxFichier />

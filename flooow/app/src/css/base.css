@@ -1,0 +1,36 @@
+/* Base applicative (importée en layer(base) par main.css). */
+
+/*
+  Compatibilité Tailwind v3 : la couleur de bordure par défaut est passée à `currentcolor`
+  en v4. Ce bloc conserve le rendu v3 ; pour le retirer, ajouter une couleur de bordure
+  explicite partout où un `border` nu en dépend.
+*/
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+  border-color: var(--color-gray-200, currentcolor);
+}
+
+/*
+  Compatibilité Tailwind v3 : le preflight v4 passe les boutons en `cursor: default`. L'app ne
+  pose `cursor-pointer` nulle part et comptait sur le curseur main par défaut — on le restitue
+  pour tout ce qui est cliquable et actif.
+*/
+button:not(:disabled),
+[role='button']:not([aria-disabled='true']),
+summary {
+  cursor: pointer;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+#app {
+  font-family: var(--font-sans);
+}

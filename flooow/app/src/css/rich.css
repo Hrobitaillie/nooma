@@ -1,0 +1,242 @@
+/* Rendu du contenu riche : modèle de bloc, mentions « @ » et liens « # ».
+   GLOBAL (layer components) et non scopé dans un composant : le même rendu doit s'appliquer à
+   l'éditeur (RichEditor, DOM géré par ProseMirror) ET à la lecture seule (RichContent, v-html) —
+   dupliquer ces règles dans les deux, c'est les voir diverger. */
+
+/* ── Modèle de bloc partagé : `.rich-body` ──────────────────────────────────────────────────────
+   Posée sur le nœud racine du contenu DANS LES DEUX MODES (RichContent, et le contenteditable de
+   RichEditor via editorProps). C'est ce qui garantit qu'un bloc occupe la MÊME hauteur en aperçu et
+   en édition : sur la carte du canvas, l'aperçu bascule en éditeur au clic, tout écart ici se voit
+   comme un saut du contenu sous le curseur.
+
+   Ce qui N'EST PAS ici, volontairement :
+   - `font-size` / `line-height` / `color` de la racine → au contexte d'appel (l'aperçu hérite de son
+     wrapper, l'éditeur les pose par variante). Les `em` ci-dessous s'adaptent d'eux-mêmes.
+   - tout ce qui n'existe qu'en édition (placeholder, curseur, min-height) → RichEditor.
+   Échelle par défaut = COMPACTE (carte). La sidebar ajoute `.rich-body--lg`. */
+
+/* Alignement sur le CSS que Tiptap INJECTE dans <head> à la création de l'éditeur (@tiptap/core,
+   src/style.ts) sous `.ProseMirror` — l'aperçu, lui, ne le reçoit jamais. Sans ça il coupe ses
+   lignes autrement que l'éditeur (espaces multiples réduits, retours à la ligne perdus, ligatures
+   actives → glyphes plus étroits) : le texte se re-wrappe à la sélection alors que la police n'a pas
+   bougé. Ces valeurs RECOPIENT les siennes, elles ne les écrasent pas — son <style> n'est dans aucun
+   @layer, il gagnerait de toute façon sur `layer(components)`. À resynchroniser si Tiptap change. */
+.rich-body {
+  white-space: break-spaces;
+  word-wrap: break-word;
+  font-variant-ligatures: none;
+  font-feature-settings: 'liga' 0;
+}
+
+/* LIGNES VIDES : même hauteur en aperçu qu'en édition.
+   Un paragraphe vide traverse bien la sérialisation (`generateHTML` rend `<p></p>`, vérifié) — mais
+   un bloc sans contenu ne crée aucune boîte de ligne, il rend donc 0 px de haut. L'éditeur, lui, ne
+   souffre pas du problème : ProseMirror glisse un `<br>` de fin dans tout bloc de texte vide, ce qui
+   lui donne sa ligne. D'où l'asymétrie visible — les respirations du texte disparaissent en lecture
+   et réapparaissent au clic, en poussant tout le contenu vers le bas.
+   On recrée donc la boîte de ligne manquante avec un `::before` INLINE-BLOCK VIDE : il ne peint rien
+   et n'ajoute aucun texte (contrairement à un `content: '\a0'`, qui polluerait la sélection et la
+   copie), mais il suffit à ouvrir une ligne, dont la hauteur vient du `line-height` hérité — donc
+   exactement celle qu'occupera la même ligne en édition.
+   La règle ne s'applique QU'À l'aperçu sans qu'on ait à la restreindre : côté éditeur, le `<br>` de
+   ProseMirror fait que `:empty` ne matche jamais. */
+.rich-body :is(p, h1, h2, h3, blockquote):empty::before {
+  content: '';
+  display: inline-block;
+}
+
+/* Espacement vertical unique entre blocs : aucun bloc ne porte de margin propre, sinon elle
+   s'ajoute/fusionne différemment selon la position (premier enfant, voisinage) et les deux modes
+   décrochent. Seuls les titres dérogent (respiration au-dessus). */
+.rich-body > * + * {
+  margin-top: 0.4em;
+}
+
+.rich-body h1,
+.rich-body h2 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  /* Explicite : sans ça le titre hérite du line-height du corps, qui diffère par variante (1.5 carte
+     / 1.65 sidebar) → hauteur de titre variable à taille de police égale. */
+  line-height: 1.25;
+  color: rgb(15 23 42);
+  margin-top: 0.8em;
+}
+.rich-body h1 {
+  font-size: 1.1em;
+}
+.rich-body h2 {
+  font-size: 1.1em;
+}
+/* Échelle pleine largeur (sidebar, page Notes) : la hiérarchie des titres peut respirer. */
+.rich-body--lg h1 {
+  font-size: 1.5em;
+}
+.rich-body--lg h2 {
+  font-size: 1.25em;
+}
+
+.rich-body h3 {
+  font-size: 0.8em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgb(100 116 139);
+  margin-top: 0.7em;
+}
+
+.rich-body ul,
+.rich-body ol {
+  padding-left: 1.3em;
+}
+.rich-body ul {
+  list-style: disc;
+}
+.rich-body ol {
+  list-style: decimal;
+}
+.rich-body li {
+  margin: 0.1em 0;
+}
+
+.rich-body blockquote {
+  border-left: 2px solid rgb(203 213 225);
+  padding-left: 0.7em;
+  color: rgb(100 116 139);
+}
+
+.rich-body code {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.9em;
+  background: rgb(241 245 249);
+  padding: 0.05em 0.3em;
+  border-radius: 4px;
+}
+/* `white-space` explicite : le <pre> ne peut PAS hériter du `break-spaces` ci-dessus (la règle
+   navigateur `pre { white-space: pre }` s'applique avant l'héritage) et resterait en `pre`, sans
+   retour à la ligne, alors que Tiptap pose `pre-wrap` sur `.ProseMirror pre` — même exception. */
+.rich-body pre {
+  white-space: pre-wrap;
+  background: rgb(241 245 249);
+  padding: 0.6em 0.8em;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+/* Le <code> intérieur porte déjà la mono : le <pre> ne redéfinit ni famille ni taille, sinon les deux
+   se composent (0.85em × 0.9em) et le bloc de code rétrécit. */
+.rich-body pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Le reset Tailwind neutralise color/text-decoration sur <a> : sans ça un lien serait indiscernable
+   du texte courant. Le `cursor` est laissé à chaque mode (texte en édition, cf. RichEditor). */
+.rich-body a {
+  color: rgb(37 99 235);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgb(147 197 253);
+}
+.rich-body a:hover {
+  text-decoration-color: rgb(37 99 235);
+}
+
+/* ── Lien « # » : un BOUTON inline, pas un lien souligné ────────────────────────────────────────
+   Il pointe vers l'intérieur du projet (note, fonctionnalité, page), là où <a> reste réservé aux
+   liens externes : la différence de forme porte la différence de nature. `white-space: nowrap` +
+   `vertical-align: baseline` pour qu'il reste sur la ligne de texte sans la déformer. */
+.ref-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  padding: 0.1em 0.5em;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 6px;
+  background: rgb(248 250 252);
+  color: rgb(30 41 59);
+  font-size: 0.9em;
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: nowrap;
+  vertical-align: baseline;
+  cursor: pointer;
+  transition: background-color var(--transition-duration-sm, 200ms);
+}
+
+.ref-link:hover {
+  background: rgb(241 245 249);
+  border-color: rgb(203 213 225);
+}
+
+.ref-link__badge {
+  font-size: 0.7em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgb(100 116 139);
+}
+
+/* Une teinte par type : repérer d'un coup d'œil ce que le lien vise sans lire le libellé. */
+.ref-link--note {
+  border-color: rgb(199 210 254);
+  background: rgb(238 242 255);
+}
+.ref-link--note .ref-link__badge {
+  color: rgb(79 70 229);
+}
+
+.ref-link--feature {
+  border-color: rgb(196 181 253);
+  background: rgb(245 243 255);
+}
+.ref-link--feature .ref-link__badge {
+  color: rgb(124 58 237);
+}
+
+.ref-link--page {
+  border-color: rgb(167 243 208);
+  background: rgb(236 253 245);
+}
+.ref-link--page .ref-link__badge {
+  color: rgb(5 150 105);
+}
+
+/* Cible disparue : le lien reste lisible (on affiche le dernier libellé connu) mais se signale
+   comme mort et n'est plus cliquable — cf useRefNavigation, qui ignore le clic. */
+.ref-link--broken {
+  border-color: rgb(254 202 202);
+  background: rgb(254 242 242);
+  color: rgb(153 27 27);
+  text-decoration: line-through;
+  text-decoration-color: rgb(252 165 165);
+  cursor: not-allowed;
+}
+.ref-link--broken .ref-link__badge {
+  color: rgb(220 38 38);
+  text-decoration: none;
+}
+
+/* ── Mention « @ » ──────────────────────────────────────────────────────────────────────────────
+   Plus discrète que le lien « # » : elle nomme quelqu'un dans une phrase, elle n'est pas une
+   destination. Pas de cursor:pointer, donc — cliquer ne fait rien (mention purement visuelle). */
+.mention {
+  display: inline;
+  padding: 0.05em 0.3em;
+  border-radius: 4px;
+  background: rgb(238 242 255);
+  color: rgb(67 56 202);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* « Ça me concerne » : la seule mention qui doit accrocher l'œil au survol d'une page. */
+.mention--self {
+  background: rgb(254 249 195);
+  color: rgb(133 77 14);
+}
+
+/* Compte sorti de l'annuaire (départ, désactivation) : le nom reste, en sourdine. */
+.mention--unknown {
+  background: rgb(241 245 249);
+  color: rgb(100 116 139);
+}

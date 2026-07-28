@@ -1,0 +1,54 @@
+# 08, Audio et voix
+
+[← Index](README.mdx)
+
+**La voix de Nooma, c'est Florence** (décision du 28/07/2026) : détail
+[doc 05 §5](#/docs/05-direction-artistique.md). Le TTS ne sert qu'à itérer en
+dev, rien de TTS en release. Budgets techniques :
+[doc 08 §4](#/docs/08-performances.md).
+
+| ID | Fonctionnalité | Lot | Périmètre | Dépend de | Est. |
+|----|----------------|-----|-----------|-----------|:----:|
+| AUD-01 | Kit et protocole d'enregistrement | <Lot code="AUD-01"/> | Audio | lettre de mission (voix) | <Est code="AUD-01"/> |
+| AUD-02 | Lot consignes et répliques | <Lot code="AUD-02"/> | Audio | AUD-01, charte MAS-02 | <Est code="AUD-02"/> |
+| AUD-03 | Lot phonèmes isolés | <Lot code="AUD-03"/> | Audio | AUD-01 | <Est code="AUD-03"/> |
+| AUD-04 | Banque de babillages | <Lot code="AUD-04"/> | Audio | AUD-01 | <Est code="AUD-04"/> |
+| AUD-05 | Sound design (SFX) | <Lot code="AUD-05"/> | Audio | — | <Est code="AUD-05"/> |
+| AUD-06 | Musiques d'ambiance par biome | <Lot code="AUD-06"/> | Audio | — | <Est code="AUD-06"/> |
+| AUD-07 | Pipeline audio (traitement, encodage, naming) | <Lot code="AUD-07"/> | Audio | — | <Est code="AUD-07"/> |
+
+---
+
+### [AUD-01] Kit et protocole d'enregistrement
+- **Quoi** : micro USB correct (~100-150 €), pièce fixe, distance fixe, checklist de session ; scripts préparés par lots (Florence enregistre en série, retakes groupés) ; test de faisabilité = Test B de la roadmap.
+- **Préalable** : autorisation écrite d'exploitation de la voix (lettre de mission, doc 09 §5.2).
+- **Est.** : <Est value="__TBD__" code="AUD-01" />
+
+### [AUD-02] Lot consignes et répliques
+- **Quoi** : consignes de chaque mécanique (avec variantes), répliques de feedback (charte MAS-02 : éloge du processus), indices, transitions ; plusieurs prises par réplique clé pour la variété.
+- **Volume estimé** : quelques centaines de fichiers courts (Vorbis mono, quelques dizaines de Mo au total).
+- **Est.** : <Est value="__TBD__" code="AUD-02" />
+
+### [AUD-03] Lot phonèmes isolés
+- **Quoi** : chaque phonème du français prononcé isolément, juste (« fff », jamais « feuh ») : le lot pédagogiquement critique, là où l'expertise de Florence est irremplaçable ([doc 02 §3](#/docs/02-pedagogie.md)).
+- **Est.** : <Est value="__TBD__" code="AUD-03" />
+
+### [AUD-04] Banque de babillages
+- **Quoi** : 30-50 gazouillis joués par Florence puis pitchés/traités, classés par émotion (joie, curiosité, hmm, excitation, dodo), mixés aléatoirement.
+- **Est.** : <Est value="__TBD__" code="AUD-04" />
+
+### [AUD-05] Sound design (SFX)
+- **Quoi** : registre cocon (carillons, clochettes, pops doux), son signature de réussite, sons neutres d'erreur (jamais négatifs), sons UI ; banques libres + génération, harmonisés au mix.
+- **Est.** : <Est value="__TBD__" code="AUD-05" />
+
+### [AUD-06] Musiques d'ambiance par biome
+- **Quoi** : une boucle discrète par biome (non répétitive à l'oreille), coupable sans perte (canal séparé) ; + variantes événements saisonniers (MOD-03) plus tard.
+- **Est.** : <Est value="__TBD__" code="AUD-06" />
+
+### [AUD-07] Pipeline audio
+- **Quoi** : chaîne réplicable : nettoyage (de-noise), normalisation loudness, découpe, encodage Vorbis mono 48 kbps, convention de nommage liée aux banques d'items, lint (audio manquant détecté en CI).
+- **Est.** : <Est value="__TBD__" code="AUD-07" />
+
+---
+
+<TotauxFichier />

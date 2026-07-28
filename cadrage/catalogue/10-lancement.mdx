@@ -1,0 +1,47 @@
+# 10, Lancement (paiement, conformité, stores)
+
+[← Index](README.mdx)
+
+Références : business model [doc 09](#/docs/09-business-model.md), conformité
+[doc 11](#/docs/11-conformite-stores.md), marketing
+[doc 10](#/docs/10-marketing-communication.md).
+
+| ID | Fonctionnalité | Lot | Périmètre | Dépend de | Est. |
+|----|----------------|-----|-----------|-----------|:----:|
+| LAN-01 | Paywall espace parent + achats (RevenueCat) | <Lot code="LAN-01"/> | App + Externe | PAR-01, nom déposé | <Est code="LAN-01"/> |
+| LAN-02 | Conformité stores (dossiers Kids/Families) | <Lot code="LAN-02"/> | App + Externe | SOC-08 | <Est code="LAN-02"/> |
+| LAN-03 | Privacy policy + site vitrine | <Lot code="LAN-03"/> | Externe | nom déposé | <Est code="LAN-03"/> |
+| LAN-04 | Pages stores (ASO, captures, vidéo) | <Lot code="LAN-04"/> | Externe | CNT-02, nom déposé | <Est code="LAN-04"/> |
+| LAN-05 | Beta fermée (TestFlight / Play) | <Lot code="LAN-05"/> | App + Externe | LAN-02 | <Est code="LAN-05"/> |
+| LAN-06 | Dossiers featuring + Teacher Approved | <Lot code="LAN-06"/> | Externe | LAN-04 | <Est code="LAN-06"/> |
+
+---
+
+### [LAN-01] Paywall espace parent + achats
+- **Quoi** : freemium (2 premiers biomes gratuits), abonnement annuel + mensuel dans l'espace parent uniquement (derrière gate), RevenueCat en mode anonyme (restauration sans compte), limite racontée par la narration côté enfant (jamais un mur).
+- **Implique** : zone à revue humaine obligatoire ; état d'achat signé (doc 07 §5) ; acknowledgement Play Billing sous 3 jours.
+- **Est.** : <Est value="__TBD__" code="LAN-01" />
+
+### [LAN-02] Conformité stores
+- **Quoi** : dérouler les checklists doc 11 §5 et doc 07 §8 : audit binaire (zéro SDK réseau), labels « Data Not Collected » + Data safety, questionnaires d'âge, déclaration public cible, test fermé Google (12 testeurs / 14 jours, couvert par la beta), Kids Category Apple.
+- **Est.** : <Est value="__TBD__" code="LAN-02" />
+
+### [LAN-03] Privacy policy + site vitrine
+- **Quoi** : privacy policy hébergée (obligatoire même à collecte nulle), site une page (promesse, vidéo, équipe, FAQ parents), press kit.
+- **Est.** : <Est value="__TBD__" code="LAN-03" />
+
+### [LAN-04] Pages stores
+- **Quoi** : fiches App Store + Play : captures réelles, vidéo 30 s, textes orientés parents, mots-clés du cluster « apprendre à lire CP » ; aucun vocabulaire médical.
+- **Est.** : <Est value="__TBD__" code="LAN-04" />
+
+### [LAN-05] Beta fermée
+- **Quoi** : TestFlight + Play test fermé avec des familles ; collecte de retours manuelle (pas de télémétrie, doc 07 §7) ; satisfait l'obligation Google des 12 testeurs.
+- **Est.** : <Est value="__TBD__" code="LAN-05" />
+
+### [LAN-06] Dossiers featuring + Teacher Approved
+- **Quoi** : nomination App Store Connect ~3 semaines avant lancement (angles : accessibilité, localisation, DA originale, histoire des fondateurs) ; exemplarité Families pour le badge Teacher Approved (pas de candidature, panel).
+- **Est.** : <Est value="__TBD__" code="LAN-06" />
+
+---
+
+<TotauxFichier />

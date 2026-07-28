@@ -2,6 +2,8 @@
 
 > **Nooma** — app tablette d'apprentissage de la lecture (CP, 5-7 ans, France), utilisée par l'enfant en autonomie, guidée par une mascotte étoile en pâte à modeler. Objectif n°1 : **l'enfant ne doit pas se rendre compte qu'il apprend.**
 
+> 💡 **Cette doc se consulte aussi dans le viewer de cadrage** (sidebar, catalogue de fonctionnalités avec chiffrage interactif, commentaires, export PDF) : `npm start` à la racine du repo puis http://localhost:8090/cadrage/viewer/ — voir [`../cadrage/README.md`](../cadrage/README.md).
+
 ## Comment lire cette doc
 
 - `../nooma-brief-projet.md` reste la **source de vérité des décisions actées** (DA, mascotte, piliers, nom).

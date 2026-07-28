@@ -1,0 +1,60 @@
+# 01, Carte-monde et biomes
+
+[← Index](README.mdx)
+
+| ID | Fonctionnalité | Lot | Périmètre | Dépend de | Est. |
+|----|----------------|-----|-----------|-----------|:----:|
+| MAP-01 | Carte globale (pan/zoom, biomes, brume) | <Lot code="MAP-01"/> | App | SOC-06, CNT-03 | <Est code="MAP-01"/> |
+| MAP-02 | Vue biome : chemin de nœuds + parallax | <Lot code="MAP-02"/> | App | SOC-06, CNT-03 | <Est code="MAP-02"/> |
+| MAP-03 | Chemin qui pousse (génération visuelle) | <Lot code="MAP-03"/> | App | MAP-02, DIR-05 | <Est code="MAP-03"/> |
+| MAP-04 | Types de nœuds lisibles (normal, cadeau, aventure, écho) | <Lot code="MAP-04"/> | App | MAP-03 | <Est code="MAP-04"/> |
+| MAP-05 | Mascotte vivante sur la carte | <Lot code="MAP-05"/> | App | MAP-02, CNT-02 | <Est code="MAP-05"/> |
+| MAP-06 | Voyage et cérémonie de changement de biome | <Lot code="MAP-06"/> | App | DIR-03, MAS-05 | <Est code="MAP-06"/> |
+| MAP-07 | Rejouer les niveaux passés | <Lot code="MAP-07"/> | App | MAP-03, DIR-07 | <Est code="MAP-07"/> |
+| MAP-08 | Grande aventure de fin de biome | <Lot code="MAP-08"/> | App | SOC-07, MAP-06 | <Est code="MAP-08"/> |
+| MAP-09 | Sentiers cachés (niveaux bonus découverts) | <Lot code="MAP-09"/> | App | MAP-03 | <Est code="MAP-09"/> |
+
+---
+
+### [MAP-01] Carte globale (pan/zoom, biomes, brume)
+- **Quoi** : le monde vu de loin : biomes traversés (revisitables), biome courant, biomes futurs en silhouettes sous la brume (donner envie sans frustrer).
+- **Réf** : [doc 04 §6.1](#/docs/04-progression-adaptative.md).
+- **Est.** : <Est value="__TBD__" code="MAP-01" />
+
+### [MAP-02] Vue biome : chemin de nœuds + parallax
+- **Quoi** : la scène de jeu principale : carte du biome en 3-4 couches (parallax au pan), nœuds tactiles larges, un seul niveau « suivant » actif.
+- **Est.** : <Est value="__TBD__" code="MAP-02" />
+
+### [MAP-03] Chemin qui pousse (génération visuelle)
+- **Quoi** : les 3-4 prochains nœuds générés par le Directeur apparaissent devant la mascotte avec une animation de pousse (le sentier de pâte à modeler s'étire) ; le passé reste fixe.
+- **Implique** : positionnement procédural des nœuds sur des rails définis par biome (données du biome), pas de collision avec le décor.
+- **Est.** : <Est value="__TBD__" code="MAP-03" />
+
+### [MAP-04] Types de nœuds lisibles
+- **Quoi** : vocabulaire visuel des nœuds : normal, cadeau 🎁, grande aventure, écho 🔔, rêve 🌙, défi ⭐ ; l'enfant reconnaît ce qui l'attend (comme Mario/Candy Crush).
+- **Est.** : <Est value="__TBD__" code="MAP-04" />
+
+### [MAP-05] Mascotte vivante sur la carte
+- **Quoi** : la mascotte est physiquement sur le chemin : idle, sautille de nœud en nœud à la progression, réagit au toucher.
+- **Est.** : <Est value="__TBD__" code="MAP-05" />
+
+### [MAP-06] Voyage et cérémonie de changement de biome
+- **Quoi** : à la validation du module : grande aventure (MAP-08) → cérémonie (transformation de la mascotte, autocollant rare) → mini-cinématique de voyage vers le biome suivant → palier de langage de la mascotte.
+- **Réf** : [doc 04 §5](#/docs/04-progression-adaptative.md).
+- **Est.** : <Est value="__TBD__" code="MAP-06" />
+
+### [MAP-07] Rejouer les niveaux passés
+- **Quoi** : tout nœud passé est rejouable librement ; le contenu rejoué re-sert discrètement des items à consolider (le Directeur choisit).
+- **Est.** : <Est value="__TBD__" code="MAP-07" />
+
+### [MAP-08] Grande aventure de fin de biome
+- **Quoi** : parcours scénarisé de 5-6 minutes enchaînant 3-4 mécaniques connues avec le contenu du biome ; jamais un examen, une fête. Déclenche MAP-06.
+- **Est.** : <Est value="__TBD__" code="MAP-08" />
+
+### [MAP-09] Sentiers cachés (niveaux bonus découverts)
+- **Quoi** : rarement, un sentier caché apparaît (niveau purement ludique, souvenir à collectionner) ; découvert, jamais annoncé (inspiration sorties secrètes de Super Mario World).
+- **Est.** : <Est value="__TBD__" code="MAP-09" />
+
+---
+
+<TotauxFichier />

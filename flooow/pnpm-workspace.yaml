@@ -1,0 +1,7 @@
+# Workspace pnpm : mutualise le store → une SEULE copie physique des deps partagées
+# (yjs DOIT être un singleton, sinon « Yjs was already imported »).
+# L'app reste gérée par npm (non listée ici) ; côté navigateur, le dédoublonnage
+# yjs est assuré par `resolve.dedupe` dans vite.config.
+packages:
+  - server
+  - packages/*

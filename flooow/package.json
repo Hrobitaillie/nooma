@@ -1,0 +1,15 @@
+{
+  "name": "flooow",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Flooow — cadrage visuel multi-user (front app/ + serveur server/)",
+  "scripts": {
+    "dev": "bash scripts/dev.sh",
+    "cadrage": "serve cadrage",
+    "flooow": "pnpm -s -C server flooow"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "serve": "^14.2.4"
+  }
+}

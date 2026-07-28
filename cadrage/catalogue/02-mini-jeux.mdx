@@ -1,0 +1,90 @@
+# 02, Mini-jeux (les mécaniques)
+
+[← Index](README.mdx)
+
+Chaque mécanique est un plugin du moteur générique (SOC-07) : elle reçoit une
+`NiveauSpec` (items, difficulté, habillage) et partage le cycle consigne audio →
+interaction → feedback → récompense. Le détail pédagogique de chaque mécanique
+est dans le [brief](#/docs/README.md) et la [doc 02 §4](#/docs/02-pedagogie.md).
+
+Chaque mécanique doit passer **deux tests avant d'être retenue** : le test du
+brocoli (la mécanique EST la compétence, [doc 03 §1](#/docs/03-game-design.md))
+et le test anti-devinette (impossible de réussir sans décoder,
+[doc 02 §3](#/docs/02-pedagogie.md)).
+
+Une estimation de mécanique comprend : le gameplay, ses paramètres de difficulté
+(pilotés par le Directeur), ses assets spécifiques hors banques communes, ses
+consignes audio, ses tests.
+
+## Pilier 1 · Conscience phonologique
+
+| ID | Mécanique | Compétence | Lot | Dépend de | Est. |
+|----|-----------|------------|-----|-----------|:----:|
+| JEU-01 | Tape la syllabe | segmentation syllabique | <Lot code="JEU-01"/> | SOC-07 | <Est code="JEU-01"/> |
+| JEU-02 | Trouve la rime | rimes | <Lot code="JEU-02"/> | SOC-07 | <Est code="JEU-02"/> |
+| JEU-03 | Qui commence pareil ? | son d'attaque | <Lot code="JEU-03"/> | SOC-07 | <Est code="JEU-03"/> |
+| JEU-04 | La boîte à sons | segmentation phonémique | <Lot code="JEU-04"/> | SOC-07 | <Est code="JEU-04"/> |
+| JEU-05 | Assemble les sons | fusion phonémique | <Lot code="JEU-05"/> | SOC-07 | <Est code="JEU-05"/> |
+
+## Pilier 2 · Correspondance grapho-phonémique
+
+| ID | Mécanique | Compétence | Lot | Dépend de | Est. |
+|----|-----------|------------|-----|-----------|:----:|
+| JEU-06 | La lettre qui chante | graphème → phonème | <Lot code="JEU-06"/> | SOC-07, CNT-05 | <Est code="JEU-06"/> |
+| JEU-07 | Attrape le son | reconnaissance rapide du graphème | <Lot code="JEU-07"/> | SOC-07, CNT-05 | <Est code="JEU-07"/> |
+| JEU-08 | Les jumelles | majuscule/minuscule/cursive | <Lot code="JEU-08"/> | SOC-07, CNT-05 | <Est code="JEU-08"/> |
+| JEU-09 | La fabrique de syllabes | combinatoire consonne + voyelle | <Lot code="JEU-09"/> | SOC-07, CNT-05 | <Est code="JEU-09"/> |
+
+## Pilier 3 · Décodage et lecture
+
+| ID | Mécanique | Compétence | Lot | Dépend de | Est. |
+|----|-----------|------------|-----|-----------|:----:|
+| JEU-10 | Le train des syllabes | fusion syllabique → mot | <Lot code="JEU-10"/> | SOC-07 | <Est code="JEU-10"/> |
+| JEU-11 | Lis et trouve | lecture de mots réguliers | <Lot code="JEU-11"/> | SOC-07, CNT-04 | <Est code="JEU-11"/> |
+| JEU-12 | La phrase mystère | lecture de phrases | <Lot code="JEU-12"/> | SOC-07 | <Est code="JEU-12"/> |
+| JEU-13 | Vrai ou rigolo ? | fluence + accès au sens | <Lot code="JEU-13"/> | SOC-07 | <Est code="JEU-13"/> |
+
+## Pilier 4 · Compréhension et vocabulaire
+
+| ID | Mécanique | Compétence | Lot | Dépend de | Est. |
+|----|-----------|------------|-----|-----------|:----:|
+| JEU-14 | Les histoires de Nooma | compréhension orale → écrite | <Lot code="JEU-14"/> | SOC-07, AUD-02 | <Est code="JEU-14"/> |
+| JEU-15 | L'intrus | catégorisation, vocabulaire | <Lot code="JEU-15"/> | SOC-07, CNT-04 | <Est code="JEU-15"/> |
+| JEU-16 | Qui fait quoi ? | verbes, syntaxe simple | <Lot code="JEU-16"/> | SOC-07 | <Est code="JEU-16"/> |
+| JEU-17 | Le sac à mots | vocabulaire thématique, réactivation | <Lot code="JEU-17"/> | SOC-07, DIR-07 | <Est code="JEU-17"/> |
+
+## Encodage et discrimination (ajouts issus du cadrage pédagogique)
+
+| ID | Mécanique | Compétence | Lot | Dépend de | Est. |
+|----|-----------|------------|-----|-----------|:----:|
+| JEU-18 | Dictée muette | encodage : image → mot composé | <Lot code="JEU-18"/> | SOC-07, CNT-05 | <Est code="JEU-18"/> |
+| JEU-19 | La machine à mots | encodage : audio → graphèmes assemblés | <Lot code="JEU-19"/> | SOC-07, CNT-05 | <Est code="JEU-19"/> |
+| JEU-20 | Les jumeaux presque pareils | paires minimales (p/b, f/v, ch/j…) | <Lot code="JEU-20"/> | SOC-07 | <Est code="JEU-20"/> |
+
+---
+
+### [JEU-01] Tape la syllabe (fiche détaillée, mécanique du prototype)
+- **Quoi** : la mascotte prononce un mot, l'enfant tape à chaque syllabe (comme taper dans les mains) ; elle tape en même temps au début (modelling).
+- **Difficulté pilotée** : longueur du mot (2 → 4 syllabes), présence du modelling, vitesse.
+- **Assets propres** : zone de frappe réactive, feedback rythmique visuel et sonore.
+- **Est.** : <Est value="__TBD__" code="JEU-01" />
+
+### [JEU-02] Trouve la rime (fiche détaillée, mécanique du prototype)
+- **Quoi** : 3 images à l'écran, la mascotte dit un mot, l'enfant touche l'image qui rime.
+- **Difficulté pilotée** : nombre de choix (2 → 4), proximité phonologique des distracteurs (le paramètre clé).
+- **Est.** : <Est value="__TBD__" code="JEU-02" />
+
+### [JEU-06] La lettre qui chante (fiche détaillée, mécanique du prototype)
+- **Quoi** : une lettre en pâte à modeler « chante » son son (jamais son nom) ; l'enfant touche, parmi 3 images, celle qui commence par ce son.
+- **Difficulté pilotée** : voyelles → consonnes continues → occlusives → digraphes ; distracteurs.
+- **Est.** : <Est value="__TBD__" code="JEU-06" />
+
+### Notes de périmètre sur les autres mécaniques
+- **JEU-18/19 (encodage)** : composer avec des **graphèmes mobiles** (« ch » est une seule pièce d'argile), pas lettre à lettre. Manque comblé du design initial ([doc 02 §4.5](#/docs/02-pedagogie.md)).
+- **JEU-20 (paires minimales)** : cœur de la pratique orthophonique, différenciateur ; à concevoir avec Florence (quelles paires, quel ordre).
+- **JEU-14 (histoires)** : partage ses contenus avec le mode Histoires (MOD-01) ; seule la couche question/réponse est propre à la mécanique.
+- Proposition de répartition des lots : 3 mécaniques en Prototype (JEU-01, 02, 06) ; environ 12 en V1 ; le reste en V1.1. À ajuster au chiffrage.
+
+---
+
+<TotauxFichier />

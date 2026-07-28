@@ -1,0 +1,27 @@
+{
+  "name": "@flooow/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Flooow — serveur Node : REST fichiers/dossiers (Hono) + temps réel Yjs (Hocuspocus)",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "flooow": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hocuspocus/server": "^4.3.0",
+    "@hono/node-server": "^1.13.7",
+    "hono": "^4.6.14",
+    "ws": "^8.21.0",
+    "yjs": "^13.6.31"
+  },
+  "devDependencies": {
+    "@hocuspocus/provider": "^4.3.0",
+    "@types/node": "^22.19.15",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

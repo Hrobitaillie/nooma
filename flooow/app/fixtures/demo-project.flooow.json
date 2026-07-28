@@ -1,0 +1,3099 @@
+{
+  "meta": {
+    "name": "Portail client B2B — ACME Distribution",
+    "formatVersion": 8,
+    "createdAt": "2026-07-07",
+    "updatedAt": "2026-07-08",
+    "pricing": {
+      "riskCoeff": 1.25,
+      "dailyRate": 550
+    },
+    "homePageId": "2ae293fc-d9d5-4977-b2f7-a45cd8a416c4"
+  },
+  "site": {
+    "attrs": {
+      "context": "Portail client B2B d'ACME Distribution : les clients professionnels consultent le catalogue, passent commande et suivent leur compte. Authentification SSO obligatoire, tarifs négociés par client, paiement en ligne ou sur facture.",
+      "constraints": [
+        "SSO obligatoire (OIDC) pour tout accès authentifié",
+        "RGPD : minimisation des données, consentement traçable",
+        "Compatibilité navigateurs : 2 dernières versions Chrome/Edge/Firefox/Safari",
+        "Accessibilité RGAA AA"
+      ],
+      "notes": "MVP visé pour le T4. Le catalogue est la brique la plus urgente."
+    }
+  },
+  "services": [
+    {
+      "id": "cf4c30a8-de84-4a07-b2cb-c52c3eb77d27",
+      "name": "ERP SAP (produits & commandes)",
+      "baseUrl": "https://erp.acme-b2b.com/api/v2",
+      "auth": "OAuth2 client_credentials",
+      "risk": "high",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/products",
+          "notes": "Catalogue paginé (100/page), tarifs par client via header X-Customer-Id"
+        },
+        {
+          "method": "GET",
+          "path": "/products/{sku}",
+          "notes": "Fiche produit détaillée"
+        },
+        {
+          "method": "GET",
+          "path": "/stock/{sku}",
+          "notes": "Disponibilité temps réel par entrepôt"
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "notes": "Création de commande, idempotency-key requise"
+        },
+        {
+          "method": "GET",
+          "path": "/orders/{id}",
+          "notes": "Suivi du statut de commande"
+        },
+        {
+          "method": "GET",
+          "path": "/invoices",
+          "notes": "Factures du client connecté"
+        }
+      ],
+      "notes": "Système central, rate limit 60 req/min, fenêtre de maintenance dimanche 02h-04h. Point de défaillance critique."
+    },
+    {
+      "id": "d5b414d7-aeda-463b-a306-ab98c920ebd9",
+      "name": "Auth SSO (Keycloak)",
+      "baseUrl": "https://sso.acme-b2b.com/realms/b2b",
+      "auth": "OIDC / OAuth2 Authorization Code + PKCE",
+      "risk": "medium",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/protocol/openid-connect/token",
+          "notes": "Échange code → jetons access/refresh"
+        },
+        {
+          "method": "GET",
+          "path": "/protocol/openid-connect/userinfo",
+          "notes": "Profil et rôles de l'utilisateur"
+        },
+        {
+          "method": "POST",
+          "path": "/protocol/openid-connect/logout",
+          "notes": "Déconnexion globale (back-channel)"
+        }
+      ],
+      "notes": "Realm b2b, rôles : client, acheteur, admin-compte. Refresh token 30 min."
+    },
+    {
+      "id": "5b8f8d19-240d-4923-947c-f5cd1d67c71f",
+      "name": "Paiement (Stripe)",
+      "baseUrl": "https://api.stripe.com/v1",
+      "auth": "Bearer secret key (côté serveur uniquement)",
+      "risk": "high",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/payment_intents",
+          "notes": "Création d'une intention de paiement (3DS)"
+        },
+        {
+          "method": "GET",
+          "path": "/payment_intents/{id}",
+          "notes": "Statut du paiement"
+        },
+        {
+          "method": "POST",
+          "path": "/refunds",
+          "notes": "Remboursement total ou partiel"
+        }
+      ],
+      "notes": "PCI-DSS : aucune donnée carte ne transite par nos serveurs (Stripe Elements). Webhooks signés."
+    }
+  ],
+  "nodes": [
+    {
+      "id": "2ae293fc-d9d5-4977-b2f7-a45cd8a416c4",
+      "type": "frame",
+      "kind": "page",
+      "parentId": null,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "lot": 1,
+      "attrs": {
+        "name": "Accueil",
+        "route": "/",
+        "roles": [
+          "visiteur",
+          "client"
+        ],
+        "description": "Vitrine du portail : accroche, avantages, produits mis en avant et appel à l'action. Accessible sans connexion, personnalisée une fois connecté.",
+        "constraints": [
+          "Temps de chargement < 2 s",
+          "Contenu hero indexable (SEO)"
+        ],
+        "logic": "Si l'utilisateur est authentifié, le menu affiche son compte et les tarifs personnalisés.",
+        "notes": "Page d'entrée du parcours."
+      }
+    },
+    {
+      "id": "bd699b33-ceda-4634-abf4-1c643cdc024e",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "2ae293fc-d9d5-4977-b2f7-a45cd8a416c4",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "attrs": {
+        "name": "Barre de navigation",
+        "blockType": "menu",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "En-tête global : logo, recherche produits, liens Catalogue/Compte, bouton connexion SSO."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Contraintes"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Sticky au scroll"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Repli en menu burger < 768 px"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Notes"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Présente sur toutes les pages (composant partagé)."
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "dc66c305-88b3-44ba-9f73-b0310546f891",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "2ae293fc-d9d5-4977-b2f7-a45cd8a416c4",
+      "position": {
+        "x": 0,
+        "y": 120
+      },
+      "attrs": {
+        "name": "Bandeau d'accroche",
+        "blockType": "hero",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Grand visuel plein écran avec slogan « Votre approvisionnement, simplifié » et bouton « Découvrir le catalogue »."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Contraintes"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Image optimisée WebP < 200 Ko"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "8f57e57b-dead-49be-a0c5-247aa1733eca",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "2ae293fc-d9d5-4977-b2f7-a45cd8a416c4",
+      "position": {
+        "x": 0,
+        "y": 240
+      },
+      "attrs": {
+        "name": "Avantages B2B",
+        "blockType": "feature",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Trois arguments icône + texte : tarifs négociés, livraison 24 h, facturation dématérialisée."
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "bb82f06d-20f7-4072-b36c-555be8a342ab",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "2ae293fc-d9d5-4977-b2f7-a45cd8a416c4",
+      "position": {
+        "x": 0,
+        "y": 360
+      },
+      "attrs": {
+        "name": "Produits mis en avant",
+        "blockType": "grid",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Grille de 3 colonnes (image + libellé + prix + disponibilité) des best-sellers du client."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Contraintes"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Affiche la dispo temps réel"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "49afe343-0643-4c61-9a98-24ec9107e7ea",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "2ae293fc-d9d5-4977-b2f7-a45cd8a416c4",
+      "position": {
+        "x": 0,
+        "y": 480
+      },
+      "attrs": {
+        "name": "Demander un devis",
+        "blockType": "cta",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Bloc centré avec bouton « Demander un devis personnalisé »."
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "d935ec9c-eb79-4bdc-925c-bfcfadadb39d",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "2ae293fc-d9d5-4977-b2f7-a45cd8a416c4",
+      "position": {
+        "x": 0,
+        "y": 600
+      },
+      "attrs": {
+        "name": "Pied de page",
+        "blockType": "footer",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Liens légaux (CGV, RGPD), contact commercial, réseaux sociaux."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Contraintes"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Lien mentions légales obligatoire"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Notes"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Composant partagé."
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "1b2582f3-4971-4ff5-80ee-e4a567cd19c6",
+      "type": "frame",
+      "kind": "page",
+      "parentId": null,
+      "position": {
+        "x": 700,
+        "y": 0
+      },
+      "lot": 1,
+      "attrs": {
+        "name": "Catalogue",
+        "route": "/catalogue",
+        "roles": [
+          "client"
+        ],
+        "description": "Liste filtrable et paginée des produits avec tarifs négociés du client connecté.",
+        "constraints": [
+          "Pagination serveur",
+          "Filtres persistés dans l'URL"
+        ],
+        "logic": "Les prix et la disponibilité proviennent de l'ERP et dépendent du compte client.",
+        "notes": "Brique prioritaire du MVP."
+      }
+    },
+    {
+      "id": "e8517d87-1595-4076-b4aa-667c07abdab7",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "1b2582f3-4971-4ff5-80ee-e4a567cd19c6",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "attrs": {
+        "name": "Barre de navigation",
+        "blockType": "menu",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Même en-tête global que l'accueil."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Notes"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Composant partagé."
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "f270109f-a5fe-437f-a72f-dc1bc834e6d4",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "1b2582f3-4971-4ff5-80ee-e4a567cd19c6",
+      "position": {
+        "x": 0,
+        "y": 120
+      },
+      "attrs": {
+        "name": "Mise en avant des catégories",
+        "blockType": "damier",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alternance texte / image sur 2 colonnes présentant les grandes familles de produits."
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "b4560c69-ac75-42ce-860e-8872becc362e",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "1b2582f3-4971-4ff5-80ee-e4a567cd19c6",
+      "position": {
+        "x": 0,
+        "y": 240
+      },
+      "attrs": {
+        "name": "Grille de produits",
+        "blockType": "grid",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Grille paginée des produits (image, réf, prix négocié, stock, bouton ajouter au panier), avec panneau de filtres à gauche."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Contraintes"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Chargement paresseux des images"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "50 produits par page"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Notes"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Cœur de la page."
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "dcf913e2-f198-4968-bdb7-902695912601",
+      "type": "frame",
+      "kind": "page",
+      "parentId": null,
+      "position": {
+        "x": 1400,
+        "y": 0
+      },
+      "lot": 2,
+      "attrs": {
+        "name": "Mon compte",
+        "route": "/compte",
+        "roles": [
+          "client",
+          "admin-compte"
+        ],
+        "description": "Tableau de bord du client : dernières commandes, factures, informations de l'entreprise et gestion des utilisateurs.",
+        "constraints": [
+          "Accès réservé aux utilisateurs authentifiés"
+        ],
+        "logic": "Le rôle admin-compte débloque la gestion des utilisateurs.",
+        "notes": ""
+      }
+    },
+    {
+      "id": "1be49ec4-4af9-40b2-b458-e94bb1c7364e",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "dcf913e2-f198-4968-bdb7-902695912601",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "attrs": {
+        "name": "Barre de navigation",
+        "blockType": "menu",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "En-tête global."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Notes"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Composant partagé."
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "45c51895-7972-4a7b-85c0-0862411d6cbf",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "dcf913e2-f198-4968-bdb7-902695912601",
+      "position": {
+        "x": 0,
+        "y": 120
+      },
+      "attrs": {
+        "name": "Tableau de bord (zone libre)",
+        "blockType": "free",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Agencement libre de widgets : commandes en cours, montant à régler, raccourci facturation, dernières factures téléchargeables."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Contraintes"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Widgets réorganisables (v2)"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Notes"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Bloc libre : gabarit non contraint."
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "54b1fb2c-fc6e-4b70-a8fe-6bca3e6a9094",
+      "type": "frame",
+      "kind": "page",
+      "parentId": null,
+      "position": {
+        "x": 2100,
+        "y": 0
+      },
+      "lot": 3,
+      "attrs": {
+        "name": "Commande",
+        "route": "/commande",
+        "roles": [
+          "client",
+          "acheteur"
+        ],
+        "description": "Tunnel de commande : récapitulatif du panier, adresse de livraison, mode de règlement (en ligne ou sur facture), confirmation.",
+        "constraints": [
+          "Idempotence de la validation",
+          "Aucune donnée carte sur nos serveurs (PCI-DSS)"
+        ],
+        "logic": "Le paiement en ligne crée une PaymentIntent Stripe ; le règlement sur facture nécessite un encours autorisé.",
+        "notes": "Dernière étape du parcours d'achat."
+      }
+    },
+    {
+      "id": "6450a907-618a-423f-89e4-f475f8bd2bbc",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "54b1fb2c-fc6e-4b70-a8fe-6bca3e6a9094",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "attrs": {
+        "name": "Barre de navigation",
+        "blockType": "menu",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "En-tête global."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Notes"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Composant partagé."
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "49c108a7-b796-47a9-8f2a-ec391bb0fc83",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "54b1fb2c-fc6e-4b70-a8fe-6bca3e6a9094",
+      "position": {
+        "x": 0,
+        "y": 120
+      },
+      "attrs": {
+        "name": "Récapitulatif panier",
+        "blockType": "grid",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Tableau des lignes de commande : produit, quantité éditable, prix unitaire, total ligne, sous-total."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Contraintes"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Recalcul du total à chaque modification de quantité"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "d6f45449-f310-472d-a065-264f85e20c9d",
+      "type": "frame",
+      "kind": "block",
+      "parentId": "54b1fb2c-fc6e-4b70-a8fe-6bca3e6a9094",
+      "position": {
+        "x": 0,
+        "y": 240
+      },
+      "attrs": {
+        "name": "Paiement & confirmation",
+        "blockType": "cta",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Choix du mode de règlement puis bouton « Valider la commande » qui déclenche le paiement et la création de commande."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Contraintes"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Bouton désactivé tant que le formulaire n'est pas valide"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": []
+      }
+    },
+    {
+      "id": "2cf8f5e6-5c58-45f7-bb63-e9d4a8dade9d",
+      "type": "note",
+      "kind": "behavior",
+      "parentId": null,
+      "attachedTo": "bd699b33-ceda-4634-abf4-1c643cdc024e",
+      "position": {
+        "x": 348,
+        "y": 55
+      },
+      "lot": 2,
+      "attrs": {
+        "name": "Recherche produits",
+        "description": "Recherche instantanée depuis la barre de navigation avec autocomplétion sur la référence et le libellé.",
+        "facet": "front",
+        "trigger": "Saisie d'au moins 2 caractères (debounce 300 ms)",
+        "rules": "Minimum 2 caractères ; 8 suggestions max ; navigation clavier ; Entrée ouvre le catalogue filtré.",
+        "hours": 12,
+        "notes": "Réutilise l'endpoint catalogue avec un paramètre de recherche."
+      }
+    },
+    {
+      "id": "695ac66c-ccc2-4c87-852d-62293e395263",
+      "type": "note",
+      "kind": "behavior",
+      "parentId": null,
+      "attachedTo": "b4560c69-ac75-42ce-860e-8872becc362e",
+      "position": {
+        "x": 1048,
+        "y": 295
+      },
+      "lot": 2,
+      "attrs": {
+        "name": "Filtres catalogue",
+        "description": "Panneau de filtres (catégorie, plage de prix, disponibilité) combinés en ET et persistés dans l'URL.",
+        "facet": "front",
+        "trigger": "Changement d'une facette de filtre",
+        "rules": "Combinaison ET ; synchronisation avec les query params ; bouton « Réinitialiser » ; conserve la pagination cohérente.",
+        "hours": 8,
+        "notes": "Se combine avec la recherche de la barre de navigation."
+      }
+    },
+    {
+      "id": "a75c4a78-0aa1-4d15-8fd7-534da5289280",
+      "type": "note",
+      "kind": "behavior",
+      "parentId": null,
+      "attachedTo": "dcf913e2-f198-4968-bdb7-902695912601",
+      "position": {
+        "x": 1748,
+        "y": 92
+      },
+      "lot": 3,
+      "attrs": {
+        "name": "Notifications de commande",
+        "description": "Alerte l'utilisateur (badge + toast) à chaque changement de statut d'une de ses commandes.",
+        "facet": "fullstack",
+        "trigger": "Réception d'un webhook « statut de commande modifié » depuis l'ERP",
+        "rules": "Dédoublonnage par id de commande ; marquage lu/non lu ; historique 30 jours.",
+        "hours": 10,
+        "notes": "Nécessite un canal temps réel (SSE ou polling)."
+      }
+    },
+    {
+      "id": "33918f75-6e30-4931-ab39-f01f7a6eaeae",
+      "type": "note",
+      "kind": "behavior",
+      "parentId": null,
+      "attachedTo": "49afe343-0643-4c61-9a98-24ec9107e7ea",
+      "position": {
+        "x": 348,
+        "y": 570
+      },
+      "lot": 1,
+      "attrs": {
+        "name": "Demande de devis",
+        "description": "Ouvre un formulaire de demande de devis pré-rempli avec les informations du compte.",
+        "facet": "fullstack",
+        "trigger": "Clic sur le bouton « Demander un devis personnalisé »",
+        "rules": "Champs obligatoires : produits/volumes, échéance ; envoi au commercial référent ; accusé de réception par e-mail.",
+        "hours": 6,
+        "notes": ""
+      }
+    },
+    {
+      "id": "9687f259-4d1a-4517-a6be-b58b81926042",
+      "type": "note",
+      "kind": "api",
+      "parentId": null,
+      "attachedTo": "bd699b33-ceda-4634-abf4-1c643cdc024e",
+      "position": {
+        "x": 348,
+        "y": 125
+      },
+      "attrs": {
+        "serviceId": "d5b414d7-aeda-463b-a306-ab98c920ebd9",
+        "method": "POST",
+        "path": "/protocol/openid-connect/token",
+        "facet": "fullstack",
+        "notes": "Échange du code d'autorisation contre les jetons après connexion SSO."
+      }
+    },
+    {
+      "id": "8dcc6bdf-44f3-427c-bea5-dc91c5482a01",
+      "type": "note",
+      "kind": "api",
+      "parentId": null,
+      "attachedTo": "bb82f06d-20f7-4072-b36c-555be8a342ab",
+      "position": {
+        "x": 348,
+        "y": 450
+      },
+      "attrs": {
+        "serviceId": "cf4c30a8-de84-4a07-b2cb-c52c3eb77d27",
+        "method": "GET",
+        "path": "/stock/{sku}",
+        "facet": "back",
+        "notes": "Disponibilité temps réel affichée sur les produits mis en avant."
+      }
+    },
+    {
+      "id": "2e943aca-096b-4529-ae57-671254425002",
+      "type": "note",
+      "kind": "api",
+      "parentId": null,
+      "attachedTo": "b4560c69-ac75-42ce-860e-8872becc362e",
+      "position": {
+        "x": 1048,
+        "y": 365
+      },
+      "attrs": {
+        "serviceId": "cf4c30a8-de84-4a07-b2cb-c52c3eb77d27",
+        "method": "GET",
+        "path": "/products",
+        "facet": "back",
+        "notes": "Liste paginée avec tarifs négociés (header X-Customer-Id)."
+      }
+    },
+    {
+      "id": "5fa08de7-decf-4bcf-bdc3-38fb3eeab716",
+      "type": "note",
+      "kind": "api",
+      "parentId": null,
+      "attachedTo": "dcf913e2-f198-4968-bdb7-902695912601",
+      "position": {
+        "x": 1748,
+        "y": 162
+      },
+      "attrs": {
+        "serviceId": "d5b414d7-aeda-463b-a306-ab98c920ebd9",
+        "method": "GET",
+        "path": "/protocol/openid-connect/userinfo",
+        "facet": "back",
+        "notes": "Récupère profil et rôles pour personnaliser le tableau de bord."
+      }
+    },
+    {
+      "id": "abd3bd58-e89e-4505-af79-eba719f12fe2",
+      "type": "note",
+      "kind": "api",
+      "parentId": null,
+      "attachedTo": "45c51895-7972-4a7b-85c0-0862411d6cbf",
+      "position": {
+        "x": 1748,
+        "y": 210
+      },
+      "attrs": {
+        "serviceId": "cf4c30a8-de84-4a07-b2cb-c52c3eb77d27",
+        "method": "GET",
+        "path": "/invoices",
+        "facet": "back",
+        "notes": "Liste des factures téléchargeables du client."
+      }
+    },
+    {
+      "id": "d3fcdfee-b2ca-476f-90dd-afa8c0d93227",
+      "type": "note",
+      "kind": "api",
+      "parentId": null,
+      "attachedTo": "d6f45449-f310-472d-a065-264f85e20c9d",
+      "position": {
+        "x": 2448,
+        "y": 295
+      },
+      "attrs": {
+        "serviceId": "cf4c30a8-de84-4a07-b2cb-c52c3eb77d27",
+        "method": "POST",
+        "path": "/orders",
+        "facet": "back",
+        "notes": "Création de la commande après paiement confirmé (idempotency-key)."
+      }
+    },
+    {
+      "id": "634cd941-fd80-454a-8474-10d6c9e7adaf",
+      "type": "note",
+      "kind": "api",
+      "parentId": null,
+      "attachedTo": "d6f45449-f310-472d-a065-264f85e20c9d",
+      "position": {
+        "x": 2448,
+        "y": 365
+      },
+      "attrs": {
+        "serviceId": "5b8f8d19-240d-4923-947c-f5cd1d67c71f",
+        "method": "POST",
+        "path": "/payment_intents",
+        "facet": "back",
+        "notes": "Intention de paiement 3D Secure via Stripe Elements."
+      }
+    },
+    {
+      "id": "demo-mod-catalogue",
+      "type": "frame",
+      "kind": "module",
+      "parentId": null,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "lot": null,
+      "attrs": {
+        "name": "01 · Catalogue produits",
+        "description": "Consultation et mise en avant du catalogue B2B.",
+        "notes": ""
+      }
+    },
+    {
+      "id": "demo-mod-commande",
+      "type": "frame",
+      "kind": "module",
+      "parentId": null,
+      "position": {
+        "x": 360,
+        "y": 0
+      },
+      "lot": null,
+      "attrs": {
+        "name": "02 · Commande & devis",
+        "description": "Parcours de commande, devis et paiement.",
+        "notes": ""
+      }
+    },
+    {
+      "id": "demo-feat-cat-01",
+      "type": "feature",
+      "parentId": "demo-mod-catalogue",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "lot": 1,
+      "attrs": {
+        "code": "CAT-01",
+        "name": "Consultation du catalogue",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Lister et filtrer les produits, voir la fiche produit."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Implique"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Grille paginée, recherche, fiche détaillée."
+                }
+              ]
+            }
+          ]
+        },
+        "estimate": "3j",
+        "fieldValues": {
+          "perimeter": "opt-perimeter-site"
+        }
+      }
+    },
+    {
+      "id": "demo-feat-cat-02",
+      "type": "feature",
+      "parentId": "demo-mod-catalogue",
+      "position": {
+        "x": 0,
+        "y": 303
+      },
+      "lot": 1,
+      "attrs": {
+        "code": "CAT-02",
+        "name": "Mise en avant produits",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Bloc de produits mis en avant sur l’accueil."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Implique"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Sélection éditoriale, carrousel."
+                }
+              ]
+            }
+          ]
+        },
+        "estimate": "1j",
+        "fieldValues": {
+          "perimeter": "opt-perimeter-site"
+        }
+      }
+    },
+    {
+      "id": "demo-feat-cmd-01",
+      "type": "feature",
+      "parentId": "demo-mod-commande",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "lot": 1,
+      "attrs": {
+        "code": "CMD-01",
+        "name": "Demande de devis",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Formulaire de demande de devis depuis l’accueil."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Implique"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "POST demande, email interne."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "À confirmer"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Champs obligatoires à confirmer."
+                }
+              ]
+            }
+          ]
+        },
+        "estimate": "2j",
+        "fieldValues": {
+          "perimeter": "opt-perimeter-site"
+        }
+      }
+    },
+    {
+      "id": "demo-feat-cmd-02",
+      "type": "feature",
+      "parentId": "demo-mod-commande",
+      "position": {
+        "x": 0,
+        "y": 343
+      },
+      "lot": 2,
+      "attrs": {
+        "code": "CMD-02",
+        "name": "Panier & commande",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Récapitulatif panier puis validation de commande."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Implique"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Panier persistant, création commande."
+                }
+              ]
+            }
+          ]
+        },
+        "estimate": "3j",
+        "fieldValues": {
+          "perimeter": "opt-perimeter-site"
+        }
+      }
+    },
+    {
+      "id": "demo-feat-cmd-03",
+      "type": "feature",
+      "parentId": "demo-mod-commande",
+      "position": {
+        "x": 0,
+        "y": 646
+      },
+      "lot": 2,
+      "attrs": {
+        "code": "CMD-03",
+        "name": "Paiement",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Paiement en ligne et confirmation."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Implique"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Intégration prestataire de paiement."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "À confirmer"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Prestataire de paiement à choisir."
+                }
+              ]
+            }
+          ]
+        },
+        "estimate": "",
+        "fieldValues": {
+          "perimeter": "opt-perimeter-external"
+        }
+      }
+    },
+    {
+      "id": "demo-feat-cmd-04",
+      "type": "feature",
+      "parentId": "demo-mod-commande",
+      "position": {
+        "x": 0,
+        "y": 989
+      },
+      "lot": 3,
+      "attrs": {
+        "code": "CMD-04",
+        "name": "Historique des commandes",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Consultation de l’historique dans l’espace compte."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Implique"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Liste des commandes, statuts."
+                }
+              ]
+            }
+          ]
+        },
+        "estimate": "1j",
+        "fieldValues": {
+          "perimeter": "opt-perimeter-site"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "8fd1dd3f-53c5-49c3-8bed-8e736446d702",
+      "type": "navigatesTo",
+      "source": "2ae293fc-d9d5-4977-b2f7-a45cd8a416c4",
+      "target": "1b2582f3-4971-4ff5-80ee-e4a567cd19c6",
+      "attrs": {
+        "notes": "Depuis le hero et le menu."
+      }
+    },
+    {
+      "id": "81b01b96-74db-4419-ab2e-e089ba09bf84",
+      "type": "navigatesTo",
+      "source": "2ae293fc-d9d5-4977-b2f7-a45cd8a416c4",
+      "target": "dcf913e2-f198-4968-bdb7-902695912601",
+      "attrs": {
+        "notes": "Accès direct à l'espace client depuis le menu ; tracé contourné pour éviter le catalogue.",
+        "render": "portal"
+      }
+    },
+    {
+      "id": "bb1f0f9c-86e9-4588-84ce-8ea41340e748",
+      "type": "navigatesTo",
+      "source": "1b2582f3-4971-4ff5-80ee-e4a567cd19c6",
+      "target": "54b1fb2c-fc6e-4b70-a8fe-6bca3e6a9094",
+      "attrs": {
+        "notes": "Passage au tunnel de commande depuis le panier — pastille portail (le trait croiserait Mon compte).",
+        "render": "portal"
+      }
+    },
+    {
+      "id": "9ed91112-0224-40e5-be28-65f3403b276d",
+      "type": "navigatesTo",
+      "source": "dcf913e2-f198-4968-bdb7-902695912601",
+      "target": "54b1fb2c-fc6e-4b70-a8fe-6bca3e6a9094",
+      "attrs": {}
+    },
+    {
+      "id": "f8eee0f1-d0ce-4c2b-9712-aabfc3966bbd",
+      "type": "dependsOn",
+      "source": "54b1fb2c-fc6e-4b70-a8fe-6bca3e6a9094",
+      "target": "dcf913e2-f198-4968-bdb7-902695912601",
+      "attrs": {
+        "notes": "La commande requiert un compte client authentifié.",
+        "render": "portal"
+      }
+    },
+    {
+      "id": "demo-rz-cat01-page",
+      "type": "realizedBy",
+      "source": "demo-feat-cat-01",
+      "target": "1b2582f3-4971-4ff5-80ee-e4a567cd19c6",
+      "attrs": {}
+    },
+    {
+      "id": "demo-rz-cat01-grille",
+      "type": "realizedBy",
+      "source": "demo-feat-cat-01",
+      "target": "b4560c69-ac75-42ce-860e-8872becc362e",
+      "attrs": {}
+    },
+    {
+      "id": "demo-rz-cat02-avant",
+      "type": "realizedBy",
+      "source": "demo-feat-cat-02",
+      "target": "bb82f06d-20f7-4072-b36c-555be8a342ab",
+      "attrs": {}
+    },
+    {
+      "id": "demo-rz-cmd01-devis",
+      "type": "realizedBy",
+      "source": "demo-feat-cmd-01",
+      "target": "49afe343-0643-4c61-9a98-24ec9107e7ea",
+      "attrs": {}
+    },
+    {
+      "id": "demo-rz-cmd02-page",
+      "type": "realizedBy",
+      "source": "demo-feat-cmd-02",
+      "target": "54b1fb2c-fc6e-4b70-a8fe-6bca3e6a9094",
+      "attrs": {}
+    },
+    {
+      "id": "demo-rz-cmd02-panier",
+      "type": "realizedBy",
+      "source": "demo-feat-cmd-02",
+      "target": "49c108a7-b796-47a9-8f2a-ec391bb0fc83",
+      "attrs": {}
+    },
+    {
+      "id": "demo-rz-cmd03-paiement",
+      "type": "realizedBy",
+      "source": "demo-feat-cmd-03",
+      "target": "d6f45449-f310-472d-a065-264f85e20c9d",
+      "attrs": {}
+    },
+    {
+      "id": "demo-dep-cmd01-cat01",
+      "type": "dependsOn",
+      "source": "demo-feat-cmd-01",
+      "target": "demo-feat-cat-01",
+      "attrs": {}
+    },
+    {
+      "id": "demo-dep-cmd03-cmd02",
+      "type": "dependsOn",
+      "source": "demo-feat-cmd-03",
+      "target": "demo-feat-cmd-02",
+      "attrs": {}
+    },
+    {
+      "id": "demo-dep-cmd04-cmd02",
+      "type": "dependsOn",
+      "source": "demo-feat-cmd-04",
+      "target": "demo-feat-cmd-02",
+      "attrs": {}
+    }
+  ],
+  "notePages": [
+    {
+      "id": "demo-note-atelier",
+      "parentId": null,
+      "rank": 0,
+      "kind": "heading",
+      "title": "Atelier client",
+      "content": {
+        "type": "doc",
+        "content": []
+      }
+    },
+    {
+      "id": "demo-note-cr-12-mars",
+      "parentId": "demo-note-atelier",
+      "rank": 0,
+      "kind": "page",
+      "title": "Compte rendu — atelier du 12 mars",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Atelier de cadrage avec ACME Distribution (direction commerciale + DSI). Objectif : arrêter le périmètre de la V1 du portail client."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Ce qui est acté"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Le portail n’est pas une boutique."
+                      },
+                      {
+                        "type": "text",
+                        "text": " Le client consulte, constitue un panier, puis demande un devis. Aucune vente directe en V1."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Tarifs négociés par client."
+                      },
+                      {
+                        "type": "text",
+                        "text": " Chaque compte voit ses propres prix ; aucun prix public n’est affiché à un visiteur non connecté."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "SSO obligatoire."
+                      },
+                      {
+                        "type": "text",
+                        "text": " Pas de création de compte en autonomie : les comptes viennent de l’ERP."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Le stock n’est pas affiché."
+                      },
+                      {
+                        "type": "text",
+                        "text": " Trop volatil, et sans engagement de disponibilité côté ACME."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Reporté en V2"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Paiement en ligne du devis validé (voir "
+                      },
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "code"
+                          }
+                        ],
+                        "text": "CMD-03"
+                      },
+                      {
+                        "type": "text",
+                        "text": ")."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Historique de commandes au-delà de 12 mois."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Application mobile."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "demo-note-decisions",
+      "parentId": "demo-note-atelier",
+      "rank": 1,
+      "kind": "page",
+      "title": "Décisions & arbitrages",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Journal des arbitrages, du plus récent au plus ancien. Une ligne = une décision tranchée en séance."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "12 mars — panier ou devis ?"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "Tranché : les deux, séquentiellement. "
+              },
+              {
+                "type": "text",
+                "text": "Le panier sert à composer la demande, le devis est le livrable. Le panier n’a donc ni total TTC ni bouton « payer »."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "5 mars — profondeur de l’historique"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "Tranché : 12 mois glissants en V1. "
+              },
+              {
+                "type": "text",
+                "text": "Au-delà, l’ERP reste la source. Évite de rapatrier 8 ans de commandes pour un usage marginal."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "5 mars — mise en avant produits"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "En suspens. "
+              },
+              {
+                "type": "text",
+                "text": "La sélection est-elle éditoriale (back-office) ou dérivée des achats du client ? À trancher avant le lot 2."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "demo-note-cadrage",
+      "parentId": null,
+      "rank": 1,
+      "kind": "heading",
+      "title": "Cadrage fonctionnel",
+      "content": {
+        "type": "doc",
+        "content": []
+      }
+    },
+    {
+      "id": "demo-note-parcours-commande",
+      "parentId": "demo-note-cadrage",
+      "rank": 0,
+      "kind": "page",
+      "title": "Parcours de commande",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Le chemin nominal, de la découverte produit à la commande confirmée."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Étapes"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Catalogue"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — le client filtre, voit ses tarifs négociés."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Panier"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — composition libre, sauvegardé entre deux sessions."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Demande de devis"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — le panier est figé et transmis au commercial."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Validation"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — le commercial ajuste, le client accepte."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Commande"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — la commande part en ERP, le client la suit dans son compte."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Points de vigilance"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Un panier abandonné ne doit pas générer de relance automatique en V1 (pas d’outil de campagne branché)."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Le devis reste modifiable côté commercial après transmission : le client doit voir la version courante, pas celle qu’il a envoyée."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "demo-note-roles",
+      "parentId": "demo-note-cadrage",
+      "rank": 1,
+      "kind": "page",
+      "title": "Rôles & permissions",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Deux niveaux seulement en V1. Toute granularité supplémentaire est reportée."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Administrateur de compte"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Gère les utilisateurs rattachés à son entreprise."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Voit toutes les commandes de l’entreprise."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Seul habilité à valider un devis."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Utilisateur"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Consulte le catalogue et ses propres commandes."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Compose un panier et demande un devis."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Ne voit pas les commandes de ses collègues."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "À confirmer : "
+              },
+              {
+                "type": "text",
+                "text": "un utilisateur peut-il appartenir à plusieurs entreprises ? Le cas existe chez les groupements d’achat."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "demo-note-tarifs",
+      "parentId": "demo-note-cadrage",
+      "rank": 2,
+      "kind": "page",
+      "title": "Tarifs négociés",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Chaque client a une grille propre, portée par l’ERP. Le portail ne calcule jamais un prix : il affiche ce que l’ERP renvoie pour le couple "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "code"
+                  }
+                ],
+                "text": "client × article"
+              },
+              {
+                "type": "text",
+                "text": "."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Règles d’affichage"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Prix affiché HT par défaut, TTC en second."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Si une remise s’applique, le prix catalogue est barré et le pourcentage affiché."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Aucun prix pour un visiteur non authentifié — la page catalogue redirige vers le SSO."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "demo-note-integrations",
+      "parentId": null,
+      "rank": 2,
+      "kind": "heading",
+      "title": "Intégrations",
+      "content": {
+        "type": "doc",
+        "content": []
+      }
+    },
+    {
+      "id": "demo-note-erp",
+      "parentId": "demo-note-integrations",
+      "rank": 0,
+      "kind": "page",
+      "title": "ERP — synchronisation catalogue",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "L’ERP est le maître du référentiel : articles, clients, grilles tarifaires, commandes. Le portail est consommateur."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Sens des flux"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Descendant"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — articles et tarifs, rafraîchis toutes les nuits."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Montant"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — devis et commandes, poussés à la validation."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Limites connues"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Pas de webhook côté ERP : la synchro descendante se fait par interrogation périodique."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Une modification de tarif en cours de journée n’est visible que le lendemain. Accepté en V1."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "demo-note-paiement",
+      "parentId": "demo-note-integrations",
+      "rank": 1,
+      "kind": "page",
+      "title": "Paiement — prestataire",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "Hors périmètre V1. "
+              },
+              {
+                "type": "text",
+                "text": "Cette page existe pour ne pas perdre le travail de cadrage déjà fait ; la fonctionnalité "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "code"
+                  }
+                ],
+                "text": "CMD-03"
+              },
+              {
+                "type": "text",
+                "text": " est reportée."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Ce qui est acquis"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Le paiement se greffe sur le devis validé, jamais sur le panier."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Le portail ne stocke aucune donnée de carte : redirection vers le prestataire."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Reste à trancher"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Acompte ou paiement total ?"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Qui relance en cas d’échec — le portail ou le commercial ?"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "demo-note-annexes",
+      "parentId": null,
+      "rank": 3,
+      "kind": "heading",
+      "title": "Annexes",
+      "content": {
+        "type": "doc",
+        "content": []
+      }
+    },
+    {
+      "id": "demo-note-glossaire",
+      "parentId": "demo-note-annexes",
+      "rank": 0,
+      "kind": "page",
+      "title": "Glossaire",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Vocabulaire partagé entre ACME et l’équipe projet. En cas de désaccord de terme, c’est cette page qui tranche."
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Compte"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — l’entreprise cliente, pas la personne."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Utilisateur"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — la personne rattachée à un compte."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Panier"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — sélection de travail, sans engagement."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Devis"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — proposition chiffrée et engageante, émise par le commercial."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Commande"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — devis accepté, transmis à l’ERP."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "demo-note-questions-ouvertes",
+      "parentId": "demo-note-annexes",
+      "rank": 1,
+      "kind": "page",
+      "title": "Questions ouvertes",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Ce qui bloque encore. Une question résolue quitte cette page pour rejoindre les décisions."
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Multi-entreprises"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — un utilisateur peut-il basculer d’un compte à l’autre ? Impacte le modèle de session."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Mise en avant produits"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — éditoriale ou dérivée de l’historique d’achat ? Impacte le back-office."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Reprise de l’historique"
+                      },
+                      {
+                        "type": "text",
+                        "text": " — 12 mois glissants confirmés, mais à partir de quelle date de bascule ?"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "featureFields": [
+    {
+      "id": "binding",
+      "label": "Branchement sur le site",
+      "order": 0
+    },
+    {
+      "id": "perimeter",
+      "label": "Fonctionnalité attribuée à",
+      "order": 1
+    }
+  ],
+  "featureOptions": [
+    {
+      "id": "opt-perimeter-site",
+      "fieldId": "perimeter",
+      "name": "Site"
+    },
+    {
+      "id": "opt-perimeter-external",
+      "fieldId": "perimeter",
+      "name": "Externe"
+    }
+  ]
+}

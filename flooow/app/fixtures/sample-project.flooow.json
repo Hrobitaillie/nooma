@@ -1,0 +1,316 @@
+{
+  "meta": {
+    "name": "Portail client Acme",
+    "formatVersion": 13,
+    "createdAt": "2026-07-07",
+    "updatedAt": "2026-07-07",
+    "pricing": {
+      "riskCoeff": 1.25,
+      "dailyRate": null
+    },
+    "homePageId": "page-tableau-de-bord"
+  },
+  "site": {
+    "attrs": {
+      "context": "Portail interne de suivi des commandes pour Acme.",
+      "constraints": [
+        "SSO obligatoire",
+        "hébergement on-premise"
+      ],
+      "notes": ""
+    }
+  },
+  "services": [
+    {
+      "id": "service-erp",
+      "name": "ERP Acme",
+      "baseUrl": "https://erp.acme.internal/api",
+      "auth": "OAuth2 client_credentials",
+      "risk": "medium",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/orders",
+          "notes": "pagination 100/p"
+        },
+        {
+          "method": "GET",
+          "path": "/orders/{id}",
+          "notes": ""
+        }
+      ],
+      "notes": "rate limit 60/min, pas de sandbox"
+    }
+  ],
+  "featureFields": [
+    {
+      "id": "binding",
+      "label": "Branchement sur le site",
+      "order": 0
+    },
+    {
+      "id": "perimeter",
+      "label": "Fonctionnalité attribuée à",
+      "order": 1
+    }
+  ],
+  "featureOptions": [],
+  "nodes": [
+    {
+      "id": "page-tableau-de-bord",
+      "parentId": null,
+      "position": {
+        "x": 320,
+        "y": 140
+      },
+      "lot": 2,
+      "type": "frame",
+      "kind": "page",
+      "attrs": {
+        "name": "Tableau de bord commandes",
+        "slug": "admin/commandes",
+        "roles": [
+          "admin",
+          "gestionnaire"
+        ],
+        "description": "Vue d'ensemble des commandes en cours.",
+        "constraints": [
+          "temps réel statut"
+        ],
+        "logic": "",
+        "notes": ""
+      }
+    },
+    {
+      "id": "block-hero",
+      "parentId": "page-tableau-de-bord",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "type": "frame",
+      "kind": "block",
+      "attrs": {
+        "name": "En-tête tableau de bord",
+        "blockType": "hero",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Bandeau titre + résumé des KPIs."
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": [],
+        "order": []
+      }
+    },
+    {
+      "id": "block-listing",
+      "parentId": "page-tableau-de-bord",
+      "position": {
+        "x": 0,
+        "y": 120
+      },
+      "type": "frame",
+      "kind": "block",
+      "attrs": {
+        "name": "Listing commandes",
+        "blockType": "grid",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Tableau paginé des commandes."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 3
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Contraintes"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "pagination serveur 50/p"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "apiRefs": [
+          {
+            "id": "note-api-orders",
+            "serviceId": "service-erp",
+            "method": "GET",
+            "path": "/orders",
+            "facet": "back",
+            "notes": "récupère la liste paginée"
+          }
+        ],
+        "order": [
+          "note-api-orders"
+        ]
+      }
+    }
+  ],
+  "edges": [],
+  "comments": [
+    {
+      "id": "comment-note-recherche",
+      "anchor": {
+        "nodeId": "block-listing"
+      },
+      "tag": {
+        "label": "Comportement",
+        "color": "#f59e0b"
+      },
+      "body": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Recherche à facettes",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Filtrage multi-critères des commandes."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 3
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Déclencheur"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "saisie utilisateur"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Estimation : 6 h — Facette : fullstack"
+              }
+            ]
+          }
+        ]
+      },
+      "author": "",
+      "createdAt": "2026-07-07",
+      "resolved": false,
+      "replies": []
+    },
+    {
+      "id": "comment-claude-hero",
+      "anchor": {
+        "nodeId": "block-hero",
+        "range": {
+          "from": 2,
+          "to": 14,
+          "text": "accroche B2B"
+        }
+      },
+      "tag": {
+        "label": "Wording",
+        "color": "#7c3aed"
+      },
+      "body": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Reformuler cette accroche pour un ton plus institutionnel."
+              }
+            ]
+          }
+        ]
+      },
+      "author": "Hugo",
+      "createdAt": "2026-07-22",
+      "resolved": false,
+      "forClaude": true,
+      "replies": [
+        {
+          "id": "reply-claude-hero-1",
+          "author": "Claude",
+          "createdAt": "2026-07-22",
+          "body": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Proposition : « La plateforme de commande dédiée aux professionnels »."
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

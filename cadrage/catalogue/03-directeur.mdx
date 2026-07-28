@@ -1,0 +1,76 @@
+# 03, Le Directeur (moteur adaptatif)
+
+[← Index](README.mdx)
+
+Le cœur différenciant : une **bibliothèque pure sans UI** qui compose chaque
+niveau selon le profil de l'enfant. Design détaillé :
+[doc 04](#/docs/04-progression-adaptative.md), paramètres validés par la
+recherche : [doc 02 §5](#/docs/02-pedagogie.md), implémentation :
+[doc 06 §4](#/docs/06-architecture-technique.md).
+
+| ID | Fonctionnalité | Lot | Périmètre | Dépend de | Est. |
+|----|----------------|-----|-----------|-----------|:----:|
+| DIR-01 | Graphe de compétences (données + lint) | <Lot code="DIR-01"/> | Data | Florence (relecture) | <Est code="DIR-01"/> |
+| DIR-02 | Banques d'items taguées (mots, sons, images) | <Lot code="DIR-02"/> | Data | DIR-01 | <Est code="DIR-02"/> |
+| DIR-03 | Score de maîtrise + validation de module | <Lot code="DIR-03"/> | App | SOC-02 | <Est code="DIR-03"/> |
+| DIR-04 | Sélecteur pédagogique (session-menu, dents de scie) | <Lot code="DIR-04"/> | App | DIR-03 | <Est code="DIR-04"/> |
+| DIR-05 | Générateur de niveaux contraint (seeds, garde-fous) | <Lot code="DIR-05"/> | App | DIR-02, DIR-04 | <Est code="DIR-05"/> |
+| DIR-06 | Règles de variété (anti-monotonie) | <Lot code="DIR-06"/> | App | DIR-05 | <Est code="DIR-06"/> |
+| DIR-07 | Rappels espacés (Leitner) → niveaux échos | <Lot code="DIR-07"/> | App | DIR-03 | <Est code="DIR-07"/> |
+| DIR-08 | Niveaux surprises (cadeaux, défis, rêves) | <Lot code="DIR-08"/> | App | DIR-05 | <Est code="DIR-08"/> |
+| DIR-09 | Détection de stagnation + changement d'approche | <Lot code="DIR-09"/> | App | DIR-03 | <Est code="DIR-09"/> |
+| DIR-10 | Pondération fatigue (fin de session) | <Lot code="DIR-10"/> | App | DIR-03 | <Est code="DIR-10"/> |
+| DIR-11 | Simulation d'enfants virtuels + QA CI (Test D) | <Lot code="DIR-11"/> | App | DIR-05 | <Est code="DIR-11"/> |
+
+---
+
+### [DIR-01] Graphe de compétences (données + lint)
+- **Quoi** : la structure Pilier → Module → Compétence → prérequis, en données versionnées (édition tableur possible pour Florence) ; scripts de lint (cycle, prérequis manquant).
+- **Implique** : c'est le livrable pédagogique fondateur ; produit par Hugo, relu par Florence ([doc 02 §8](#/docs/02-pedagogie.md)).
+- **Est.** : <Est value="__TBD__" code="DIR-01" />
+
+### [DIR-02] Banques d'items taguées
+- **Quoi** : mots/sons/phrases avec tags : compétences travaillées, structure syllabique, graphèmes requis, fréquence, distracteurs recommandés, assets liés (image, audio).
+- **Garde-fou codé** : aucun mot proposé en lecture ne contient un graphème non introduit pour cet enfant (règle d'or, [doc 02 §2](#/docs/02-pedagogie.md)).
+- **Est.** : <Est value="__TBD__" code="DIR-02" />
+
+### [DIR-03] Score de maîtrise + validation de module
+- **Quoi** : v1 moyenne glissante pondérée (aide reçue comptée) + décroissance temporelle ; validation de compétence sur plusieurs succès répartis sur des jours distincts ; module validé → changement de biome (MAP-06). Migration Elo prévue en V1.1 (le log SOC-02 permet le recalcul).
+- **Est.** : <Est value="__TBD__" code="DIR-03" />
+
+### [DIR-04] Sélecteur pédagogique
+- **Quoi** : compose la session (échauffement / cœur / dessert), choisit la compétence cible (zone proximale) + compétences d'entretien, vise 80-85 % de réussite, difficulté en dents de scie.
+- **Est.** : <Est value="__TBD__" code="DIR-04" />
+
+### [DIR-05] Générateur de niveaux contraint
+- **Quoi** : `generateLevel(profil, contenu, seed) → NiveauSpec` ; générateur constructif (jamais de niveau impossible), seeds hiérarchiques déterministes (tout niveau reproductible en debug), garde-fous en dur (réponse unique, pas de saut de difficulté, distracteurs non ambigus, deux graphies valides détectées).
+- **Est.** : <Est value="__TBD__" code="DIR-05" />
+
+### [DIR-06] Règles de variété
+- **Quoi** : jamais 2 fois la même mécanique d'affilée, alternance des modalités (écouter/toucher/taper), rotation des habillages, au moins une nouveauté par session.
+- **Est.** : <Est value="__TBD__" code="DIR-06" />
+
+### [DIR-07] Rappels espacés (Leitner) → niveaux échos
+- **Quoi** : planification J+1 → J+2/3 → J+7 → J+14 par compétence validée, robuste aux jours manqués (recalage sans pénalité) ; habillage « on retourne voir les amis de la Prairie » ; mix par session : 70-80 % biome courant + 20-30 % rappels.
+- **Est.** : <Est value="__TBD__" code="DIR-07" />
+
+### [DIR-08] Niveaux surprises
+- **Quoi** : nœuds cadeaux (aléatoire contrôlé, toujours positif, jamais annoncé), défis proposés refusables, rêves (interleaving multi-biomes, périodiques). Règles éthiques : [doc 04 §7](#/docs/04-progression-adaptative.md).
+- **Est.** : <Est value="__TBD__" code="DIR-08" />
+
+### [DIR-09] Détection de stagnation + changement d'approche
+- **Quoi** : si une compétence stagne : changer de mécanique pour la même compétence, redescendre la difficulté, modelling renforcé ; signal discret côté parent (formulé avec Florence).
+- **Est.** : <Est value="__TBD__" code="DIR-09" />
+
+### [DIR-10] Pondération fatigue
+- **Quoi** : dérive du taux d'erreur + latences en fin de session → propose la fin (la mascotte baille) ET pondère ces réponses à la baisse dans la maîtrise (la fatigue n'est pas une lacune).
+- **Est.** : <Est value="__TBD__" code="DIR-10" />
+
+### [DIR-11] Simulation d'enfants virtuels + QA CI (Test D)
+- **Quoi** : profils synthétiques (rapide, lent, irrégulier) joués en masse : vérifie statistiquement le taux de réussite, l'absence de niveau impossible, les temps de sortie de biome, l'absence de boucle de répétition ; énumération exhaustive template × difficulté × seeds en CI.
+- **Implique** : c'est la première brique à développer (dérisque le concept avant toute UI).
+- **Est.** : <Est value="__TBD__" code="DIR-11" />
+
+---
+
+<TotauxFichier />

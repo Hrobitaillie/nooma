@@ -1,0 +1,10 @@
+{
+  "name": "nooma-cadrage",
+  "private": true,
+  "description": "Cadrage du projet Nooma — viewer de doc + catalogue de fonctionnalités (npm start)",
+  "type": "module",
+  "scripts": {
+    "start": "node cadrage/server.mjs",
+    "flooow": "bash flooow/scripts/dev-local.sh"
+  }
+}

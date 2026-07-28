@@ -1,0 +1,53 @@
+/* Design system — couleurs de marque flooow.
+   COMPLÈTE la palette Tailwind par défaut (slate/sky/violet… restent disponibles) :
+   ne pas ajouter `--color-*: initial` tant que l'app consomme la palette par défaut. */
+@theme {
+  /* Slots sémantiques des facettes (front / back / fullstack). */
+  --color-facet-front: #2563eb;
+  --color-facet-back: #7c3aed;
+  --color-facet-fullstack: #0891b2;
+
+  --color-black: #233c50;
+
+  --color-primary: #6994b0;
+  --color-primary-300: #dee7ed;
+  /* Sans équivalent Figma : nuance propre au code (bascules topbar). */
+  --color-primary-700: #3e617a;
+
+  /* Rampe secondaire (violet). */
+  --color-secondary-50: #f5f3ff;
+  --color-secondary-100: #ede9fe;
+  --color-secondary-200: #ddd6ff;
+  --color-secondary-300: #c4b4ff;
+  --color-secondary-400: #a684ff;
+  --color-secondary: #8e51ff;
+  --color-secondary-600: #7f22fe;
+  --color-secondary-700: #7008e7;
+  --color-secondary-900: #4d179a;
+
+  /* Fond « papier » chaud du document de spécifications. */
+  --color-paper: #faf9f6;
+
+  /* Rampe gris-bleu neutre. ATTENTION : `--color-gray-200` redéfinit le gris Tailwind par
+     défaut, que `base.css` consomme comme couleur de bordure nue (shim de compat v3) — ce
+     token pilote donc les bordures de toute l'app, pas seulement ce qui écrit `gray-200`.
+     La rampe est TROUÉE (ni 400, ni 500, ni 800, ni 900) : Figma ne les définit pas, et les
+     slots absents retombent sur le gris Tailwind par défaut, beaucoup plus neutre. Ne pas
+     écrire `gray-400`/`gray-500` sans l'ajouter d'abord ici ET dans Figma. */
+  --color-gray-100: #f0f4f8;
+  --color-gray-200: #d9e2ec;
+  --color-gray-300: #bcccdc;
+  --color-gray: #627d98;
+  --color-gray-600: #486581;
+  --color-gray-700: #334e68;
+
+  /* Cycle de vie des fonctionnalités — zone de suivi de la carte (v10, maquette « image.png »).
+     Rampe dorée : pastille de statut en phase dév, barre de progression et compteur n/total.
+     `--color-check` : coche cochée de la checklist. La phase cadrage réutilise la rampe `primary`
+     (bleu-gris) et les sorties de route (reportée/écartée) le `slate` Tailwind par défaut. */
+  --color-gold-100: #f7edd0;
+  --color-gold-200: #e8d9a8;
+  --color-gold: #c99a3a;
+  --color-gold-700: #a07d1f;
+  --color-check: #4c9a5e;
+}

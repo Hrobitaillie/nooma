@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flooow · cadrage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sometype+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<style>
+:root {
+  --bp-deep:   #0a1f38;
+  --bp-base:   #0e2a4a;
+  --bp-panel:  #0b2340;
+  --bp-line:   rgba(140, 190, 235, .14);
+  --bp-line-2: rgba(140, 190, 235, .07);
+  --ink:       #d7e6f4;
+  --ink-dim:   #8fabc7;
+  --ink-faint: #5d7d9d;
+  --amber:     #f5b942;
+  --amber-dim: rgba(245, 185, 66, .14);
+  --cyan:      #7fd4e8;
+  --sheet:     #10304f;
+  --code-bg:   #0a2038;
+  --mono: "Sometype Mono", ui-monospace, monospace;
+  --sans: "Instrument Sans", system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { height: 100%; }
+body {
+  height: 100%;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    linear-gradient(rgba(140,190,235,.05) 1px, transparent 1px) 0 0 / 100% 120px,
+    linear-gradient(90deg, rgba(140,190,235,.05) 1px, transparent 1px) 0 0 / 120px 100%,
+    linear-gradient(var(--bp-line-2) 1px, transparent 1px) 0 0 / 100% 24px,
+    linear-gradient(90deg, var(--bp-line-2) 1px, transparent 1px) 0 0 / 24px 100%,
+    radial-gradient(1200px 800px at 75% -10%, #143a63 0%, var(--bp-base) 55%, var(--bp-deep) 100%);
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  overflow: hidden;
+}
+
+/* ---------- Sidebar ---------- */
+aside {
+  border-right: 1px dashed var(--bp-line);
+  background: linear-gradient(180deg, rgba(10,31,56,.75), rgba(10,31,56,.92));
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.brand {
+  padding: 26px 22px 20px;
+  border-bottom: 1px dashed var(--bp-line);
+}
+.brand .stamp {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+.brand h1 {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.brand h1 span { color: var(--cyan); }
+.brand .sub {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+nav { padding: 14px 0 30px; flex: 1; }
+.cat {
+  animation: rise .45s cubic-bezier(.2,.7,.2,1) both;
+}
+.cat:nth-child(1){animation-delay:.05s}.cat:nth-child(2){animation-delay:.12s}
+.cat:nth-child(3){animation-delay:.19s}.cat:nth-child(4){animation-delay:.26s}
+@keyframes rise { from { opacity:0; transform: translateY(8px);} to { opacity:1; transform:none;} }
+.cat h2 {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 18px 22px 8px;
+  display: flex; align-items: center; gap: 10px;
+}
+.cat h2::after { content:""; flex:1; border-top: 1px dashed var(--bp-line); }
+.cat a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 22px 8px 20px;
+  border-left: 2px solid transparent;
+  color: var(--ink-dim);
+  text-decoration: none;
+  font-size: 13.5px;
+  line-height: 1.35;
+  transition: color .15s, background .15s, border-color .15s;
+}
+.cat a .idx {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-faint);
+  min-width: 26px;
+}
+.cat a:hover { color: var(--ink); background: rgba(140,190,235,.05); }
+.cat a.active {
+  color: var(--amber);
+  background: var(--amber-dim);
+  border-left-color: var(--amber);
+}
+.cat a.active .idx { color: var(--amber); }
+.foot {
+  padding: 16px 22px;
+  border-top: 1px dashed var(--bp-line);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--ink-faint);
+}
+
+/* ---------- Main ---------- */
+main { overflow-y: auto; scroll-behavior: smooth; }
+.wrap { max-width: 860px; margin: 0 auto; padding: 34px 48px 90px; }
+
+.titleblock {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  border: 1px solid var(--bp-line);
+  background: rgba(10,31,56,.6);
+  font-family: var(--mono);
+  margin-bottom: 34px;
+  animation: rise .4s .1s cubic-bezier(.2,.7,.2,1) both;
+}
+.titleblock > div { padding: 10px 16px; }
+.titleblock > div + div { border-left: 1px solid var(--bp-line); }
+.titleblock .lbl {
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink-faint); margin-bottom: 4px;
+}
+.titleblock .val { font-size: 12.5px; color: var(--cyan); }
+.titleblock .val.path { color: var(--ink-dim); }
+.titleblock .val.sheet { color: var(--amber); }
+
+article { animation: rise .4s .18s cubic-bezier(.2,.7,.2,1) both; }
+
+/* rendu markdown */
+article h1 {
+  font-family: var(--mono);
+  font-size: 30px; font-weight: 700; letter-spacing: -.01em;
+  color: #fff; margin: 0 0 6px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--bp-line);
+  position: relative;
+}
+article h1::after {
+  content: ""; position: absolute; left: 0; bottom: -1px;
+  width: 72px; border-bottom: 2px solid var(--amber);
+}
+article h2 {
+  font-family: var(--mono);
+  font-size: 19px; font-weight: 700; color: var(--cyan);
+  margin: 40px 0 12px;
+}
+article h2::before { content: "▸ "; color: var(--amber); }
+article h3 {
+  font-family: var(--mono);
+  font-size: 15px; font-weight: 500; color: var(--ink);
+  margin: 26px 0 10px;
+}
+article p { margin: 12px 0; line-height: 1.7; color: var(--ink-dim); font-size: 15px; }
+article strong { color: var(--ink); font-weight: 600; }
+article em { color: var(--cyan); }
+article ul, article ol { margin: 12px 0 12px 22px; }
+article li { margin: 6px 0; line-height: 1.65; color: var(--ink-dim); font-size: 15px; }
+article li::marker { color: var(--amber); }
+article a { color: var(--cyan); text-decoration: underline dotted; text-underline-offset: 3px; }
+article a:hover { color: var(--amber); }
+article blockquote {
+  margin: 20px 0; padding: 14px 20px;
+  border-left: 2px solid var(--amber);
+  background: var(--amber-dim);
+}
+article blockquote p { color: var(--ink); margin: 0; }
+article code {
+  font-family: var(--mono); font-size: .88em;
+  background: var(--code-bg); border: 1px solid var(--bp-line);
+  padding: 1px 6px; border-radius: 3px; color: var(--cyan);
+}
+article pre {
+  margin: 18px 0; padding: 18px 20px; overflow-x: auto;
+  background: var(--code-bg); border: 1px solid var(--bp-line);
+  position: relative;
+}
+article pre::before {
+  content: "␣"; position: absolute; top: 6px; right: 10px;
+  font-family: var(--mono); font-size: 9px; color: var(--ink-faint);
+}
+article pre code { background: none; border: none; padding: 0; color: var(--ink-dim); font-size: 12.5px; line-height: 1.6; }
+article table {
+  width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13.5px;
+}
+article th {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  text-align: left; color: var(--amber);
+  border-bottom: 1px solid var(--amber);
+  padding: 8px 12px;
+}
+article td {
+  padding: 9px 12px; color: var(--ink-dim); line-height: 1.55;
+  border-bottom: 1px dashed var(--bp-line);
+  vertical-align: top;
+}
+article tr:hover td { background: rgba(140,190,235,.04); }
+article hr { border: none; border-top: 1px dashed var(--bp-line); margin: 28px 0; }
+article input[type="checkbox"] { accent-color: var(--amber); margin-right: 6px; }
+
+/* pagination bas de page */
+.pager {
+  display: flex; justify-content: space-between; gap: 16px;
+  margin-top: 60px; padding-top: 20px;
+  border-top: 1px dashed var(--bp-line);
+  font-family: var(--mono); font-size: 12px;
+}
+.pager a {
+  color: var(--ink-dim); text-decoration: none;
+  padding: 10px 14px; border: 1px solid var(--bp-line);
+  transition: all .15s; max-width: 46%;
+}
+.pager a:hover { color: var(--amber); border-color: var(--amber); }
+.pager .lbl { display:block; font-size: 9px; letter-spacing: .2em; color: var(--ink-faint); margin-bottom: 4px; text-transform: uppercase; }
+
+/* état erreur */
+.error {
+  border: 1px solid var(--amber); background: var(--amber-dim);
+  padding: 26px 30px; font-size: 14px; line-height: 1.7; color: var(--ink);
+}
+.error h2 { font-family: var(--mono); color: var(--amber); margin-bottom: 10px; font-size: 16px; }
+.error code { font-family: var(--mono); background: var(--code-bg); padding: 2px 8px; border: 1px solid var(--bp-line); }
+
+@media (max-width: 760px) {
+  body { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  aside { max-height: 40vh; border-right: none; border-bottom: 1px dashed var(--bp-line); }
+  .wrap { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<aside>
+  <div class="brand">
+    <div class="stamp">Dossier de cadrage</div>
+    <h1>fl<span>ooo</span>w</h1>
+    <div class="sub">un graphe, plusieurs vues</div>
+  </div>
+  <nav id="nav"></nav>
+  <div class="foot">RÉV. 2 · 2026-07-07</div>
+</aside>
+
+<main id="main">
+  <div class="wrap">
+    <div class="titleblock" id="titleblock" hidden>
+      <div><div class="lbl">Document</div><div class="val" id="tb-title"></div></div>
+      <div><div class="lbl">Fichier</div><div class="val path" id="tb-path"></div></div>
+      <div><div class="lbl">Feuille</div><div class="val sheet" id="tb-sheet"></div></div>
+    </div>
+    <article id="content"></article>
+    <div class="pager" id="pager"></div>
+  </div>
+</main>
+
+<script>
+// ————— Manifeste : ajouter ici tout nouveau fichier de cadrage —————
+const DOCS = [
+  { cat: "01 · Vision", items: [
+    { file: "01-vision/concept.md",            title: "Concept & vision" },
+    { file: "01-vision/positionnement.md",     title: "Positionnement & outils existants" },
+    { file: "01-vision/decisions.md",          title: "Décisions & arbitrages" },
+  ]},
+  { cat: "02 · Fonctionnalités", items: [
+    { file: "02-fonctionnalites/canvas.md",           title: "Le canvas" },
+    { file: "02-fonctionnalites/frames-et-scopes.md", title: "Frames & scopes" },
+    { file: "02-fonctionnalites/noeuds-et-liens.md",  title: "Nœuds & liens" },
+    { file: "02-fonctionnalites/vues-derivees.md",    title: "Vues dérivées" },
+    { file: "02-fonctionnalites/cadrage-par-fonctionnalite.md", title: "Cadrage par fonctionnalité" },
+    { file: "02-fonctionnalites/chiffrage.md",        title: "Chiffrage (pistes)" },
+    { file: "02-fonctionnalites/exports.md",          title: "Exports" },
+  ]},
+  { cat: "03 · Technique", items: [
+    { file: "03-technique/modele-de-donnees.md", title: "Modèle de données" },
+    { file: "03-technique/stack.md",             title: "Stack technique" },
+  ]},
+  { cat: "04 · Roadmap", items: [
+    { file: "04-roadmap/mvp.md", title: "Périmètre MVP" },
+  ]},
+  { cat: "05 · Implémentation", items: [
+    { file: "05-implementation/architecture.md",         title: "Architecture de l'app" },
+    { file: "05-implementation/interface.md",            title: "Interface (panneaux flottants)" },
+    { file: "05-implementation/donnees-json.md",         title: "Données JSON" },
+    { file: "05-implementation/logique-algorithmes.md",  title: "Logique & algorithmes" },
+    { file: "05-implementation/securite.md",             title: "Sécurisation" },
+    { file: "05-implementation/performances.md",         title: "Performances" },
+    { file: "05-implementation/plan-de-dev.md",          title: "Plan de dev (agents IA)" },
+    { file: "05-implementation/evolution-v2.md",         title: "Évolution v2 (blocs & notes)" },
+  ]},
+];
+
+const FLAT = DOCS.flatMap(c => c.items.map(i => ({ ...i, cat: c.cat })));
+const nav = document.getElementById("nav");
+const content = document.getElementById("content");
+const pager = document.getElementById("pager");
+const titleblock = document.getElementById("titleblock");
+
+// sidebar
+DOCS.forEach(group => {
+  const sec = document.createElement("div");
+  sec.className = "cat";
+  sec.innerHTML = `<h2>${group.cat}</h2>`;
+  group.items.forEach(item => {
+    const n = FLAT.findIndex(f => f.file === item.file) + 1;
+    const a = document.createElement("a");
+    a.href = "#" + item.file;
+    a.dataset.file = item.file;
+    a.innerHTML = `<span class="idx">${String(n).padStart(2, "0")}</span><span>${item.title}</span>`;
+    sec.appendChild(a);
+  });
+  nav.appendChild(sec);
+});
+
+function current() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  return FLAT.find(f => f.file === h) || FLAT[0];
+}
+
+async function render() {
+  const doc = current();
+  const idx = FLAT.indexOf(doc);
+
+  document.querySelectorAll("#nav a").forEach(a =>
+    a.classList.toggle("active", a.dataset.file === doc.file));
+
+  try {
+    const res = await fetch(doc.file);
+    if (!res.ok) throw new Error(res.status);
+    const md = await res.text();
+    content.innerHTML = marked.parse(md);
+    // liens .md relatifs → routage interne
+    const base = doc.file.slice(0, doc.file.lastIndexOf("/") + 1);
+    content.querySelectorAll('a[href$=".md"]').forEach(a => {
+      const href = a.getAttribute("href");
+      if (/^https?:/.test(href)) return;
+      const parts = (base + href).split("/"), out = [];
+      for (const p of parts) {
+        if (p === "..") out.pop();
+        else if (p !== "." && p !== "") out.push(p);
+      }
+      a.href = "#" + out.join("/");
+    });
+  } catch (e) {
+    const isFile = location.protocol === "file:";
+    content.innerHTML = `<div class="error">
+      <h2>⚠ Impossible de charger ${doc.file}</h2>
+      ${isFile
+        ? `<p>Le viewer charge les fichiers markdown via <code>fetch</code>, bloqué en <code>file://</code>.<br>
+           Depuis la racine du projet :</p>
+           <p><code>pnpm install && pnpm start</code><br>
+           puis ouvrir l'URL affichée</p>`
+        : `<p>Vérifier que le fichier existe et que le manifeste <code>DOCS</code> en tête de <code>index.html</code> est à jour. (${e.message})</p>`}
+    </div>`;
+    pager.innerHTML = "";
+    titleblock.hidden = true;
+    return;
+  }
+
+  titleblock.hidden = false;
+  document.getElementById("tb-title").textContent = doc.title;
+  document.getElementById("tb-path").textContent = doc.file;
+  document.getElementById("tb-sheet").textContent = `${String(idx + 1).padStart(2, "0")} / ${FLAT.length}`;
+  document.title = doc.title + " · Flooow";
+
+  const prev = FLAT[idx - 1], next = FLAT[idx + 1];
+  pager.innerHTML =
+    (prev ? `<a href="#${prev.file}"><span class="lbl">← Précédent</span>${prev.title}</a>` : "<span></span>") +
+    (next ? `<a href="#${next.file}" style="text-align:right"><span class="lbl">Suivant →</span>${next.title}</a>` : "<span></span>");
+
+  document.getElementById("main").scrollTo(0, 0);
+}
+
+window.addEventListener("hashchange", render);
+// navigation clavier ← →
+window.addEventListener("keydown", e => {
+  if (e.target.closest("input,textarea")) return;
+  const idx = FLAT.indexOf(current());
+  if (e.key === "ArrowRight" && FLAT[idx + 1]) location.hash = FLAT[idx + 1].file;
+  if (e.key === "ArrowLeft" && FLAT[idx - 1]) location.hash = FLAT[idx - 1].file;
+});
+render();
+</script>
+</body>
+</html>

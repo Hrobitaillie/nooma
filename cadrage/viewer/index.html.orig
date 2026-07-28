@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Empêche le navigateur de garder un app.js périmé (le serveur n'envoie
+       pas de Cache-Control). -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Atelier Loca Reception</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="style.css?v=1783439738" />
+  <!-- Libs chargées depuis le CDN (aucun build) : Preact + compilateur MDX. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "preact": "https://esm.sh/preact@10.24.3",
+      "preact/hooks": "https://esm.sh/preact@10.24.3/hooks",
+      "preact/jsx-runtime": "https://esm.sh/preact@10.24.3/jsx-runtime",
+      "htm/preact": "https://esm.sh/htm@3.1.1/preact?external=preact",
+      "@mdx-js/mdx": "https://esm.sh/@mdx-js/mdx@3.1.0?bundle",
+      "remark-gfm": "https://esm.sh/remark-gfm@4.0.0"
+    }
+  }
+  </script>
+</head>
+<body>
+  <aside id="sidebar">
+    <header>
+      <h1><a href="#/">Atelier Loca Reception</a></h1>
+      <p class="hint">Trame de l'atelier client</p>
+      <button id="pdf-btn" type="button" class="pdf-btn">📄 Télécharger la doc en PDF</button>
+    </header>
+    <nav id="nav"></nav>
+    <footer>
+      <a href="../api-doc.json" target="_blank">api-doc.json</a>
+      ·
+      <a href="https://ws.pgs.fr/wslocasuite/scalar/" target="_blank">Scalar</a>
+    </footer>
+  </aside>
+
+  <main id="content"><div class="loading">Chargement…</div></main>
+
+  <div id="recap-resizer" title="Glisser pour redimensionner"></div>
+
+  <aside id="recap-root"></aside>
+
+  <div id="ui-root"></div>
+
+  <script type="module" src="app.js?v=1783439738"></script>
+</body>
+</html>

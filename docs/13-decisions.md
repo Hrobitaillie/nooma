@@ -14,6 +14,8 @@
 | 28/07/2026 | **Développement majoritairement vibe codé** (IA/Claude Code) — avec garde-fous : CI juge, zones à revue humaine obligatoire (gate/PIN, import, achats, manifests), zéro dépendance ajoutée sans décision humaine (doc 06 §7) |
 | 28/07/2026 | **Hugo gère toute la 3D** (Blender + addon **Clay Doh**, rendu Cycles — sans impact app car tout est pré-rendu) — pipeline détaillé doc 14 |
 | 28/07/2026 | **Florence prête sa voix à Nooma** (consignes, phonèmes, babillages) — remplace le plan TTS ; TTS = outil d'itération dev uniquement ; autorisation écrite voix à intégrer à la lettre de mission (docs 05 §5, 09 §5.2) |
+| 28/07/2026 | **Outillage de cadrage** : viewer de doc (hérité de locasyst-api) + catalogue de fonctionnalités fusionnés dans `/cadrage` — 76 postes chiffrables (SOC/MAP/JEU/DIR/MAS/REC/MOD/PAR/AUD/CNT/LAN), lots Proto/V1/V1.1/V2, commentaires ancrés, export PDF (`npm start`). L'édition multi-sessions de flooow n'est pas reprise (assumé) |
+| 28/07/2026 | **Flooow vendorisé dans `/flooow`** (snapshot du 28/07, hors node_modules/.git) avec un **graphe projet Nooma versionné** (`flooow/data/nooma/`, 10 écrans seedés depuis le catalogue) — `npm run flooow` (Vite 5173 + API 3011, script dev-local sans l'infra podman/Caddy). Flooow = graphe visuel ; catalogue = référence texte chiffrable |
 | 07/2026 | **Progression infinie adaptative** : biome = module de compétences, niveaux générés par le Directeur jusqu'à validation, changement de biome à la maîtrise, niveaux surprises/rappels — remplace « 5 mondes × 8-12 niveaux fixes » (formalisé doc 04, à confirmer ci-dessous) |
 | 07/2026 | Anti-dark-patterns comme principe produit ET argument public (doc 03 §5) — dont : Nooma jamais triste au départ de l'enfant |
 

@@ -1,0 +1,17 @@
+# Caddy DU CONTAINER dev-flooow-web (:8080). Bind-monté depuis
+# /srv/dev/flooow/Caddyfile. Reverse-proxy vers un upstream généré dynamiquement
+# (.caddy-upstream) : Vite (dev) ou Node/SPA build (prod). Le Node tourne sur
+# l'HÔTE (host.containers.internal) façon site facturation.
+# Cf cadrage/05-implementation/multi-user-serveur.md.
+:8080 {
+    import /srv/.caddy-upstream
+    encode gzip
+
+    # En-têtes de sécurité de base (le gros de la sécu + AuthCrunch est au Caddy hôte).
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        -Server
+    }
+}
