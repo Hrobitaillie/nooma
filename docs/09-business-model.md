@@ -13,7 +13,7 @@
 
 **Poppins (ex-Mila) n'est plus un concurrent frontal.** Avis HAS favorable pour la prise en charge anticipée (PECAN) par l'Assurance Maladie : accès **sur prescription** (~août 2026), positionnement « thérapie digitale » pour enfants dys 7-11 ans, dispositif médical CE, essai clinique Pitié-Salpêtrière, ~20 M€ levés ([FNO](https://fno.fr/poppins-clinical-ce-quil-faut-retenir-de-lavis-de-la-has/)). Ses prix : 26-39 €/mois selon engagement.
 
-Conséquences pour Nooma :
+Conséquences pour Plouma :
 - Le créneau **« apprentissage grand public de la lecture CP, 5-7 ans »** est plus ouvert que prévu — Poppins monte en gamme médicale et laisse le terrain prévention/apprentissage.
 - ⚠️ La **caution scientifique devient la norme du secteur** : « conçu avec une orthophoniste » est le minimum ; à terme, une étude d'efficacité (même modeste, avec une école partenaire) sera un différenciateur réel.
 - La voie « remboursement/mutuelles » existe (marquage CE médical + essai clinique) mais c'est une **barrière très haute** — à exclure en v1, à garder comme option stratégique long terme si le produit pivote vers le soin.
@@ -26,7 +26,7 @@ Autres modèles observés : Lingokids ~60 $/an, Holy Owly 60-96 €/an, Bayam ~9
 
 | Élément | Proposition | Justification |
 |---|---|---|
-| Gratuit | Les 2 premiers biomes complets (~2-4 semaines de jeu réel) | Essai réel, pas un teaser frustrant ; l'attachement à Nooma se construit avant le paywall |
+| Gratuit | Les 2 premiers biomes complets (~2-4 semaines de jeu réel) | Essai réel, pas un teaser frustrant ; l'attachement à Plouma se construit avant le paywall |
 | Payant | **Abonnement annuel ~59-79 €/an** (+ mensuel ~7,99 €/mois sans engagement, pour l'accessibilité) | Standard du marché (50-90 €/an) ; l'annuel domine en Education (59-66 % des abonnements — [RevenueCat 2026](https://www.revenuecat.com/state-of-subscription-apps-2026-education/)) |
 | Où on paie | **Uniquement dans l'espace parent** (derrière le PIN + parental gate) | L'enfant ne voit jamais ni prix ni mur ; la limite est racontée par la narration (« la suite du voyage se prépare ») |
 | 1 abonnement | = tous les enfants du foyer (multi-profils) | Argument famille, aligné Poppins (2 enfants) |
@@ -47,7 +47,7 @@ Cumul réaliste : **100-150 k€ non dilutifs** sur 18-24 mois si le dossier est
 | Dispositif | Montant | Condition clé |
 |---|---|---|
 | **Bourse French Tech** (Bpifrance) | Jusqu'à 50 k€ (70 % des dépenses) | Entreprise <1 an **ou** créateur accompagné par un incubateur → ⚠️ **intégrer un incubateur AVANT de créer la société** |
-| **Édu-Up** (Éducation nationale) | Jusqu'à ~70 k€ (50 % du projet) | Ressources numériques éducatives ; priorités « savoirs fondamentaux » et « école inclusive » — **le dispositif le plus aligné avec Nooma**, l'orthophoniste est un atout dossier majeur |
+| **Édu-Up** (Éducation nationale) | Jusqu'à ~70 k€ (50 % du projet) | Ressources numériques éducatives ; priorités « savoirs fondamentaux » et « école inclusive » — **le dispositif le plus aligné avec Plouma**, l'orthophoniste est un atout dossier majeur |
 | **Crédit d'Impôt Innovation** | 20 % des dépenses d'innovation (plafond 400 k€/an) | Dès le premier exercice ; prototypes de produits nouveaux |
 | Aides régionales (ex. Innov'up IDF) | Jusqu'à 100 k€ (faisabilité) | Selon région |
 | ACRE/ARCE | Exonérations + capital ARE | Si demandeur d'emploi au moment de la création |
@@ -79,7 +79,7 @@ Pas d'association, donc pas de pacte ni de vesting. Deux points restent utiles, 
 - ⚠️ **Tout contenu qu'elle rédige ou corrige** (listes de mots, progressions, formulations de consignes) est protégé par le droit d'auteur et **lui appartient par défaut**, amie ou pas : une cession/autorisation écrite (intégrée à la lettre de mission §5.2) évite toute ambiguïté future — c'est 3 lignes maintenant, un problème insoluble dans 3 ans.
 - Preuve d'antériorité du code : dépôt APP (~415 €/an tarif startup) ou enveloppe Soleau INPI.
 
-### 5.4 La marque ⚠️⚠️ VERDICT (recherche d'antériorité du 28/07/2026) : **« Nooma » déconseillé — risque moyen-élevé**
+### 5.4 La marque ⚠️⚠️ VERDICT (recherche d'antériorité du 28/07/2026) : **ancien nom « Nooma » déconseillé — risque moyen-élevé → nom retenu « Plouma » (29/07/2026)**
 
 Recherche menée sur TMview/EUIPO/data.inpi.fr, stores (iTunes API, Google Play) et domaines (RDAP). Constats :
 
@@ -89,6 +89,8 @@ Recherche menée sur TMview/EUIPO/data.inpi.fr, stores (iTunes API, Google Play)
 4. Risque par territoire : **France/UE moyen-élevé** (marque identique récente en 41/42) ; **US élevé** (Noomalife cl. 41 enregistrée, Empathic Labs cl. 9/41 en examen).
 
 **Décision : renommer** (Hugo, 28/07/2026), avec un **nom inventé, pas un prénom, sans finale en « -ou »** (trop « surnom »). La coexistence avec SAM SAS a été écartée (coût/délai incertains, ne règle ni les domaines ni les US).
+
+> ✅ **Nom retenu : « Plouma »** (Hugo, 29/07/2026 — shortlist #2 ci-dessous). Seul risque notable identifié : coexistence avec **PLOUMANAC'H** (cl. 41, commune de Perros-Guirec) — jugé faible, **à confirmer par l'avis CPI**. Renommage effectué dans toute la doc `/docs` (le nom de code interne « Nooma » subsiste dans les chemins techniques et le nom du dépôt). **À faire avant dépôt** : réserver `plouma.fr`/`plouma.app`, test oral auprès d'enfants de 5 ans, avis CPI, dépôt INPI (cl. 9+41+42).
 
 **Candidats vérifiés le 28/07/2026** (TMview tous offices via API + fichier prénoms INSEE 1900-2025 + iTunes Search API + RDAP AFNIC/Google Registry) — classement :
 

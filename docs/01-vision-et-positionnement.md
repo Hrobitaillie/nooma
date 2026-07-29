@@ -4,9 +4,9 @@
 
 ## 1. Vision ✅
 
-**Nooma** transforme l'apprentissage de la lecture (programme du CP) en un jeu d'aventure que l'enfant de 5-7 ans a *envie* de lancer — au point de ne pas se rendre compte qu'il apprend. L'app s'utilise **seul, en autonomie totale**, sur tablette, guidé par Nooma, une petite étoile en pâte à modeler tombée du ciel qui apprend à parler et à lire *en même temps que l'enfant*.
+**Plouma** transforme l'apprentissage de la lecture (programme du CP) en un jeu d'aventure que l'enfant de 5-7 ans a *envie* de lancer — au point de ne pas se rendre compte qu'il apprend. L'app s'utilise **seul, en autonomie totale**, sur tablette, guidé par Plouma, une petite étoile en pâte à modeler tombée du ciel qui apprend à parler et à lire *en même temps que l'enfant*.
 
-**Le test ultime du produit** : si on demande à l'enfant « tu fais quoi ? », il doit répondre « je joue avec Nooma », jamais « je fais mes exercices de lecture ».
+**Le test ultime du produit** : si on demande à l'enfant « tu fais quoi ? », il doit répondre « je joue avec Plouma », jamais « je fais mes exercices de lecture ».
 
 ## 2. L'équipe ✅
 
@@ -29,15 +29,15 @@ Le projet reste **solo** : Hugo décide et réalise tout. L'orthophoniste éclai
 
 Trois promesses :
 
-1. **Pour l'enfant** : un jeu coloré, doux et drôle, avec une amie (Nooma) qui grandit avec lui. Jamais d'échec, jamais de note, jamais de chrono anxiogène.
+1. **Pour l'enfant** : un jeu coloré, doux et drôle, avec une amie (Plouma) qui grandit avec lui. Jamais d'échec, jamais de note, jamais de chrono anxiogène.
 2. **Pour le parent** : un contenu sérieux (conçu par une orthophoniste, aligné programme CP), zéro pub, zéro tracking, données qui restent sur la tablette, temps d'écran maîtrisé.
-3. **Différenciation produit** : là où la concurrence propose des parcours fixes, Nooma propose une **progression infinie générée pour chaque enfant** à partir de ses forces/faiblesses (voir [04-progression-adaptative.md](04-progression-adaptative.md)) — l'app « respire » avec l'enfant au lieu de dérouler un catalogue.
+3. **Différenciation produit** : là où la concurrence propose des parcours fixes, Plouma propose une **progression infinie générée pour chaque enfant** à partir de ses forces/faiblesses (voir [04-progression-adaptative.md](04-progression-adaptative.md)) — l'app « respire » avec l'enfant au lieu de dérouler un catalogue.
 
 ## 4. Différenciation face à la concurrence
 
 > L'analyse concurrentielle détaillée (Poppins, Lalilo, GraphoLearn, Kaligo, Duolingo ABC, Khan Academy Kids, Teach Your Monster to Read…) est dans [02-pedagogie.md](02-pedagogie.md) §concurrence.
 
-Nooma ne rivalisera pas sur la richesse visuelle d'un studio financé (Poppins). Sa valeur perçue vient de :
+Plouma ne rivalisera pas sur la richesse visuelle d'un studio financé (Poppins). Sa valeur perçue vient de :
 
 - **Cohérence et douceur** : une seule DA claymation unifiée, soignée, chaleureuse (voir [05-direction-artistique.md](05-direction-artistique.md))
 - **Qualité d'interaction** : micro-feedbacks sonores, animations réactives, zéro friction
@@ -45,7 +45,7 @@ Nooma ne rivalisera pas sur la richesse visuelle d'un studio financé (Poppins).
 - **Adaptativité réelle** : niveaux générés selon le profil de l'enfant, pas un parcours linéaire identique pour tous
 - **Confiance** : conseils d'une orthophoniste + vie privée exemplaire (100 % offline v1)
 
-## 5. Anti-objectifs ✅ (ce que Nooma ne sera jamais)
+## 5. Anti-objectifs ✅ (ce que Plouma ne sera jamais)
 
 - Pas de publicité, pas d'achats visibles par l'enfant, pas de monnaie achetable
 - Pas de mécaniques de pression : streaks punitifs, timers, vies limitées, FOMO
@@ -55,7 +55,7 @@ Nooma ne rivalisera pas sur la richesse visuelle d'un studio financé (Poppins).
 
 ## 6. Le nom ⚠️ (statut : à re-décider)
 
-**« Nooma » est abandonné** (recherche d'antériorité du 28/07/2026 : marque FR identique enregistrée en classes 41/42, nom saturé, domaines pris) — **le renommage est décidé**. Contraintes de Hugo : nom inventé, pas un prénom, pas de finale « -ou ». **Shortlist vérifiée : Zintille · Plouma · Brillune · Étinelle · Ploumelle** (détail et étapes dans [09-business-model.md](09-business-model.md) §5.4). « Nooma » reste le **nom de code interne** (repo, docs) tant que le nouveau nom n'est pas choisi et déposé — la mascotte sera renommée d'après le nom retenu.
+**« Plouma » est abandonné** (recherche d'antériorité du 28/07/2026 : marque FR identique enregistrée en classes 41/42, nom saturé, domaines pris) — **le renommage est décidé**. Contraintes de Hugo : nom inventé, pas un prénom, pas de finale « -ou ». **Shortlist vérifiée : Zintille · Plouma · Brillune · Étinelle · Ploumelle** (détail et étapes dans [09-business-model.md](09-business-model.md) §5.4). « Plouma » reste le **nom de code interne** (repo, docs) tant que le nouveau nom n'est pas choisi et déposé — la mascotte sera renommée d'après le nom retenu.
 
 ## 7. Métriques de succès 🔶
 

@@ -7,7 +7,7 @@
 
 **Produit/juridique :**
 - [ ] Valider ensemble les propositions 🔶 de cette doc (modèle biomes/infini, modes de jeu, stack, business model) → mettre à jour [13-decisions.md](13-decisions.md)
-- [ ] ⚠️ **Recherche d'antériorité marque « Nooma »** (INPI + EUIPO — une app « nooma » existe déjà en classe 9, voir doc 09 §5.4) → décision garder/renommer **avant toute com publique**
+- [ ] ⚠️ **Recherche d'antériorité marque « Plouma »** (INPI + EUIPO — une app « nooma » existe déjà en classe 9, voir doc 09 §5.4) → décision garder/renommer **avant toute com publique**
 - [ ] Lettre de mission de l'orthophoniste conseil (1 page : périmètre, confidentialité, IP des contenus relus/rédigés) (doc 09 §5.2-5.3)
 - [ ] Candidature incubateur (condition de la Bourse French Tech — doc 09 §4)
 
@@ -15,7 +15,7 @@
 - [ ] Graphe de compétences v1 (modules → compétences → prérequis) — doc 02 §8
 - [ ] Progression des graphèmes validée (doc 02 §2)
 - [ ] Première banque d'items : module Syllabes (~100 mots tagués)
-- [ ] Charte des consignes/feedbacks de Nooma (éloge du processus — doc 03 §2.4)
+- [ ] Charte des consignes/feedbacks de Plouma (éloge du processus — doc 03 §2.4)
 
 **Technique/DA :**
 - [ ] Acheter la **tablette de référence** 2 Go (doc 08 §1)
@@ -26,8 +26,8 @@
 
 ## Phase 1 — Preuves techniques (les 4 tests tueurs de risque)
 
-- [ ] **Test A — le look & la pipeline** ✅ (inchangé) : Nooma clay (pose neutre + idle + célébration) + carte Prairie 3 couches → app Flutter/Flame avec parallax + sprite animée + **flutter_soloud**, mesurée **sur la tablette de référence** (fps, RAM, latence tap→son, poids). *Risque levé : la pipeline Blender→mobile tient-elle ?*
-- [ ] **Test B — le son** (mis à jour : **la voix de Nooma = Florence**) : session d'enregistrement test (10 consignes + 10 babillages + 5 phonèmes isolés, micro correct, doc 05 §5) → écoute par des parents et des enfants. *Risques levés : la voix enregistrée « maison » est-elle assez propre techniquement ? le processus d'enregistrement par lots est-il tenable pour Florence ?*
+- [ ] **Test A — le look & la pipeline** ✅ (inchangé) : Plouma clay (pose neutre + idle + célébration) + carte Prairie 3 couches → app Flutter/Flame avec parallax + sprite animée + **flutter_soloud**, mesurée **sur la tablette de référence** (fps, RAM, latence tap→son, poids). *Risque levé : la pipeline Blender→mobile tient-elle ?*
+- [ ] **Test B — le son** (mis à jour : **la voix de Plouma = Florence**) : session d'enregistrement test (10 consignes + 10 babillages + 5 phonèmes isolés, micro correct, doc 05 §5) → écoute par des parents et des enfants. *Risques levés : la voix enregistrée « maison » est-elle assez propre techniquement ? le processus d'enregistrement par lots est-il tenable pour Florence ?*
 - [ ] **Test C — les images-mots** ✅ (inchangé) : 15 images (template Blender + IA claymation), vérifier l'homogénéité. *Risque levé : le lot de 200-400 images est-il produisible ?*
 - [ ] **Test D — le Directeur** 🔶 (nouveau) : implémentation de la lib pure (moyenne glissante ou Elo, génération contrainte, seeds) + **simulation de 10 000 enfants virtuels** validant : ~80 % de réussite, jamais de niveau impossible, sortie de biome en 8-20 niveaux selon profil. *Risque levé : la génération infinie adaptative fonctionne-t-elle sur le papier ?* — 100 % testable sans UI, parallélisable avec A/B/C.
 
@@ -48,8 +48,8 @@
 - [ ] Biomes 1-4 (≈ modules Syllabes → Rimes → Phonèmes → Premières lettres) avec banques d'items complètes
 - [ ] Niveaux surprises : nœuds cadeaux + niveaux échos (rappel espacé) — les rêves/saisons peuvent attendre la v1.1
 - [ ] Mécaniques d'encodage (dictée muette — le manque identifié doc 02 §4.5)
-- [ ] Espace parent minimal (PIN + gate, progression par module en langage clair, réglages audio 3 canaux, limite douce « Nooma va dormir »)
-- [ ] Maison de Nooma v1 (album + customisation basique)
+- [ ] Espace parent minimal (PIN + gate, progression par module en langage clair, réglages audio 3 canaux, limite douce « Plouma va dormir »)
+- [ ] Maison de Plouma v1 (album + customisation basique)
 - [ ] Onboarding enfant + robustesse interruptions
 - [ ] **Beta fermée familles** — ⚠️ satisfait au passage l'obligation Google « 12 testeurs / 14 jours » (doc 11 §3)
 - [ ] Dossiers Édu-Up + Bourse French Tech déposés (doc 09 §4)
@@ -69,7 +69,7 @@
 ## Phase 5 — Vie du produit
 
 - [ ] Biomes suivants jusqu'à couvrir tout le CP (~10-14 biomes — doc 04 §5.2)
-- [ ] Rêves de Nooma, visites saisonnières, sentiers cachés
+- [ ] Rêves de Plouma, visites saisonnières, sentiers cachés
 - [ ] Mode histoires enrichi, customisation avancée
 - [ ] Multi-profils (fratries)
 - [ ] Pistes v2+ : co-jeu parent-enfant (Overcooked-like), lecture à voix haute (reconnaissance vocale), extension GS/CE1, licence pro orthophonistes (doc 09 §3)
@@ -78,7 +78,7 @@
 
 | Risque | Parade | Phase |
 |---|---|---|
-| ⚠️ Marque « Nooma » indisponible | Recherche d'antériorité AVANT toute com | 0 |
+| ⚠️ Marque « Plouma » indisponible | Recherche d'antériorité AVANT toute com | 0 |
 | Enfant seul ne comprend pas / ne revient pas | Test enfants réels, métrique n°1 | 2 |
 | Pipeline Blender→mobile (poids/RAM/look) | Test A sur tablette de référence | 1 |
 | Génération adaptative répétitive ou cassée | Test D (simulation massive) + règles de variété | 1-2 |

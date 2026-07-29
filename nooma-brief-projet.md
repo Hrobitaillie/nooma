@@ -1,4 +1,4 @@
-# Nooma — Brief projet
+# Plouma — Brief projet
 
 Application d'apprentissage du CP (lecture, phonologie) pour enfants de 5-7 ans, en autonomie, guidée par une mascotte.
 
@@ -39,34 +39,34 @@ Base théorique : la conscience phonologique est un des meilleurs prédicteurs d
 
 | # | Nom | Mécanique | Compétence |
 |---|-----|-----------|------------|
-| 1 | **Tape la syllabe** | Nooma prononce un mot, l'enfant tape sur l'écran à chaque syllabe entendue (comme taper dans les mains). Nooma tape en même temps pour montrer l'exemple au début. | Segmentation syllabique |
-| 2 | **Trouve la rime** | 3 images à l'écran (ex : chat, vélo, rat), Nooma dit un mot ("bras"), l'enfant touche l'image qui rime. | Reconnaissance de rimes |
-| 3 | **Qui commence pareil ?** | Plusieurs images, l'enfant regroupe celles qui commencent par le même son que celui prononcé par Nooma. | Son d'attaque |
+| 1 | **Tape la syllabe** | Plouma prononce un mot, l'enfant tape sur l'écran à chaque syllabe entendue (comme taper dans les mains). Plouma tape en même temps pour montrer l'exemple au début. | Segmentation syllabique |
+| 2 | **Trouve la rime** | 3 images à l'écran (ex : chat, vélo, rat), Plouma dit un mot ("bras"), l'enfant touche l'image qui rime. | Reconnaissance de rimes |
+| 3 | **Qui commence pareil ?** | Plusieurs images, l'enfant regroupe celles qui commencent par le même son que celui prononcé par Plouma. | Son d'attaque |
 | 4 | **La boîte à sons** | Un mot simple ("chat") est découpé visuellement en cases représentant chaque son (/ch/-/a/), l'enfant place des jetons/étoiles dans chaque case en répétant. | Segmentation phonémique |
-| 5 | **Assemble les sons** | Nooma dit deux sons séparés ("f... eu"), l'enfant choisit le mot correspondant parmi 2-3 propositions ("feu", "fou", "faux"). | Fusion phonémique |
+| 5 | **Assemble les sons** | Plouma dit deux sons séparés ("f... eu"), l'enfant choisit le mot correspondant parmi 2-3 propositions ("feu", "fou", "faux"). | Fusion phonémique |
 
 Un **prototype HTML jouable** a existé (écran d'accueil + mini-jeu "Trouve la rime") : `nooma-prototype.html` — fichier à retrouver ou à recréer (absent du dossier projet au 27/07/2026).
 
 ## 4. Structure d'usage
 
 - **Session courte** : 5-10 min, un seul objectif à la fois
-- **Fil rouge narratif** : la carte-monde du voyage de Nooma (voir section 5)
+- **Fil rouge narratif** : la carte-monde du voyage de Plouma (voir section 5)
 - **Difficulté adaptative discrète** : l'app ajuste sans jamais afficher "tu as échoué"
 - **Récompenses** : autocollants virtuels, personnalisation de la mascotte — pas de scores anxiogènes
 
 ## 5. Carte-monde & gamification
 
 ### Fil narratif
-**Nooma est une étoile tombée du ciel — la carte-monde, c'est son voyage sur Terre.** Chaque monde est une région (prairie, forêt, rivière, montagne, ciel nocturne…). En avançant, Nooma apprend à parler et à lire **en même temps que l'enfant**, ce qui justifie naturellement l'évolution de son langage (section 8).
+**Plouma est une étoile tombée du ciel — la carte-monde, c'est son voyage sur Terre.** Chaque monde est une région (prairie, forêt, rivière, montagne, ciel nocturne…). En avançant, Plouma apprend à parler et à lire **en même temps que l'enfant**, ce qui justifie naturellement l'évolution de son langage (section 8).
 
 ### Structure façon "map Mario"
 - **Carte globale pannable/zoomable** avec des mondes débloqués progressivement
 - **Chaque monde** : un chemin avec **8-12 niveaux** (mini-jeux), déblocage séquentiel, mélange des 4 piliers, difficulté croissante alignée sur l'année de CP
-- **Fin de monde** : pas de "boss" stressant, mais une **"grande aventure"** récapitulative qui débloque le monde suivant + une transformation/tenue de Nooma
+- **Fin de monde** : pas de "boss" stressant, mais une **"grande aventure"** récapitulative qui débloque le monde suivant + une transformation/tenue de Plouma
 
 ### Récompenses (jamais anxiogènes)
 - Pas d'étoiles de performance ni de notation : chaque niveau terminé donne un **autocollant en pâte à modeler** à coller dans un album
-- **"Poussière d'étoile"** collectée au fil des niveaux pour customiser Nooma
+- **"Poussière d'étoile"** collectée au fil des niveaux pour customiser Plouma
 - Nombre et thèmes définitifs des mondes : **à caler sur les périodes du programme de CP** (à trancher)
 
 ### Extensibilité
@@ -89,7 +89,7 @@ Même en usage autonome, prévoir un espace parent séparé :
 - Suivi de la progression pédagogique
 - Suivi du temps d'écran
 
-## 8. La mascotte : Nooma
+## 8. La mascotte : Plouma
 
 ### Concept
 Une petite **étoile tombée du ciel**, curieuse de tout ce qui se passe sur Terre — en particulier fascinée par les sons et les mots des humains, qu'elle ne comprend pas encore bien au début. C'est une mascotte à **forme unique qui se transforme** selon l'exercice (note de musique, lettre vivante, nuage de syllabes, etc.) — l'enfant comprend intuitivement "l'étoile devient ce qu'on travaille". C'est le fil rouge pédagogique visuel de toute l'app.
@@ -107,7 +107,7 @@ Une petite **étoile tombée du ciel**, curieuse de tout ce qui se passe sur Ter
 - **Affectueuse** — elle s'attache à l'enfant, l'appelle par un petit surnom ("mon petit humain", "mon ami/amie"...)
 
 ### Voix et langage — évolution sur l'année
-Nooma parle un mélange de babillage ("gibberish", façon Animal Crossing / Pikmin / BabyBus — pas de vraies phrases enregistrées à chaque mise à jour) et de français, qui devient plus fluide au fil de la progression de l'enfant :
+Plouma parle un mélange de babillage ("gibberish", façon Animal Crossing / Pikmin / BabyBus — pas de vraies phrases enregistrées à chaque mise à jour) et de français, qui devient plus fluide au fil de la progression de l'enfant :
 - **Début** : babillage doux + quelques mots français très clairs et bien articulés, redondants avec des sons/gestes
 - **Milieu de parcours** : mélange de babillage et phrases courtes en français, de plus en plus fluides
 - **Fin de parcours (fin CP)** : elle parle presque normalement, avec encore quelques "bl bl bl" d'excitation comme signature affective (pas comme béquille de compréhension)
@@ -123,13 +123,13 @@ Voix : **féminine, douce**.
 | **Scintillement/vacillement** | Réflexion / temps d'attente / l'enfant hésite | Elle clignote doucement, comble les temps morts sans jamais faire sentir à l'enfant qu'il est "regardé en silence" |
 
 ### Séquence de réussite
-Nooma s'excite → se transforme rapidement en 2-3 formes rigolotes (note de musique, petit nuage, spirale) → finit en forme de **cœur** → petit son de clochette/rire → phrase de félicitation chaleureuse.
+Plouma s'excite → se transforme rapidement en 2-3 formes rigolotes (note de musique, petit nuage, spirale) → finit en forme de **cœur** → petit son de clochette/rire → phrase de félicitation chaleureuse.
 
 ### Séquence d'erreur / essai raté
-**Jamais de son négatif.** Nooma fait un petit "hmm ?" curieux, penche la tête, encourage à réessayer, sans jamais donner l'impression que l'enfant a "perdu". Le babillage en cas d'échec reste toujours doux — à bannir : tout son qui pourrait sonner comme une moquerie (ex. un "ha ha" mal interprété).
+**Jamais de son négatif.** Plouma fait un petit "hmm ?" curieux, penche la tête, encourage à réessayer, sans jamais donner l'impression que l'enfant a "perdu". Le babillage en cas d'échec reste toujours doux — à bannir : tout son qui pourrait sonner comme une moquerie (ex. un "ha ha" mal interprété).
 
 ### Animation — inventaire des clips (décision : sprite sheets Blender, voir section 10)
-Nooma est riggée dans Blender (armature légère + shape keys) et chaque animation est rendue en séquence d'images → sprite sheet. L'inventaire est **fini** (~12-15 clips de 1 à 3 s) :
+Plouma est riggée dans Blender (armature légère + shape keys) et chaque animation est rendue en séquence d'images → sprite sheet. L'inventaire est **fini** (~12-15 clips de 1 à 3 s) :
 
 idle/scintillement, clignement, écoute, "hmm ?" d'erreur (tête penchée), célébration complète (transformations → cœur), éternuement d'étincelles, hoquet du rire, apparition, disparition, geste "montrer/pointer", tape-des-mains (jeu des syllabes), boucle "elle parle" (babillage).
 
@@ -137,7 +137,7 @@ idle/scintillement, clignement, écoute, "hmm ?" d'erreur (tête penchée), cél
 - Chaque clip **commence et finit sur la même pose neutre** → l'app enchaîne n'importe quels clips sans transition visible
 - **12-15 fps** — suffisant, et le léger saccadé renforce l'esthétique stop-motion
 - Babillage : boucle "elle parle" générique déclenchée avec l'audio — pas de lipsync (référence : Animal Crossing)
-- Nooma affichée ~300-400 px à l'écran → rendu à 2x, poids maîtrisé
+- Plouma affichée ~300-400 px à l'écran → rendu à 2x, poids maîtrisé
 - **En réserve (pas v1)** : pupilles dessinées par l'app par-dessus le sprite pour un suivi du regard en temps réel (les pupilles sont des ronds sombres simples)
 
 ## 9. Univers visuel et sonore
@@ -171,7 +171,7 @@ Le style peint/texturé façon **Arcane** reste écarté pour les mêmes raisons
 ### Pipeline carte-monde
 1. **Une scène Blender par monde**, caméra fixe (orthographique ou légère plongée)
 2. Rendu en **3-4 couches séparées** (fond / décor médian / éléments interactifs / premier plan) → léger décalage des couches au scroll dans l'app = **effet parallax** à coût quasi nul
-3. Éléments animés du décor (drapeau, eau, Nooma qui sautille sur le chemin) : séquences d'images → **sprite sheets WebP, 12-15 fps**
+3. Éléments animés du décor (drapeau, eau, Plouma qui sautille sur le chemin) : séquences d'images → **sprite sheets WebP, 12-15 fps**
 4. **JSON par monde** pour les nœuds/niveaux (voir section 5 — extensibilité)
 5. L'app affiche la carte comme une grande image pannable/zoomable avec zones tactiles superposées
 
@@ -200,7 +200,7 @@ no other characters, single character only
 
 ## 11. Nom du projet
 
-**Nooma** — nom vérifié comme largement libre et sûr dans le créneau enfance/éducation (App Store / Google Play), après élimination de plusieurs pistes :
+**Plouma** — nom vérifié comme largement libre et sûr dans le créneau enfance/éducation (App Store / Google Play), après élimination de plusieurs pistes :
 - ~~Luma~~ — déjà pris (appli d'étude + appli de suivi de sommeil bébé)
 - ~~Lumy~~ — déjà pris par une appli de rencontres (risque de confusion inacceptable pour une app enfants)
 - ~~Lumii~~ — déjà pris (retouche photo, appli beauté/développement personnel 14-24 ans)

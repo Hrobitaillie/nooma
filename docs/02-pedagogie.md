@@ -31,7 +31,7 @@ Une évaluation de **309 apps de phonics** (Flinders 2025) n'en recommande que 8
 2. **Nom des lettres au lieu des sons.**
 3. **Mécaniques de devinette** : si l'enfant peut réussir via l'image ou le contexte sans décoder, l'exercice est nul. Test à appliquer à chaque mini-jeu (complémentaire du « test du brocoli » du doc 03).
 4. **Mots non déchiffrables trop tôt** (cf. règle d'or §2).
-5. **Hotspots/animations distracteurs** : méta-analyse Takacs et al. 2015 (43 études) — le multimédia congruent aide, les enrichissements non liés à la tâche nuisent, surtout aux enfants fragiles. → Les célébrations de Nooma arrivent *après* la tâche, jamais pendant.
+5. **Hotspots/animations distracteurs** : méta-analyse Takacs et al. 2015 (43 études) — le multimédia congruent aide, les enrichissements non liés à la tâche nuisent, surtout aux enfants fragiles. → Les célébrations de Plouma arrivent *après* la tâche, jamais pendant.
 6. **Absence d'encodage** : écrire (composer des mots avec des lettres/graphèmes mobiles) est le test ultime du code — nos 17 mécaniques actuelles sont trop « réception » (voir §4.5).
 7. **Surestimation de l'app seule** ⚠️ : le RCT de Kalulu (l'app de l'équipe Dehaene, 1 092 enfants) montre des gains immédiats **non maintenus** ; les méta-analyses GraphoGame concluent : efficace surtout **couplé à une interaction adulte**. Implications : (a) humilité dans le discours (l'app *complète*), (b) donner un rôle au parent (mode histoires du soir, conseils dans l'espace parent), (c) à terme, un exercice de lecture à voix haute (§4.6).
 
@@ -48,14 +48,14 @@ Nos 17 mécaniques actuelles (brief §3, plan §3.3-3.5) restent valides. La rec
 ### 4.2 Grapho-phonémique
 - Chasse au graphème dans une grille (variante de « Attrape le son »)
 - Tri d'images par son en 2 colonnes (/s/ vs /z/)
-- **Gestes Borel-Maisonny** 🔶 : 1 geste par son (Nooma fait le geste, l'enfant l'imite) — très utilisé en ortho, différenciateur, et donne un canal *corporel* au jeu
+- **Gestes Borel-Maisonny** 🔶 : 1 geste par son (Plouma fait le geste, l'enfant l'imite) — très utilisé en ortho, différenciateur, et donne un canal *corporel* au jeu
 - Tracé de la lettre au doigt (préparation écriture — mécanique tactile naturelle)
 - Distinction explicite nom/son/tracé
 
 ### 4.3 Décodage & fluence
 - Gammes de syllabes (ba-bo-bu — notre « Fabrique de syllabes »)
 - **Colorisation syllabique alternée** (imprégnation syllabique, méthode ortho éprouvée) : les mots s'affichent avec syllabes en 2 couleurs → allège la mémoire de travail 🔶 à intégrer comme *aide* dans tous les jeux de lecture
-- **Pseudo-mots/logatomes** (« lire les mots rigolos des étoiles ») ⚠️ crucial : force le décodage pur, empêche la devinette — et narrativement parfait (la langue de Nooma !)
+- **Pseudo-mots/logatomes** (« lire les mots rigolos des étoiles ») ⚠️ crucial : force le décodage pur, empêche la devinette — et narrativement parfait (la langue de Plouma !)
 - Lecture flash de mots-outils (2-5 s)
 - Lecture répétée avec modèle audio (karaoké : surlignage synchronisé)
 - Chaînes de mots (bal→bol→bar : un graphème change)
@@ -64,12 +64,12 @@ Nos 17 mécaniques actuelles (brief §3, plan §3.3-3.5) restent valides. La rec
 - Appariement mot-image avec **distracteurs calibrés** (phonologique : « poule/boule » ; sémantique : « poule/canard » — la difficulté du niveau EST la proximité des distracteurs, paramètre clé du Directeur)
 - **Consignes à exécuter** (« touche le rond bleu sous l'arbre ») — idéal tactile, mesure la syntaxe
 - Phrase-image (sur/sous, avant/après), vrai/faux, remise en ordre
-- Compréhension orale d'histoires (dissociée du décodage — nos « Histoires de Nooma »)
+- Compréhension orale d'histoires (dissociée du décodage — nos « Histoires de Plouma »)
 
 ### 4.5 Encodage ⚠️ (le manque n°1 de notre design actuel)
 Le brief n'a **aucune mécanique de production** — or l'encodage quotidien est une recommandation forte (Eduscol, Dehaene). Mécaniques à ajouter 🔶 :
 - **Dictée muette** : une image (chat), l'enfant compose le mot avec des graphèmes mobiles en clay
-- **La machine à mots** : Nooma prononce, l'enfant assemble les graphèmes (pas les lettres une à une : les *graphèmes* — « ch » est une seule pièce)
+- **La machine à mots** : Plouma prononce, l'enfant assemble les graphèmes (pas les lettres une à une : les *graphèmes* — « ch » est une seule pièce)
 - Tracé guidé de lettres (pont vers l'écriture manuscrite, sans stylet en v1)
 
 ### 4.6 Transversal (v2+, à garder au backlog)
@@ -99,7 +99,7 @@ La recherche (Taylor & Rohrer 2010 : l'interleaving **double** la rétention au 
 - **Fritz et al. 2007** (préscolaires) : récupération espacée expansive → d = 1,9.
 - Intervalle optimal ≈ 10-20 % du délai de rétention visé ; **mieux vaut trop espacer que pas assez** (Cepeda 2008).
 - ⚠️ Les 5-7 ans n'ont **aucune métacognition de l'espacement** : le calendrier doit être imposé par l'app (jamais « veux-tu réviser ? »), robuste aux jours manqués (recalage sans pénalité).
-- **Implémentation v1 : Leitner simplifié J+1 → J+2/3 → J+7 → J+14+** (FSRS/SM-2 non calibrés pour enfants), maîtrise mesurée par les réponses (pas d'auto-évaluation, impossible à cet âge). C'est exactement ce que déguisent nos « niveaux échos » et « rêves de Nooma » (doc 04 §7).
+- **Implémentation v1 : Leitner simplifié J+1 → J+2/3 → J+7 → J+14+** (FSRS/SM-2 non calibrés pour enfants), maîtrise mesurée par les réponses (pas d'auto-évaluation, impossible à cet âge). C'est exactement ce que déguisent nos « niveaux échos » et « rêves de Plouma » (doc 04 §7).
 - Mix par session : ~70-80 % compétence du biome courant + 20-30 % rappels espacés.
 
 ### 5.5 Structure de session (validée)
@@ -118,7 +118,7 @@ Mini-blocs de 1-2 min ; chaque session contient **du décodage ET de l'encodage*
 | Kaligo | 3-8 | 39,99 €/an | Écriture au stylet (niche complémentaire) |
 | Boukili | 4+ | Gratuit | Livres nivelés, pas d'adaptativité |
 
-**Les 5 trous de marché identifiés** (fenêtre pour Nooma) :
+**Les 5 trous de marché identifiés** (fenêtre pour Plouma) :
 1. **Aucun « Duolingo ABC du français »** : les apps AAA gratuites sont anglophones, les françaises gratuites ont une UX datée.
 2. **Vide post-Lalilo** (payant depuis 2025, fin du dispositif TNE août 2026) côté familles et enseignants.
 3. **Personne ne couvre les 4 piliers ensemble** en français grand public — le marché est fragmenté (code / écriture / compréhension / remédiation).
@@ -138,6 +138,6 @@ Statut : **amie proche en conseil métier** — pas d'association ni de rôle op
 1. **Le graphe de compétences** (modules → compétences → prérequis) — fondation du Directeur
 2. **La progression des graphèmes** (validation/ajustement du §2)
 3. **Les banques d'items tagués** : mots (avec structure syllabique, graphèmes requis, fréquence), images nécessaires, distracteurs recommandés par item
-4. **La charte des consignes et feedbacks** (formulations exactes de Nooma, éloge du processus — doc 03 §2.4)
+4. **La charte des consignes et feedbacks** (formulations exactes de Plouma, éloge du processus — doc 03 §2.4)
 5. **L'enregistrement/validation audio des phonèmes**
 6. La **matrice compétence ↔ mécaniques** (quel jeu peut travailler quoi)

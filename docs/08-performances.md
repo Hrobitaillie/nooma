@@ -16,7 +16,7 @@
 | iOS : « Ask if Over 200 MB » en cellulaire par défaut | 200 Mo |
 | Impact conversion | +6 Mo d'APK ≈ −1 % d'installs (étude Google Play) |
 
-**Budget Nooma v1 : ≤ 150-200 Mo compressés, tout embarqué** 🔶. Répartition indicative : ~90-120 Mo d'images/atlas, ~30-50 Mo d'audio, ~15 Mo de binaire.
+**Budget Plouma v1 : ≤ 150-200 Mo compressés, tout embarqué** 🔶. Répartition indicative : ~90-120 Mo d'images/atlas, ~30-50 Mo d'audio, ~15 Mo de binaire.
 
 ⚠️ Livraison différée des biomes (si on dépasse un jour) : Play Asset Delivery n'a **pas de support Flutter officiel** (plugin communautaire à auditer), et **iOS On-Demand Resources est déprécié depuis WWDC 2025** (remplacé par Background Assets, sans support Flutter connu). En pratique : tout embarquer en v1 ; si besoin plus tard, téléchargement HTTPS maison. L'ancienne idée « mondes téléchargeables à la demande » du brief est donc **reportée** — raison de plus pour tenir le budget embarqué.
 
@@ -35,7 +35,7 @@
 
 ## 4. Audio
 
-- **Voix (consignes, Nooma)** : OGG Vorbis **mono, 32-64 kbps, 22-24 kHz** — 60 s ≈ 360 Ko à 48 kbps. Des centaines de consignes tiennent en quelques dizaines de Mo. Pas de stéréo pour de la voix, pas de 44,1 kHz.
+- **Voix (consignes, Plouma)** : OGG Vorbis **mono, 32-64 kbps, 22-24 kHz** — 60 s ≈ 360 Ko à 48 kbps. Des centaines de consignes tiennent en quelques dizaines de Mo. Pas de stéréo pour de la voix, pas de 44,1 kHz.
 - **SFX (feedbacks)** : courts, **préchargés et décodés en mémoire** (via flutter_soloud) pour une latence quasi nulle au tap — c'est le cœur du ressenti « réactif ».
 - Boucles musicales : Vorbis stéréo ~96 kbps, 1 par biome, streamées (pas préchargées).
 - ⚠️ Latence : flutter_soloud (miniaudio → AAudio) est notre choix précisément pour ça (doc 06 §1). Tester le ressenti tap→son sur la tablette de référence : cible perçue « instantané » (< ~50 ms).
@@ -49,7 +49,7 @@
 ## 6. Temps de chargement (pour un enfant de 5 ans)
 
 - Repères UX : 1 s = fluide, 10 s = abandon (NN/g) ; un enfant de 5 ans décroche bien avant 10 s.
-- **Budget : < 2-3 s par transition, jamais d'écran figé** — toujours une animation + un son pendant les chargements (Nooma qui sautille). ⚠️ Extrapolation raisonnable, pas un chiffre d'étude enfant — à observer en vrai lors des tests Phase 2.
+- **Budget : < 2-3 s par transition, jamais d'écran figé** — toujours une animation + un son pendant les chargements (Plouma qui sautille). ⚠️ Extrapolation raisonnable, pas un chiffre d'étude enfant — à observer en vrai lors des tests Phase 2.
 - Le préchargement du biome pendant la carte-monde rend les entrées en niveau instantanées.
 - Démarrage à froid : Flutter est bon là-dessus (~0,75 s dans les benchmarks) ; garder le splash < 2 s sur la tablette de référence.
 

@@ -24,14 +24,14 @@ Le choix **100 % offline / sans compte / sans pub / sans tracking** ✅ est un *
 ## 3. Google Play — Families
 
 - Déclaration **Target Audience and Content** : public cible enfants → **Families Policy Requirements** s'appliquent : pas de transmission AAID/IMEI/MAC, pas de localisation, **SDK tiers uniquement s'ils sont certifiés « Families »**, Data safety form + privacy policy obligatoires.
-- **Badge « Teacher Approved »** : pas de candidature — panel d'enseignants (programme conçu avec Harvard/Georgetown) qui évalue valeur pédagogique, adéquation à l'âge, absence de mécaniques agressives. Objectif explicite pour Nooma : notre design anti-dark-patterns (doc 03 §5) est exactement leur grille.
+- **Badge « Teacher Approved »** : pas de candidature — panel d'enseignants (programme conçu avec Harvard/Georgetown) qui évalue valeur pédagogique, adéquation à l'âge, absence de mécaniques agressives. Objectif explicite pour Plouma : notre design anti-dark-patterns (doc 03 §5) est exactement leur grille.
 - ⚠️ **Compte développeur personnel : obligation de test fermé — 12 testeurs pendant 14 jours — avant tout accès production.** À anticiper dans la roadmap beta (les familles beta de la Phase 3 servent à ça).
 - Compte : 25 $ une fois ; vérification d'identité ; délais de review 7-21 jours pour un nouveau compte en catégorie sensible.
 - Nouveautés 2025-2026 : politique « Age-Restricted Content and Functionality » (oct. 2025), Play Age Signals API en bêta — à surveiller, sans impact immédiat pour une app sans compte ni chat.
 
 ## 4. Réglementation applicable (résumé — détail dans doc 07)
 
-| Texte | Impact sur Nooma v1 offline |
+| Texte | Impact sur Plouma v1 offline |
 |---|---|
 | RGPD (France : consentement parental < 15 ans) | Quasi neutralisé si rien ne quitte l'appareil ; réactivé par tout SDK/analytics/backend |
 | COPPA (si distribution US) | Hors champ sans collecte ; un seul identifiant persistant collecté suffit à y entrer |

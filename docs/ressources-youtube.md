@@ -1,4 +1,4 @@
-# Nooma — Mots-clés YouTube pour la pipeline Blender → app
+# Plouma — Mots-clés YouTube pour la pipeline Blender → app
 
 > Recherches à faire en **anglais** en priorité (10x plus de contenu, souvent de meilleure qualité).
 > Conseil de méthode : commencer par la section 4 (sprite sheets) — c'est le maillon qui valide toute la pipeline (Test A de la Phase 1 du plan projet). Le style clay est le plus agréable à explorer mais le moins risqué.
@@ -12,7 +12,7 @@
 - `blender cute stylized character tutorial` (beaucoup de résultats proches du rendu kawaii/clay)
 - `blender fingerprint texture clay` (effet empreintes de doigts)
 
-**Chaînes à repérer** : Polyfjord, **Southern Shotty** (spécialiste du rendu clay/felt/stop-motion — quasi exactement la DA Nooma), CG Geek, Blender Guru.
+**Chaînes à repérer** : Polyfjord, **Southern Shotty** (spécialiste du rendu clay/felt/stop-motion — quasi exactement la DA Plouma), CG Geek, Blender Guru.
 
 ## 2. La carte-monde (décor de jeu vu de haut)
 
@@ -54,4 +54,4 @@ Le maillon le moins documenté sous ce nom exact — varier les formulations :
 
 - `webp vs png game assets` (poids des assets)
 - `blender turntable render product` (pour les images-mots : template studio réutilisable)
-- Rig de Nooma : `rig simple character blender shape keys`, `blender shape keys facial expressions`, `blender simple armature rig`
+- Rig de Plouma : `rig simple character blender shape keys`, `blender shape keys facial expressions`, `blender simple armature rig`

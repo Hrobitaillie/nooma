@@ -1,4 +1,205 @@
 {
   "version": 1,
-  "comments": []
+  "comments": [
+    {
+      "id": "c_ms66ovcr_1",
+      "space": "docs",
+      "file": "05-direction-artistique.md",
+      "sectionId": "h-4-mascotte-plouma-rappel-condens",
+      "sectionTitle": "4. Mascotte Plouma ✅ (rappel condensé)",
+      "quote": "Langage : babillage (façon Animal Crossing) + français, de plus en plus fluide au fil de la progression de l'enfant — la mascotte est la jauge de progression incarnée",
+      "prefix": "nt parfois (normalise l'erreur)\n",
+      "suffix": "\n3 tics signature : éternuement ",
+      "startOffset": 239,
+      "commentText": "je me demande si mélanger les babillage et la vraie voix parlée ne va pas faire bizzarre. Entrendre ddzedazefdznfzio Bravo daozdnazd risque d'etre etrange, surtout si le babillage est pitché et pas la voix normale. du coup je me suis dit peut etre qu'on pourrait avoir le babillage de plouma et en suite une voix narative vient traduire ce que plouma dit, comme une traductrice. ce serait plus harmonieux. Il y aurait donc en fait un echange entre 3 personnes, Plouma, la voix et l'enfant.",
+      "forClaude": true,
+      "createdAt": "2026-07-29T14:32:30.650Z",
+      "updatedAt": "2026-07-29T11:00:00.000Z",
+      "resolved": true,
+      "resolvedAt": "2026-07-29T11:00:00.000Z",
+      "resolvedNote": "Piste « voix narratrice » intégrée : Plouma babille, une voix narratrice traduit (échange à 3 : Plouma / narratrice / enfant), pour éviter le mélange babil pitché + voix parlée.",
+      "changes": [
+        {
+          "file": "docs/05-direction-artistique.md",
+          "before": "",
+          "after": "🔶 **Piste « voix narratrice » (Hugo)**"
+        }
+      ]
+    },
+    {
+      "id": "c_ms66q1pa_2",
+      "space": "docs",
+      "file": "05-direction-artistique.md",
+      "sectionId": "h-4-mascotte-plouma-rappel-condens",
+      "sectionTitle": "4. Mascotte Plouma ✅ (rappel condensé)",
+      "quote": "3 tics signature : éternuement d'étincelles, hoquet du rire, scintillement d'attente",
+      "prefix": "a jauge de progression incarnée\n",
+      "suffix": "\n~12-15 clips d'animation en spr",
+      "startOffset": 406,
+      "commentText": "ON pourrait réduire, et dire que plouma est juste tres tres joyeuse, et a chaque reuissite de l'enfant tourne sur elle meme ou autre, montrer son excitation de l'avancement de l'enfant",
+      "forClaude": true,
+      "createdAt": "2026-07-29T14:33:25.534Z",
+      "updatedAt": "2026-07-29T11:00:00.000Z",
+      "resolved": true,
+      "resolvedAt": "2026-07-29T11:00:00.000Z",
+      "resolvedNote": "Expressivité simplifiée : plutôt que 3 tics à animer, une Plouma très joyeuse qui tourne/saute à chaque réussite (tics conservés en option).",
+      "changes": [
+        {
+          "file": "docs/05-direction-artistique.md",
+          "before": "",
+          "after": "🔶 **Expressivité (version simplifiée, Hugo)**"
+        }
+      ]
+    },
+    {
+      "id": "c_ms66qtsz_3",
+      "space": "docs",
+      "file": "05-direction-artistique.md",
+      "sectionId": "h-4-mascotte-plouma-rappel-condens",
+      "sectionTitle": "4. Mascotte Plouma ✅ (rappel condensé)",
+      "quote": "~12-15 clips d'animation en sprite sheets, 12-15 fps, chaque clip borné par la même pose neutre",
+      "prefix": "u rire, scintillement d'attente\n",
+      "suffix": "\nSéquence de réussite : transfor",
+      "startOffset": 491,
+      "commentText": "La pause neutre serait la première frame et la denière frame de l'animation idle du coup",
+      "forClaude": true,
+      "createdAt": "2026-07-29T14:34:01.955Z",
+      "updatedAt": "2026-07-29T11:00:00.000Z",
+      "resolved": true,
+      "resolvedAt": "2026-07-29T11:00:00.000Z",
+      "resolvedNote": "Précisé : la pose neutre = première et dernière frame de l'animation idle (chaque clip y part et y revient).",
+      "changes": [
+        {
+          "file": "docs/05-direction-artistique.md",
+          "before": "chaque clip borné par la même pose neutre",
+          "after": "chaque clip borné par la même **pose neutre** — concrètement la **première et la dernière frame de l'animation *idle***"
+        }
+      ]
+    },
+    {
+      "id": "c_ms66rqmq_4",
+      "space": "docs",
+      "file": "05-direction-artistique.md",
+      "sectionId": "h-4-mascotte-plouma-rappel-condens",
+      "sectionTitle": "4. Mascotte Plouma ✅ (rappel condensé)",
+      "quote": "🔶 Ajout proposé — Plouma comme \"skin system\" : la customisation (chapeaux, écharpes, couleurs de joues achetées en poussière d'étoile) et les transformations de fin de biome sont le principal levier de récompense long terme. Prévoir dès le rig Blender des points d'accroche (tête, cou) pour rendre les accessoires composables sans re-rendre tous les clips — sinon chaque accessoire multiplie les sprite sheets. ⚠️ À valider techniquement au Test A : accessoire rendu séparément et superposé dans l'app (même éclairage, même angle) vs re-rendu complet.",
+      "prefix": "curieux, jamais de son négatif\n\n",
+      "suffix": "\n🔶 Fragments de langue (récompe",
+      "startOffset": 707,
+      "commentText": "Pour le moment avoir du cosmetique ne m'interesse pas",
+      "forClaude": true,
+      "createdAt": "2026-07-29T14:34:44.498Z",
+      "updatedAt": "2026-07-29T11:00:00.000Z",
+      "resolved": true,
+      "resolvedAt": "2026-07-29T11:00:00.000Z",
+      "resolvedNote": "Skin system / cosmétique reporté hors v1 (pas une priorité) — la récompense v1 reste « fragments de langue ». Note conservée pour plus tard.",
+      "changes": [
+        {
+          "file": "docs/05-direction-artistique.md",
+          "before": "🔶 **Ajout proposé — Plouma comme \"skin system\"**",
+          "after": "⏸ **Reporté hors v1 (Hugo, 29/07) — Plouma comme \"skin system\"**"
+        }
+      ]
+    },
+    {
+      "id": "c_ms66upsq_5",
+      "space": "docs",
+      "file": "05-direction-artistique.md",
+      "sectionId": "h-5-audio-principes-production",
+      "sectionTitle": "5. Audio ✅ principes, 🔶 production",
+      "quote": "Organisation des enregistrements 🔶 : sessions par lots (scripts préparés à l'avance : consignes, feedbacks, phonèmes, babillages), même pièce/même micro/même distance à chaque session (cohérence sonore), un bon micro USB (~100-150 €) + pièce meublée suffisent. Prévoir des re-takes groupés — le contenu évoluera.",
+      "prefix": "ur les phonèmes hors contexte).\n",
+      "suffix": "\nLe TTS reste l'outil d'itératio",
+      "startOffset": 672,
+      "commentText": "ok pour ce fonctionnement. Je pensais peut etre aussi pour le coté simple, faire un mini site  que je donne a Florence, et dessus elle peut directement s'enregistrer, et faire des sequences qui seront envoyées au serveur stockées ?on pourrait avoir un backoffice pour la gestion de touts les enregistrements les ots etc, pour plus facilement éditer et mettre a jour, garder un suivi etc. tu pourrais travailler ce plan aussi",
+      "forClaude": true,
+      "createdAt": "2026-07-29T14:37:03.386Z",
+      "updatedAt": "2026-07-29T11:00:00.000Z",
+      "resolved": true,
+      "resolvedAt": "2026-07-29T11:00:00.000Z",
+      "resolvedNote": "Ajout d'une piste d'outillage : mini-site d'enregistrement navigateur pour Florence + back-office (lots/prises/versions, réécoute, validation, export du pack audio). Plan technique à détailler.",
+      "changes": [
+        {
+          "file": "docs/05-direction-artistique.md",
+          "before": "",
+          "after": "🔶 **Outil d'enregistrement + back-office (piste Hugo, plan à détailler)**"
+        }
+      ]
+    },
+    {
+      "id": "c_ms66whw3_6",
+      "space": "docs",
+      "file": "05-direction-artistique.md",
+      "sectionId": "h-5-audio-principes-production",
+      "sectionTitle": "5. Audio ✅ principes, 🔶 production",
+      "quote": " Mix : prévoir 3 canaux réglables séparément dans l'espace parent (voix / effets / musique) — certains enfants (notamment profils sensibles ou TSA) sont gênés par la musique de fond ; pouvoir la couper sans perdre les consignes est un vrai plus inclusif.",
+      "prefix": " musicale discrète par biome.\n🔶",
+      "suffix": "\n\n",
+      "startOffset": 1810,
+      "commentText": "oui c'est nécessaire, un bouton pour régler les 3 volumes",
+      "forClaude": true,
+      "createdAt": "2026-07-29T14:38:26.451Z",
+      "updatedAt": "2026-07-29T11:00:00.000Z",
+      "resolved": true,
+      "resolvedAt": "2026-07-29T11:00:00.000Z",
+      "resolvedNote": "Validé : 3 curseurs de volume distincts (voix / effets / musique) dans l'espace parent.",
+      "changes": [
+        {
+          "file": "docs/05-direction-artistique.md",
+          "before": "🔶 **Mix : prévoir 3 canaux réglables séparément dans l'espace parent**",
+          "after": "✅ **Mix : 3 canaux réglables séparément dans l'espace parent**"
+        }
+      ]
+    },
+    {
+      "id": "c_ms66yg4v_7",
+      "space": "docs",
+      "file": "05-direction-artistique.md",
+      "sectionId": "h-6-pipeline-de-production-rappel-compl-ments",
+      "sectionTitle": "6. Pipeline de production (rappel + compléments)",
+      "quote": "Cartes-mondes : une scène par biome, caméra fixe, rendu en 3-4 couches (parallax), ~2048 px, WebP.",
+      "prefix": "me studio → cohérence garantie.\n",
+      "suffix": "\nMascotte : rig armature + shape",
+      "startOffset": 210,
+      "commentText": "Ma problématique c'est que si c'esten web, ca va etre statique, comment lorsqu'on va faire bouger la camera sur l'app on va voir l'effet de perspective 3, logiquement en isometrique (ou vu de dessus) quand on déplace la caméra, on voit la perspective evoluer.",
+      "forClaude": true,
+      "createdAt": "2026-07-29T14:39:57.487Z",
+      "updatedAt": "2026-07-29T11:00:00.000Z",
+      "resolved": true,
+      "resolvedAt": "2026-07-29T11:00:00.000Z",
+      "resolvedNote": "Réponse technique : profondeur = parallax par translation (couches à vitesses différentes au pan) ; pas de vraie rotation de perspective depuis des couches plates → caméra en translation+zoom, pas de rotation (sinon pré-rendre des angles ou 3D légère).",
+      "changes": [
+        {
+          "file": "docs/05-direction-artistique.md",
+          "before": "",
+          "after": "les couches WebP sont plates ; la profondeur vient du **parallax par translation**"
+        }
+      ]
+    },
+    {
+      "id": "c_ms66zjqt_8",
+      "space": "docs",
+      "file": "05-direction-artistique.md",
+      "sectionId": "h-6-pipeline-de-production-rappel-compl-ments",
+      "sectionTitle": "6. Pipeline de production (rappel + compléments)",
+      "quote": "Images-mots (le gros chantier : 200-400 images) : template Blender (turntable studio, fond transparent) + complément IA claymation si homogène — à valider au Test C.",
+      "prefix": "ences PNG → sprite sheets WebP.\n",
+      "suffix": "\nAutocollants, objets de jeu, UI",
+      "startOffset": 391,
+      "commentText": "on peut peut-etre simplifier s'il y a des mots on génère juste en pate a modeler, le fond et par dessus ce fond webp, on affiche le texte incrusté",
+      "forClaude": true,
+      "createdAt": "2026-07-29T14:40:48.821Z",
+      "updatedAt": "2026-07-29T11:00:00.000Z",
+      "resolved": true,
+      "resolvedAt": "2026-07-29T11:00:00.000Z",
+      "resolvedNote": "Simplification adoptée : produire seulement l'objet clay, le poser sur un fond WebP réutilisable et incruster le texte du mot dans l'app (au lieu de 200-400 images composées figées).",
+      "changes": [
+        {
+          "file": "docs/05-direction-artistique.md",
+          "before": "",
+          "after": "🔶 *Simplification (Hugo) : ne produire que l'**objet en pâte à modeler**"
+        }
+      ]
+    }
+  ]
 }

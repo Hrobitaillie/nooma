@@ -1,6 +1,6 @@
-# Documentation projet Nooma
+# Documentation projet Plouma
 
-> **Nooma** — app tablette d'apprentissage de la lecture (CP, 5-7 ans, France), utilisée par l'enfant en autonomie, guidée par une mascotte étoile en pâte à modeler. Objectif n°1 : **l'enfant ne doit pas se rendre compte qu'il apprend.**
+> **Plouma** — app tablette d'apprentissage de la lecture (CP, 5-7 ans, France), utilisée par l'enfant en autonomie, guidée par une mascotte étoile en pâte à modeler. Objectif n°1 : **l'enfant ne doit pas se rendre compte qu'il apprend.**
 
 > 💡 **Cette doc se consulte aussi dans le viewer de cadrage** (sidebar, catalogue de fonctionnalités avec chiffrage interactif, commentaires, export PDF) : `npm start` à la racine du repo puis http://localhost:8090/cadrage/viewer/ — voir [`../cadrage/README.md`](../cadrage/README.md).
 
@@ -35,6 +35,6 @@
 - Cible : 5-7 ans (CP), enfant **seul en autonomie**, tablette prioritaire, portrait
 - Consignes **100 % audio**, jamais de texte comme seule instruction
 - Feedback **jamais négatif**, pas de scores anxiogènes, difficulté adaptative invisible
-- Mascotte **Nooma** : étoile dorée en pâte à modeler, babillage → français évolutif
+- Mascotte **Plouma** : étoile dorée en pâte à modeler, babillage → français évolutif
 - DA **100 % claymation pré-rendue Blender**, intégrée en sprites/images 2D
 - **Fondateur solo** (développeur fullstack) épaulé par une **orthophoniste en conseil métier** (amie proche — pas d'association ni de parts)

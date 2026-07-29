@@ -13,9 +13,9 @@ Axes de message, par ordre de force 🔶 :
 2. **« Votre enfant joue, il ne "fait pas ses devoirs" »** — le stealth learning est aussi un argument parent (fin de la bataille du soir).
 3. **« Zéro pub, zéro donnée collectée, tout reste sur la tablette »** — le label « Data Not Collected » sur les stores est un différenciateur *visible* ; peu d'apps du créneau peuvent l'afficher.
 4. **« S'adapte vraiment à votre enfant »** — chaque enfant a son propre voyage, l'app travaille ses points faibles sans qu'il le sache.
-5. **« Pensée pour des sessions courtes »** — alignement explicite avec la doctrine française sur les écrans (Tisseron 3-6-9-12, rapport « Enfants et écrans » 2024) : co-usage encouragé, 10-15 min/jour, Nooma va se coucher. On retourne l'objection écrans en argument.
+5. **« Pensée pour des sessions courtes »** — alignement explicite avec la doctrine française sur les écrans (Tisseron 3-6-9-12, rapport « Enfants et écrans » 2024) : co-usage encouragé, 10-15 min/jour, Plouma va se coucher. On retourne l'objection écrans en argument.
 
-⚠️ **Vocabulaire interdit** (risque juridique + positionnement) : « dyslexie », « troubles », « rééducation », « thérapie », « soigne », « diagnostique ». Toute revendication de ce type ferait basculer l'app en **dispositif médical** (marquage CE, essais cliniques — le parcours à millions de Poppins). Formule type à utiliser partout : *« Nooma est une application éducative. Elle ne remplace pas un professionnel de santé. »*
+⚠️ **Vocabulaire interdit** (risque juridique + positionnement) : « dyslexie », « troubles », « rééducation », « thérapie », « soigne », « diagnostique ». Toute revendication de ce type ferait basculer l'app en **dispositif médical** (marquage CE, essais cliniques — le parcours à millions de Poppins). Formule type à utiliser partout : *« Plouma est une application éducative. Elle ne remplace pas un professionnel de santé. »*
 
 ## 2. L'orthophoniste dans la communication ⚠️ (cadre précis)
 
@@ -36,7 +36,7 @@ Axes de message, par ordre de force 🔶 :
 ### 3.2 Featuring et badges — l'effet de levier
 
 - **Apple featuring** : nomination via App Store Connect (~3 semaines de délai) ; critères = design, innovation, **accessibilité**, **localisation**, qualité de fiche. Une app claymation française originale avec une vraie histoire de fondateurs coche les cases éditoriales. Impact documenté : App of the Day = +1747 % de téléchargements en moyenne.
-- **Google « Teacher Approved »** : pas de candidature — panel d'enseignants qui évalue valeur pédagogique et absence de mécaniques agressives. Nooma est taillée pour l'obtenir si la conformité Families est exemplaire (voir doc 11).
+- **Google « Teacher Approved »** : pas de candidature — panel d'enseignants qui évalue valeur pédagogique et absence de mécaniques agressives. Plouma est taillée pour l'obtenir si la conformité Families est exemplaire (voir doc 11).
 
 ### 3.3 Presse et prescripteurs spécialisés
 
@@ -52,7 +52,7 @@ Axes de message, par ordre de force 🔶 :
 
 ### 3.5 SEO / contenu — l'actif long terme
 
-Blog conseils parents (rédigé par Hugo, relu — et si elle le souhaite, signé — par l'orthophoniste conseil ; territoire éditorial naturel, modèle Allo-Ortho / blog Poppins) : « aider son enfant à lire au CP », « mon enfant confond b et d », « combien de temps d'écran à 6 ans ». Chaque article = une inquiétude parentale réelle → réponse experte → Nooma en solution douce. C'est lent mais compose bien avec le temps, coûte 0 € et construit la crédibilité.
+Blog conseils parents (rédigé par Hugo, relu — et si elle le souhaite, signé — par l'orthophoniste conseil ; territoire éditorial naturel, modèle Allo-Ortho / blog Poppins) : « aider son enfant à lire au CP », « mon enfant confond b et d », « combien de temps d'écran à 6 ans ». Chaque article = une inquiétude parentale réelle → réponse experte → Plouma en solution douce. C'est lent mais compose bien avec le temps, coûte 0 € et construit la crédibilité.
 
 ### 3.6 Paid — plus tard, prudemment
 
@@ -60,9 +60,9 @@ Apple Search Ads possible pour une app Kids (la restriction porte sur la pub *da
 
 ## 4. Assets de communication à prévoir 🔶
 
-- **Page store irréprochable** : captures montrant le jeu (pas des mockups), vidéo de 30 s (un enfant joue, rit, Nooma célèbre — avec captures d'écran, pas d'enfant filmé sans les autorisations §3.4), texte court orienté bénéfices parents.
+- **Page store irréprochable** : captures montrant le jeu (pas des mockups), vidéo de 30 s (un enfant joue, rit, Plouma célèbre — avec captures d'écran, pas d'enfant filmé sans les autorisations §3.4), texte court orienté bénéfices parents.
 - **Site vitrine une page** : la promesse, la démo vidéo, l'équipe (l'histoire « un développeur crée seul un jeu de lecture, épaulé par une amie orthophoniste » est un vrai storytelling de presse), FAQ parents, privacy policy (obligatoire pour les stores de toute façon).
-- **Press kit** : logo, captures, visuels Nooma, bio des fondateurs, dossier de presse d'une page.
+- **Press kit** : logo, captures, visuels Plouma, bio des fondateurs, dossier de presse d'une page.
 - La **mascotte est l'actif marketing central** : reconnaissable, déclinable (stickers WhatsApp gratuits ? coloriages à imprimer ? — acquisition douce très « parent-compatible »).
 
 ## 5. Timing 🔶

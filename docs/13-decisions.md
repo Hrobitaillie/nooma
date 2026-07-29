@@ -8,27 +8,28 @@
 | Date | Décision |
 |---|---|
 | ≤ 07/2026 | Cible 5-7 ans (CP), enfant autonome, tablette-first, portrait ; consignes 100 % audio ; feedback jamais négatif ; pas de scores |
-| ≤ 07/2026 | Mascotte Nooma (étoile clay, babillage→français évolutif, 3 tics) ; DA 100 % claymation pré-rendue Blender ; sprite sheets 12-15 fps |
+| ≤ 07/2026 | Mascotte Plouma (étoile clay, babillage→français évolutif, 3 tics) ; DA 100 % claymation pré-rendue Blender ; sprite sheets 12-15 fps |
 | ≤ 07/2026 | 4 piliers pédagogiques ; 17 mécaniques de mini-jeux (5+4+4+4) comme briques de base |
-| 28/07/2026 | **Équipe = Hugo fondateur solo** (100 % capital et direction) ; **Florence**, amie orthophoniste, intervient en **conseil métier** (relecture pédagogique), sans parts ni co-direction |
+| 28/07/2026 | **Équipe = Hugo fondateur solo** (100 % capital et direction) ; **Florence**, amie orthophoniste, intervient en **conseil métier** (relecture pédagogique), sans parts ni co-direction — ⚠️ *si la collaboration s'approfondit, prévoir un avenant/doc formel pour l'intégrer réellement au projet (parts, co-direction) ; déclenché par Hugo* |
 | 28/07/2026 | **Développement majoritairement vibe codé** (IA/Claude Code) — avec garde-fous : CI juge, zones à revue humaine obligatoire (gate/PIN, import, achats, manifests), zéro dépendance ajoutée sans décision humaine (doc 06 §7) |
 | 28/07/2026 | **Hugo gère toute la 3D** (Blender + addon **Clay Doh**, rendu Cycles — sans impact app car tout est pré-rendu) — pipeline détaillé doc 14 |
-| 28/07/2026 | **Florence prête sa voix à Nooma** (consignes, phonèmes, babillages) — remplace le plan TTS ; TTS = outil d'itération dev uniquement ; autorisation écrite voix à intégrer à la lettre de mission (docs 05 §5, 09 §5.2) |
+| 28/07/2026 | **Florence prête sa voix à Plouma** (consignes, phonèmes, babillages) — remplace le plan TTS ; TTS = outil d'itération dev uniquement ; autorisation écrite voix à intégrer à la lettre de mission (docs 05 §5, 09 §5.2) |
 | 28/07/2026 | **Outillage de cadrage** : viewer de doc (hérité de locasyst-api) + catalogue de fonctionnalités fusionnés dans `/cadrage` — 76 postes chiffrables (SOC/MAP/JEU/DIR/MAS/REC/MOD/PAR/AUD/CNT/LAN), lots Proto/V1/V1.1/V2, commentaires ancrés, export PDF (`npm start`). L'édition multi-sessions de flooow n'est pas reprise (assumé) |
-| 28/07/2026 | **Flooow vendorisé dans `/flooow`** (snapshot du 28/07, hors node_modules/.git) avec un **graphe projet Nooma versionné** (`flooow/data/nooma/`, 10 écrans seedés depuis le catalogue) — `npm run flooow` (Vite 5173 + API 3011, script dev-local sans l'infra podman/Caddy). Flooow = graphe visuel ; catalogue = référence texte chiffrable |
+| 28/07/2026 | **Flooow vendorisé dans `/flooow`** (snapshot du 28/07, hors node_modules/.git) avec un **graphe projet Plouma versionné** (`flooow/data/nooma/`, 10 écrans seedés depuis le catalogue) — `npm run flooow` (Vite 5173 + API 3011, script dev-local sans l'infra podman/Caddy). Flooow = graphe visuel ; catalogue = référence texte chiffrable |
 | 07/2026 | **Progression infinie adaptative** : biome = module de compétences, niveaux générés par le Directeur jusqu'à validation, changement de biome à la maîtrise, niveaux surprises/rappels — remplace « 5 mondes × 8-12 niveaux fixes » (formalisé doc 04, à confirmer ci-dessous) |
-| 07/2026 | Anti-dark-patterns comme principe produit ET argument public (doc 03 §5) — dont : Nooma jamais triste au départ de l'enfant |
+| 07/2026 | Anti-dark-patterns comme principe produit ET argument public (doc 03 §5) — dont : Plouma jamais triste au départ de l'enfant |
+| 29/07/2026 | **Nom retenu : « Plouma »** (remplace « Nooma », abandonné pour marque FR identique + saturation) — renommage de `/docs` effectué ; réservation `plouma.fr`/`plouma.app` + avis CPI + dépôt INPI restant à faire (doc 09 §5.4) |
 
 ## Propositions en attente de validation 🔶 (à trancher ensemble, par priorité)
 
 ### Urgence ⚠️
-1. **Marque — « Nooma » abandonné, renommage décidé (28/07/2026)**. Contraintes : nom inventé, pas un prénom (INSEE vérifié), pas de finale « -ou ». **Shortlist vérifiée (marques/prénoms/stores/domaines) : 1. Zintille · 2. Plouma · 3. Brillune · 4. Étinelle · 5. Ploumelle** — détail doc 09 §5.4. **Favori provisoire de Hugo (28/07/2026) : « Plouma »** — non définitif tant que : .fr/.app non réservés, test oral enfants non fait, avis CPI non rendu (point à vérifier : coexistence avec la marque PLOUMANAC'H cl. 41). Ne pas renommer le repo/les docs avant confirmation. **Bloque toute com publique.** (doc 09 §5.4)
+1. **Marque — nom retenu « Plouma »** (29/07/2026, remplace « Nooma » abandonné). L'ancien nom a été écarté : marque FR verbale identique FR5209947 (cl. 41/42 éducation/logiciels) + saturation mondiale + domaines pris (détail doc 09 §5.4). Renommage effectué dans `/docs` ; le code et le dépôt gardent « nooma » comme nom technique interne. **Restent à faire avant dépôt et com publique** : réserver `plouma.fr`/`plouma.app` (~30 €), test oral auprès d'enfants de 5 ans, avis CPI (coexistence avec **PLOUMANAC'H** cl. 41 à confirmer — risque jugé faible), dépôt INPI verbal + semi-figuratif (cl. 9+41+42). (doc 09 §5.4)
 2. **Lettre de mission de l'orthophoniste conseil** (1 page, avec cession/autorisation écrite sur les contenus qu'elle rédige ou corrige). (doc 09 §5.2-5.3)
 
 ### Produit
 3. Modèle biomes/infini détaillé (doc 04) : ~10-14 biomes, découplage du calendrier scolaire, session-menu (échauffement/cœur/dessert), typologie des 5 niveaux surprises.
-4. Modes de jeu (doc 03 §4) : maison de Nooma, histoires, rendez-vous hebdo ; co-jeu parent v2.
-5. Récompenses « tournées vers l'univers » (offrir à Nooma/aux habitants plutôt qu'accumuler) (doc 03 §2.2).
+4. Modes de jeu (doc 03 §4) : maison de Plouma, histoires, rendez-vous hebdo ; co-jeu parent v2.
+5. Récompenses « tournées vers l'univers » (offrir à Plouma/aux habitants plutôt qu'accumuler) (doc 03 §2.2).
 6. Ajout de mécaniques d'**encodage** (dictée muette, machine à mots) — manque identifié (doc 02 §4.5).
 7. Surnom par défaut plutôt que vrai prénom (doc 07 §4).
 

@@ -1,4 +1,4 @@
-# Nooma — Plan projet (document remplacé)
+# Plouma — Plan projet (document remplacé)
 
 > ⚠️ **Ce document a été décomposé le 28/07/2026 dans la nouvelle documentation structurée.**
 > Point d'entrée : [README.md](README.md) (sommaire complet).
