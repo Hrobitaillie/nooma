@@ -14,10 +14,11 @@ import {
   setDraft,
   setStatuses,
   setActive,
+  setDiffTarget,
   setRecapOverride,
   commentsForCurrentPage,
-} from '../store.js?v=1';
-import { captureAnchor, relocateAll, setActiveMarks, highlightDraft, clearDraft } from './anchoring.js?v=1';
+} from '../store.js?v=1785320225';
+import { captureAnchor, relocateAll, setActiveMarks, highlightDraft, clearDraft } from './anchoring.js?v=1785320225';
 
 function contentEl() {
   return document.getElementById('content');
@@ -31,7 +32,14 @@ export function ControlLayer() {
   const activeId = useStore((s) => s.activeId);
   const location = useStore((s) => s.location);
   const recapOverride = useStore((s) => s.recapOverride);
+  const diffTarget = useStore((s) => s.diffTarget);
   const pageCommentCount = useStore((s) => commentsForCurrentPage(s).length);
+
+  // Sujet traité en cours de révision, s'il concerne la page affichée.
+  const stripExt = (p) => String(p).replace(/\.mdx?$/, '');
+  const diffComment = diffTarget ? comments.find((c) => c.id === diffTarget) : null;
+  const inReview =
+    diffComment && diffComment.space === location.space && stripExt(diffComment.file) === stripExt(location.path);
 
   // Panneau récap ouvert si : forcé, sinon page avec commentaires ou mode actif.
   const recapOpen = recapOverride !== null ? recapOverride : pageCommentCount > 0 || commentMode;
@@ -77,6 +85,8 @@ export function ControlLayer() {
     const content = contentEl();
     if (!content) return undefined;
     const raf = requestAnimationFrame(() => {
+      // La vue diff occupe #content : pas de surlignage à (re)localiser.
+      if (getState().diffTarget) return;
       // Les commentaires résolus (fermés) ne sont plus surlignés dans la page.
       const pageComments = commentsForCurrentPage(getState()).filter((c) => !c.resolved);
       const statuses = relocateAll(content, pageComments);
@@ -93,16 +103,6 @@ export function ControlLayer() {
   }, [activeId]);
 
   return html`
-    <button
-      type="button"
-      class="cmt-toggle"
-      data-active=${commentMode ? 'true' : 'false'}
-      aria-pressed=${commentMode ? 'true' : 'false'}
-      onClick=${() => setCommentMode(!commentMode)}
-      title=${commentMode ? 'Désactiver le mode commentaire' : 'Activer le mode commentaire'}
-    >
-      💬 ${commentMode ? 'Commenter : activé' : 'Commenter'}
-    </button>
     ${!recapOpen
       ? html`<button
           type="button"
@@ -110,6 +110,13 @@ export function ControlLayer() {
           onClick=${() => setRecapOverride(true)}
           title="Ouvrir le panneau des commentaires"
         >💬 Commentaires${pageCommentCount ? html` <span class="recap-reopen__count">${pageCommentCount}</span>` : ''}</button>`
+      : null}
+    ${inReview
+      ? html`<div class="redline-bar">
+          <span class="redline-bar__label">🤖 Révision des modifications de Claude</span>
+          <span class="redline-bar__legend"><span class="diff-del">avant</span> <span class="diff-ins">après</span></span>
+          <button type="button" class="redline-bar__quit" onClick=${() => setDiffTarget(null)}>Quitter la révision</button>
+        </div>`
       : null}
     ${draft ? html`<${CommentPopover} draft=${draft} location=${location} />` : null}
   `;

@@ -5,9 +5,9 @@
 //    puce d'estimation, chaque option portant son propre lot).
 import { html } from 'htm/preact';
 import { useContext } from 'preact/hooks';
-import { EstContext } from './provider.js?v=1';
-import { useStore, setEstimation, addLot } from '../store.js?v=1';
-import { optionsOf } from './data.js?v=1';
+import { EstContext } from './provider.js?v=1785320225';
+import { useStore, setEstimation, addLot } from '../store.js?v=1785320225';
+import { optionsOf } from './data.js?v=1785320225';
 
 const NEW_LOT = '__new__';
 

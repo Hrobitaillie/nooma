@@ -5,8 +5,8 @@
 // de puce <Est/> ; supprimer un lot fait retomber ses affectations en V1.
 import { html } from 'htm/preact';
 import { useState } from 'preact/hooks';
-import { useStore, addLot, renameLot, deleteLot } from '../store.js?v=1';
-import { optionsOf } from './data.js?v=1';
+import { useStore, addLot, renameLot, deleteLot } from '../store.js?v=1785320225';
+import { optionsOf } from './data.js?v=1785320225';
 
 // Nombre de valeurs (postes simples + options) actuellement rattachées au lot.
 function countUses(lotId, estimations) {

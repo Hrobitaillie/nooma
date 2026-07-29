@@ -7,9 +7,9 @@ import { render as preactRender, h } from 'preact';
 import { evaluate } from '@mdx-js/mdx';
 import * as jsxRuntime from 'preact/jsx-runtime';
 import remarkGfm from 'remark-gfm';
-import { SPACES } from './spaces.js?v=1';
-import { mdxComponents } from './mdx-components.js?v=1';
-import { EstimationsProvider } from './src/estimations/provider.js?v=1';
+import { SPACES } from './spaces.js?v=1785320225';
+import { mdxComponents } from './mdx-components.js?v=1785320225';
+import { EstimationsProvider } from './src/estimations/provider.js?v=1785320225';
 
 const PDF_LIBS = [
   'https://cdn.jsdelivr.net/npm/pdfmake@0.2.10/build/pdfmake.min.js',

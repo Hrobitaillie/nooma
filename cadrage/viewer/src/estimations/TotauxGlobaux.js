@@ -4,11 +4,11 @@
 // <TotauxGlobaux/>
 import { html } from 'htm/preact';
 import { useContext, useState } from 'preact/hooks';
-import { EstContext } from './provider.js?v=1';
-import { useStore } from '../store.js?v=1';
-import { fileRange, foldUnknownLots } from './data.js?v=1';
-import { DOCS_TREE, CATALOGUE_TREE } from '../../tree.js?v=1';
-import { fmtJBetween, fmtHBetween } from './format.js?v=1';
+import { EstContext } from './provider.js?v=1785320225';
+import { useStore } from '../store.js?v=1785320225';
+import { fileRange, foldUnknownLots } from './data.js?v=1785320225';
+import { DOCS_TREE, CATALOGUE_TREE } from '../../tree.js?v=1785320225';
+import { fmtJBetween, fmtHBetween } from './format.js?v=1785320225';
 
 function flatten(tree, space, trail = []) {
   const out = [];

@@ -3,8 +3,8 @@
 // construit la même structure que l'ancien module virtuel — source de vérité
 // unique pour les totaux par fichier et le total global.
 
-import { SPACES } from '../../spaces.js?v=1';
-import { parseEst, HOURS_PER_DAY } from './parseEst.js?v=1';
+import { SPACES } from '../../spaces.js?v=1785320225';
+import { parseEst, HOURS_PER_DAY } from './parseEst.js?v=1785320225';
 
 const EST_TAG = /<Est\b([^>]*?)\/?>/g;
 const TITLE_RE = /^### \[([A-Z]+-\d+)\] (.+)$/gm;

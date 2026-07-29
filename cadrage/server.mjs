@@ -97,7 +97,10 @@ const server = createServer(async (req, res) => {
   }
 });
 
+const FLOOOW_PORT = Number(process.env.VITE_PORT) || 5173;
+
 server.listen(PORT, () => {
   console.log(`Cadrage Nooma → http://localhost:${PORT}/cadrage/viewer/`);
+  console.log(`Graphe flooow → http://localhost:${FLOOOW_PORT}/  (projet « nooma » — lancer « npm run flooow » si non démarré)`);
   console.log('(commentaires et estimations persistés dans cadrage/viewer/*.json)');
 });

@@ -1,6 +1,6 @@
 // Contexte d'estimations : clé du fichier courant + données extraites au runtime.
 import { createContext } from 'preact';
-import { estimationsData } from './data.js?v=1';
+import { estimationsData } from './data.js?v=1785320225';
 
 export const EstContext = createContext({ fileKey: null, data: estimationsData });
 

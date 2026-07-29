@@ -3,13 +3,13 @@ import { evaluate } from '@mdx-js/mdx';
 import * as jsxRuntime from 'preact/jsx-runtime';
 import remarkGfm from 'remark-gfm';
 import { marked } from 'marked';
-import { SPACES, DEFAULT_SPACE } from './spaces.js?v=1';
-import { mdxComponents } from './mdx-components.js?v=1';
-import { EstimationsProvider } from './src/estimations/provider.js?v=1';
-import { buildEstimations } from './src/estimations/data.js?v=1';
-import { ControlLayer } from './src/comments/ControlLayer.js?v=1';
-import { CommentsRecap } from './src/comments/CommentsRecap.js?v=1';
-import { setLocation, bumpRender, loadComments, loadEstimations } from './src/store.js?v=1';
+import { SPACES, DEFAULT_SPACE } from './spaces.js?v=1785320225';
+import { mdxComponents } from './mdx-components.js?v=1785320225';
+import { EstimationsProvider } from './src/estimations/provider.js?v=1785320225';
+import { buildEstimations } from './src/estimations/data.js?v=1785320225';
+import { ControlLayer } from './src/comments/ControlLayer.js?v=1785320225';
+import { CommentsRecap } from './src/comments/CommentsRecap.js?v=1785320225';
+import { setLocation, bumpRender, loadComments, loadEstimations, getState, subscribe, setDiffTarget, setDiffScroll } from './src/store.js?v=1785320225';
 
 const navEl = document.getElementById('nav');
 const contentEl = document.getElementById('content');
@@ -32,8 +32,11 @@ function buildNav(items, depth = 0) {
     if (node.type === 'page') {
       const a = document.createElement('a');
       a.href = '#/' + currentSpace + '/' + node.path;
-      a.textContent = node.label;
       a.dataset.path = node.path;
+      const label = document.createElement('span');
+      label.className = 'nav-label';
+      label.textContent = node.label;
+      a.appendChild(label);
       li.appendChild(a);
     } else {
       const span = document.createElement('span');
@@ -61,6 +64,39 @@ function findPage(items, path) {
 function highlightActive(path) {
   navEl.querySelectorAll('a').forEach((a) => {
     a.classList.toggle('active', a.dataset.path === path);
+  });
+}
+
+// Indicateurs par page dans l'arbo : nombre de commentaires non traités (actifs)
+// et traités (résolus). Recalculé à chaque changement de commentaires.
+function updateNavBadges() {
+  const strip = (p) => String(p).replace(/\.mdx?$/, '');
+  const counts = {}; // clé = chemin sans extension -> { u: non traités, t: traités }
+  for (const c of getState().comments) {
+    if (c.space !== currentSpace) continue;
+    const key = strip(c.file);
+    const e = counts[key] || (counts[key] = { u: 0, t: 0 });
+    if (c.resolved) e.t += 1;
+    else e.u += 1;
+  }
+  navEl.querySelectorAll('a[data-path]').forEach((a) => {
+    a.querySelectorAll('.nav-badge').forEach((b) => b.remove());
+    const e = counts[strip(a.dataset.path)];
+    if (!e) return;
+    if (e.u) {
+      const b = document.createElement('span');
+      b.className = 'nav-badge nav-badge--untreated';
+      b.textContent = e.u;
+      b.title = e.u + ' commentaire(s) non traité(s)';
+      a.appendChild(b);
+    }
+    if (e.t) {
+      const b = document.createElement('span');
+      b.className = 'nav-badge nav-badge--treated';
+      b.textContent = '✓' + e.t;
+      b.title = e.t + ' commentaire(s) traité(s)';
+      a.appendChild(b);
+    }
   });
 }
 
@@ -134,6 +170,84 @@ function renderNode(vnode) {
   preactRender(vnode, contentEl);
 }
 
+// Compare deux chemins sans extension (13-decisions.md ≡ 13-decisions.mdx).
+function sameFileStrip(a, b) {
+  const strip = (p) => String(p).replace(/\.mdx?$/, '');
+  return strip(a) === strip(b);
+}
+
+// Un extrait « s'étale sur plusieurs blocs » s'il contient une ligne vide
+// (séparateur de blocs markdown) ou un marqueur de bloc en début de ligne
+// (titre #, puce, liste numérotée, citation >, ligne de tableau |).
+function spansBlocks(t) {
+  return /\n[ \t]*\n/.test(t) || /(^|\n)[ \t]*([-*+]\s|\d+[.)]\s|#{1,6}\s|>\s|\|)/.test(t);
+}
+
+// Révision inline : dans le markdown SOURCE, à l'emplacement du texte, on insère
+// l'ancien contenu en rouge SUIVI du nouveau en vert — pour lire le doc complet en
+// mode « révision ». On ancre d'abord sur le texte APRÈS (présent une fois la modif
+// appliquée au fichier) ; à défaut sur le texte AVANT (modif pas encore écrite).
+//
+// Deux rendus selon la portée du change :
+//  - INLINE (dans un même bloc) : <span> rouge + <span> vert directement dans la source.
+//  - BLOC (plusieurs paragraphes / titres / listes) : un <span> ne peut pas envelopper
+//    plusieurs blocs sans casser marked. On remplace donc la zone par un JETON isolé,
+//    et on note le couple {before, after} : après rendu markdown, le jeton est remplacé
+//    par deux conteneurs pleine largeur (ancien rendu en rouge, nouveau rendu en vert).
+//
+// Renvoie { source, blocks } — `blocks` = substitutions post-rendu à appliquer sur le HTML.
+function applyRedline(md, changes) {
+  let out = md;
+  const blocks = [];
+  let n = 0;
+  const list = changes || [];
+  // `idx` = rang du motif dans changes[] ; reporté en data-diff pour permettre
+  // aux liens de motif de la sidebar de défiler jusqu'au bon changement.
+  for (let idx = 0; idx < list.length; idx++) {
+    const ch = list[idx];
+    const before = ch.before == null ? '' : String(ch.before);
+    const after = ch.after == null ? '' : String(ch.after);
+    const anchor = ch.anchor == null ? '' : String(ch.anchor);
+    if (!before && !after) continue;
+
+    // Positionnement EXPLICITE via `anchor` : on insère des conteneurs de bloc
+    // adjacents à un repère inchangé, SANS le retirer. Indispensable pour
+    // l'insertion pure (le nouveau texte n'est pas encore/plus localisable seul)
+    // et la suppression pure (l'ancien texte a disparu du fichier).
+    // `at` = 'after' (défaut) | 'before' — côté du repère où placer le bloc.
+    if (anchor && out.includes(anchor)) {
+      const token = 'xDIFFBLK' + n++ + 'x';
+      blocks.push({ token, before, after, idx });
+      out = out.replace(anchor, ch.at === 'before' ? token + '\n\n' + anchor : anchor + '\n\n' + token);
+      continue;
+    }
+
+    // Ancrage par CONTENU : texte APRÈS présent (modif appliquée), sinon AVANT.
+    const needle = after && out.includes(after) ? after : before && out.includes(before) ? before : null;
+    if (!needle) continue; // introuvable (texte re-modifié depuis) -> on n'injecte rien
+    if (spansBlocks(before) || spansBlocks(after)) {
+      const token = 'xDIFFBLK' + n++ + 'x';
+      blocks.push({ token, before, after, idx });
+      out = out.replace(needle, '\n\n' + token + '\n\n');
+    } else {
+      const del = before ? '<span class="diff-del" data-diff="' + idx + '">' + before + '</span>' : '';
+      const ins = after ? '<span class="diff-ins" data-diff="' + idx + '">' + after + '</span>' : '';
+      out = out.replace(needle, del + ins);
+    }
+  }
+  return { source: out, blocks };
+}
+
+// Le commentaire traité dont on doit afficher la révision, s'il concerne la page
+// courante et porte des modifications localisables.
+function activeRedlineComment(space, path) {
+  const s = getState();
+  if (!s.diffTarget) return null;
+  const c = s.comments.find((x) => x.id === s.diffTarget);
+  if (!c || c.space !== space || !sameFileStrip(c.file, path)) return null;
+  return Array.isArray(c.changes) && c.changes.length ? c : null;
+}
+
 async function render() {
   const { space, path } = parseHash();
   if (space !== currentSpace) {
@@ -143,6 +257,7 @@ async function render() {
     updateSwitcher();
   }
   highlightActive(path);
+  updateNavBadges();
   setLocation(space, path);
   renderNode(h('div', { class: 'loading' }, 'Chargement…'));
 
@@ -150,9 +265,12 @@ async function render() {
     const res = await fetch(SPACES[space].base + path, { cache: 'no-cache' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
+    const redline = activeRedlineComment(space, path);
 
     if (/\.mdx$/.test(path)) {
-      // Espace catalogue : MDX complet (composants Est/Lot/Totaux).
+      // Espace catalogue : MDX complet (composants Est/Lot/Totaux). La révision
+      // inline n'est pas appliquée ici (pipeline JSX) — les sujets traités portent
+      // sur les docs .md.
       const { default: Content } = await evaluate(text, {
         ...jsxRuntime,
         remarkPlugins: [remarkGfm],
@@ -163,14 +281,33 @@ async function render() {
     } else {
       // Espace docs : markdown pur rendu par marked (tolère les chevrons,
       // accolades et autres syntaxes qui feraient échouer le compilateur MDX).
-      const html = marked.parse(text, { gfm: true });
+      const rl = redline ? applyRedline(text, redline.changes) : { source: text, blocks: [] };
+      let html = marked.parse(rl.source, { gfm: true });
+      // Substitution des jetons de bloc par les conteneurs rouge/vert (chacun
+      // rendu en markdown pour préserver titres, listes, gras…).
+      for (const b of rl.blocks) {
+        const del = b.before ? '<div class="diff-block diff-block--del" data-diff="' + b.idx + '">' + marked.parse(b.before, { gfm: true }) + '</div>' : '';
+        const ins = b.after ? '<div class="diff-block diff-block--ins" data-diff="' + b.idx + '">' + marked.parse(b.after, { gfm: true }) + '</div>' : '';
+        const repl = del + ins;
+        html = html.includes('<p>' + b.token + '</p>') ? html.replace('<p>' + b.token + '</p>', repl) : html.replace(b.token, repl);
+      }
       renderNode(h('article', { class: 'md-article', dangerouslySetInnerHTML: { __html: html } }));
       wrapTables(contentEl);
     }
 
     rewriteLinks(contentEl, space, path);
-    contentEl.scrollTop = 0;
     bumpRender();
+    // En mode révision on centre sur le motif ciblé (lien de la sidebar), à défaut
+    // sur le premier changement ; sinon on remonte en haut.
+    let target = null;
+    if (redline) {
+      const idx = getState().diffScrollIdx;
+      if (idx != null) target = contentEl.querySelector('[data-diff="' + idx + '"]');
+      if (!target) target = contentEl.querySelector('.diff-ins, .diff-del, .diff-block--ins, .diff-block--del');
+    }
+    if (getState().diffScrollIdx != null) setDiffScroll(null); // consommé
+    if (target) target.scrollIntoView({ block: 'center' });
+    else contentEl.scrollTop = 0;
     const page = findPage(SPACES[space].tree, path);
     document.title = (page ? page.label + ' — ' : '') + SPACES[space].docTitle;
   } catch (e) {
@@ -236,7 +373,7 @@ function wirePdf() {
     pdfBtn.disabled = true;
     try {
       pdfBtn.textContent = 'Chargement…';
-      const { exportPdf } = await import('./pdf.js?v=1');
+      const { exportPdf } = await import('./pdf.js?v=1785320225');
       pdfBtn.textContent = 'Génération…';
       await exportPdf(currentSpace);
     } catch (e) {
@@ -255,7 +392,47 @@ wirePdf();
 preactRender(h(ControlLayer, {}), document.getElementById('ui-root'));
 preactRender(h(CommentsRecap, {}), document.getElementById('recap-root'));
 loadComments();
-window.addEventListener('hashchange', render);
+
+// Un seul rendu par « tick » même si plusieurs déclencheurs tombent ensemble
+// (ex. clic sur un sujet traité = setDiffTarget + changement de hash).
+let renderQueued = false;
+function scheduleRender() {
+  if (renderQueued) return;
+  renderQueued = true;
+  Promise.resolve().then(() => {
+    renderQueued = false;
+    render();
+  });
+}
+
+// Naviguer vers une AUTRE page que celle en cours de révision quitte la révision.
+window.addEventListener('hashchange', () => {
+  const s = getState();
+  if (s.diffTarget) {
+    const c = s.comments.find((x) => x.id === s.diffTarget);
+    const { space, path } = parseHash();
+    if (!c || c.space !== space || !sameFileStrip(c.file, path)) {
+      setDiffTarget(null); // déclenche l'abonnement -> scheduleRender
+      return;
+    }
+  }
+  scheduleRender();
+});
+
+// On ne réagit qu'aux transitions de diffTarget (activer/quitter la révision).
+let prevDiffTarget = getState().diffTarget;
+let prevComments = getState().comments;
+subscribe((s) => {
+  if (s.diffTarget !== prevDiffTarget) {
+    prevDiffTarget = s.diffTarget;
+    scheduleRender();
+  }
+  // Les badges de l'arbo suivent les commentaires (chargement, résolution, suppression).
+  if (s.comments !== prevComments) {
+    prevComments = s.comments;
+    updateNavBadges();
+  }
+});
 
 // Estimations : scan de tous les .mdx + chargement des overrides, puis (re)rendu
 // pour remplir les totaux.

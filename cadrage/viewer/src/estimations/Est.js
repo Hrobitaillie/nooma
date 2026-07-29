@@ -8,11 +8,11 @@
 
 import { html } from 'htm/preact';
 import { useContext, useState, useRef, useEffect } from 'preact/hooks';
-import { EstContext } from './provider.js?v=1';
-import { useStore, setEstimation, addLot } from '../store.js?v=1';
-import { parseEst } from './parseEst.js?v=1';
-import { fmtChip, fmtChipRange } from './format.js?v=1';
-import { optionsOf, codeRange } from './data.js?v=1';
+import { EstContext } from './provider.js?v=1785320225';
+import { useStore, setEstimation, addLot } from '../store.js?v=1785320225';
+import { parseEst } from './parseEst.js?v=1785320225';
+import { fmtChip, fmtChipRange } from './format.js?v=1785320225';
+import { optionsOf, codeRange } from './data.js?v=1785320225';
 
 // Valeurs proposées pour le sélecteur de temps.
 const PRESETS = [

@@ -4,11 +4,11 @@
 
 import { html } from 'htm/preact';
 import { useContext } from 'preact/hooks';
-import { EstContext } from './provider.js?v=1';
-import { useStore } from '../store.js?v=1';
-import { optionsOf } from './data.js?v=1';
-import { parseEst } from './parseEst.js?v=1';
-import { fmtJ, fmtH } from './format.js?v=1';
+import { EstContext } from './provider.js?v=1785320225';
+import { useStore } from '../store.js?v=1785320225';
+import { optionsOf } from './data.js?v=1785320225';
+import { parseEst } from './parseEst.js?v=1785320225';
+import { fmtJ, fmtH } from './format.js?v=1785320225';
 
 export function EstOptions({ code, title }) {
   const { fileKey, data } = useContext(EstContext);

@@ -1,7 +1,7 @@
 // Formatage FR des durées (décimale à la virgule). Les minutes restent entières
 // en interne (accumulation exacte) ; on ne formate qu'au bord de l'affichage.
 
-import { MIN_PER_DAY } from './parseEst.js?v=1';
+import { MIN_PER_DAY } from './parseEst.js?v=1785320225';
 
 const nf = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
 

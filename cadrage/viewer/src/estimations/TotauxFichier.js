@@ -2,10 +2,10 @@
 // Réactif aux overrides ; VENTILÉ PAR LOT (V1 = lot par défaut).
 import { html } from 'htm/preact';
 import { useContext } from 'preact/hooks';
-import { EstContext } from './provider.js?v=1';
-import { useStore } from '../store.js?v=1';
-import { fileRange, foldUnknownLots } from './data.js?v=1';
-import { fmtJBetween, fmtHBetween } from './format.js?v=1';
+import { EstContext } from './provider.js?v=1785320225';
+import { useStore } from '../store.js?v=1785320225';
+import { fileRange, foldUnknownLots } from './data.js?v=1785320225';
+import { fmtJBetween, fmtHBetween } from './format.js?v=1785320225';
 
 export function TotauxFichier() {
   const { fileKey, data } = useContext(EstContext);

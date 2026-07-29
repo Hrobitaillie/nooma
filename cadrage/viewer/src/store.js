@@ -18,6 +18,8 @@ let state = {
   draft: null, // { anchor, rect } d'un nouveau commentaire en cours
   saveState: 'idle', // 'idle' | 'saving' | 'error'
   statuses: {}, // id -> 'resolved' | 'orphan' (runtime, après re-localisation)
+  diffTarget: null, // id du commentaire traité dont on affiche la diff dans le corps (null = doc normale)
+  diffScrollIdx: null, // motif (index de change) ciblé pour le défilement au prochain rendu de révision
   estimations: {}, // overrides saisis dans l'UI : fileKey -> { code: "valeur" }
   lots: [{ id: 'v1', label: 'V1' }], // registre des lots de chiffrage (v1 = défaut, réservé)
   estSaveState: 'idle',
@@ -125,6 +127,19 @@ export function deleteComment(id) {
   setState((s) => ({
     comments: s.comments.filter((c) => c.id !== id),
     activeId: s.activeId === id ? null : s.activeId,
+    diffTarget: s.diffTarget === id ? null : s.diffTarget,
+  }));
+  scheduleSave();
+}
+
+// Suppression groupée (ex. « tout effacer » de l'onglet Traités) : une seule
+// écriture, et on retombe sur la doc normale si la cible de révision est effacée.
+export function deleteComments(ids) {
+  const set = new Set(ids);
+  setState((s) => ({
+    comments: s.comments.filter((c) => !set.has(c.id)),
+    activeId: set.has(s.activeId) ? null : s.activeId,
+    diffTarget: set.has(s.diffTarget) ? null : s.diffTarget,
   }));
   scheduleSave();
 }
@@ -147,6 +162,25 @@ export function setDraft(draft) {
 
 export function setActive(id) {
   setState({ activeId: id });
+}
+
+// Affichage de la diff d'un sujet traité par Claude dans le corps de la page.
+// null = on rend la doc normale. La diff vit sur le commentaire (champ `changes`)
+// et disparaît donc avec lui à la suppression.
+export function setDiffTarget(id) {
+  setState({ diffTarget: id });
+}
+
+// Index du motif (change) vers lequel le prochain rendu de révision doit défiler
+// (null = premier changement). Consommé par render() puis remis à null.
+export function setDiffScroll(idx) {
+  setState({ diffScrollIdx: idx });
+}
+
+// Un « sujet traité par Claude » = commentaire résolu qui portait une instruction
+// pour Claude (forClaude) OU qui a des modifications enregistrées.
+export function treatedComments(s = state) {
+  return s.comments.filter((c) => c.resolved && (c.forClaude || (Array.isArray(c.changes) && c.changes.length)));
 }
 
 export function setLocation(space, path) {
