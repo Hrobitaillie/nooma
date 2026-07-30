@@ -32,6 +32,8 @@
 | 30/07/2026 | **Simulateur du Directeur** : construit en TypeScript zéro-dépendance dans `/cadrage/simulateur` (enfants virtuels, dashboard dans le viewer) ; portage Dart après le Test A, le simulateur servant d'oracle de non-régression |
 | 30/07/2026 | **Graphe de compétences v1 + banque Syllabes v1 produits dans `/contenu`** (12 modules/biomes, 47 compétences, 100 mots tagués, lint `npm run lint-contenu`, vue de relecture `contenu/graphe-competences.md`) — **en attente de relecture par Florence**. Le simulateur tourne sur ce vrai graphe : sur 36 semaines simulées, profil rapide 12/12 modules, moyen 10/12, lent 8/12, en difficulté 4/12 — la différenciation par maîtrise fonctionne |
 | 30/07/2026 | **Actions marque reportées à bien plus tard** (décision Hugo) : réservation domaines, test oral, avis CPI, dépôt INPI — à faire impérativement **avant toute com publique** (le garde-fou de la roadmap reste) |
+| 30/07/2026 | **Cartes-mondes : caméra orthographique 3/4** (règle le problème de perspective au scroll — pas de « mauvais côté » des objets), profondeur par parallax de couches + zoom ; cinématiques = travellings pré-rendus ; pistes à bencher au Test A : shader de profondeur (Z-pass) et scrub de travelling. Cohérent avec le lobby en tuiles iso (docs 05 §6, 04 §6.1) |
+| 30/07/2026 | **Socle Flutter posé** (`/app`, via sous-agents) : Flutter 3.44.8, deps actées épinglées, CLAUDE.md règles inviolables, audit dépendances bloquant, CI, rng/params/maitrise portés en Dart avec tests d'oracle croisé contre le simulateur |
 
 ## Propositions en attente de validation 🔶 (à trancher ensemble, par priorité)
 
