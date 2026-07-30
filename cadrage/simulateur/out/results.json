@@ -3,7 +3,7 @@
     "seed": "plouma",
     "enfants": 500,
     "semaines": 36,
-    "dureeMs": 1235,
+    "dureeMs": 727,
     "params": {
       "cibleReussiteMin": 0.78,
       "cibleReussiteMax": 0.87,

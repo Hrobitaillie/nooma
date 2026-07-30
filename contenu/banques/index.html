@@ -51,7 +51,7 @@
 <header>
   <h1>🍎 Banque d'items — module Syllabes</h1>
   <p>100 mots imagés, découpage en <strong>syllabes orales</strong> (colorisation alternée) — v1 à relire par l'orthophoniste. Source : <code>contenu/banques/syllabes.csv</code></p>
-  <nav><a href="../../cadrage/simulateur/dashboard/">← dashboard du simulateur</a> · <a href="../../cadrage/viewer/">viewer de doc</a></nav>
+  <nav><a href="admin.html"><strong>🛠️ administrer / corriger</strong></a> · <a href="../../cadrage/simulateur/dashboard/">dashboard du simulateur</a> · <a href="../../cadrage/viewer/">viewer de doc</a></nav>
 </header>
 <main>
   <div class="filtres" id="filtres">
@@ -66,7 +66,7 @@ const lignes = (await rep.text()).trim().split('\n');
 const cles = lignes[0].split(';');
 const items = lignes.slice(1).map((l) => Object.fromEntries(l.split(';').map((v, i) => [cles[i], v])));
 
-const etat = { syllabes: null, attaque: null, aVerifier: false, texte: '' };
+const etat = { syllabes: null, attaque: null, aVerifier: false, statut: null, texte: '' };
 
 const filtres = document.getElementById('filtres');
 function puce(label, get, set) {
@@ -89,6 +89,10 @@ sel.innerHTML = '<option value="">attaque : toutes</option>'
 sel.onchange = () => { etat.attaque = sel.value || null; rendre(); };
 filtres.append(sel);
 puce('⚠️ à vérifier', () => etat.aVerifier, () => { etat.aVerifier = !etat.aVerifier; });
+puce('✓ validés', () => etat.statut === 'valide',
+  () => { etat.statut = etat.statut === 'valide' ? null : 'valide'; });
+puce('à relire', () => etat.statut === 'a-relire',
+  () => { etat.statut = etat.statut === 'a-relire' ? null : 'a-relire'; });
 document.getElementById('recherche').oninput = (e) => { etat.texte = e.target.value.toLowerCase(); rendre(); };
 
 function carte(it) {
@@ -100,7 +104,7 @@ function carte(it) {
   return `<div class="mot" id="mot-${it.mot}">
     ${it.aVerifier === 'oui' ? '<span class="badge">à vérifier</span>' : ''}
     <div class="decoupage">${syls}</div>
-    <div class="infos">${it.syllabesOrales} syll. · attaque /${it.phonemeAttaque}/ · fréq. ${'★'.repeat(4 - Number(it.frequence))}</div>
+    <div class="infos">${it.syllabesOrales} syll. · attaque /${it.phonemeAttaque}/ · fréq. ${'★'.repeat(4 - Number(it.frequence))}${it.statut === 'valide' ? ' · <b style="color:var(--syl-a)">✓ relu</b>' : ''}</div>
     ${dis}</div>`;
 }
 
@@ -110,6 +114,7 @@ function rendre() {
     (!etat.syllabes || it.syllabesOrales === etat.syllabes)
     && (!etat.attaque || it.phonemeAttaque === etat.attaque)
     && (!etat.aVerifier || it.aVerifier === 'oui')
+    && (!etat.statut || it.statut === etat.statut)
     && (!etat.texte || it.mot.toLowerCase().includes(etat.texte)));
   document.getElementById('grille').innerHTML = visibles.map(carte).join('');
   const nAV = visibles.filter((i) => i.aVerifier === 'oui').length;

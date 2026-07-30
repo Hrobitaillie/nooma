@@ -65,7 +65,7 @@ const statsBanques = [];
 for (const fichier of banques) {
   const lignes = readFileSync(join(ROOT, 'banques', fichier), 'utf8').trim().split('\n');
   const entetes = lignes[0].split(';');
-  const attendu = ['mot', 'syllabesOrales', 'decoupage', 'phonemeAttaque', 'frequence', 'competences', 'distracteursProches', 'aVerifier'];
+  const attendu = ['mot', 'syllabesOrales', 'decoupage', 'phonemeAttaque', 'frequence', 'competences', 'distracteursProches', 'aVerifier', 'statut'];
   if (entetes.join(';') !== attendu.join(';')) {
     erreurs.push(`${fichier} : en-têtes inattendus (${entetes.join(';')})`);
     continue;
@@ -88,13 +88,14 @@ for (const fichier of banques) {
     }
     if (!['oui', 'non'].includes(it.aVerifier)) erreurs.push(`${fichier} : « ${it.mot} » — aVerifier doit être oui/non`);
     if (it.aVerifier === 'oui') aVerifier++;
+    if (!['a-relire', 'valide'].includes(it.statut)) erreurs.push(`${fichier} : « ${it.mot} » — statut doit être a-relire/valide`);
   }
   for (const it of items) {
     for (const d of it.distracteursProches.split('|').filter(Boolean)) {
       if (!mots.has(d)) avertissements.push(`${fichier} : « ${it.mot} » — distracteur « ${d} » absent de la banque`);
     }
   }
-  statsBanques.push({ fichier, nb: items.length, aVerifier, items });
+  statsBanques.push({ fichier, nb: items.length, aVerifier, valides: items.filter((i) => i.statut === 'valide').length, items });
 }
 
 // ————— Vue lisible (relecture orthophoniste) —————
@@ -113,7 +114,7 @@ for (const mod of ordonnes) {
 
 md += `\n## Banques d'items\n\n`;
 for (const b of statsBanques) {
-  md += `- \`banques/${b.fichier}\` : **${b.nb} items**, dont ${b.aVerifier} marqués « à vérifier » (découpage syllabique oral à arbitrer — e caduc).\n`;
+  md += `- \`banques/${b.fichier}\` : **${b.nb} items**, ${b.valides} validés en relecture, dont ${b.aVerifier} marqués « à vérifier » (découpage syllabique oral à arbitrer — e caduc).\n`;
 }
 md += `\n*Progression des graphèmes cumulée (ordre d'introduction par module) :* `;
 md += ordonnes.flatMap((m) => m.competences.flatMap((c) => c.graphemesIntroduits)).join(', ') + '.\n';

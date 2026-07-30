@@ -47,6 +47,24 @@ function send(res, code, body, type = 'application/json; charset=utf-8') {
   res.end(body);
 }
 
+// Sauvegarde d'une banque d'items depuis l'admin (contenu/banques/admin.html).
+// Le client envoie le CSV complet ; on vérifie juste le nom de fichier et l'en-tête.
+async function sauverBanque(req, res) {
+  let raw = '';
+  req.on('data', (c) => { raw += c; });
+  req.on('end', async () => {
+    try {
+      const { fichier, csv } = JSON.parse(raw);
+      if (!/^[a-z0-9-]+\.csv$/.test(fichier)) { send(res, 400, '{"ok":false,"error":"nom de fichier invalide"}'); return; }
+      if (!csv.startsWith('mot;')) { send(res, 400, '{"ok":false,"error":"en-tête CSV inattendu"}'); return; }
+      await writeFile(join(ROOT, 'contenu', 'banques', fichier), csv.endsWith('\n') ? csv : csv + '\n');
+      send(res, 200, '{"ok":true}');
+    } catch {
+      send(res, 400, '{"ok":false,"error":"invalid json"}');
+    }
+  });
+}
+
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, 'http://localhost');
   const path = decodeURIComponent(url.pathname);
@@ -75,6 +93,13 @@ const server = createServer(async (req, res) => {
       });
       return;
     }
+    send(res, 405, '{"ok":false,"error":"method not allowed"}');
+    return;
+  }
+
+  // --- API banques d'items (admin) -------------------------------------------
+  if (path === '/contenu/banques/save') {
+    if (req.method === 'POST') { sauverBanque(req, res); return; }
     send(res, 405, '{"ok":false,"error":"method not allowed"}');
     return;
   }

@@ -11,14 +11,15 @@ consomme le simulateur aujourd'hui et l'app Flutter demain.
 | `mecaniques.json` | Les 19 mécaniques actées (liste canonique référencée partout) |
 | `banques/syllabes.csv` | Banque du module Syllabes : 100 mots imagés tagués (syllabes orales, découpage, attaque, fréquence, distracteurs) |
 | `banques/index.html` | **Visualisation de la banque** (filtres, syllabes colorées, distracteurs) : <http://localhost:8090/contenu/banques/> |
+| `banques/admin.html` | **Admin de la banque** : édition/création/suppression + **mode correction** (un mot à la fois, juste/corriger — un mot validé ne réapparaît plus) : <http://localhost:8090/contenu/banques/admin.html> |
 | `lint.mjs` | Validation : ids, prérequis (existence, ordre des modules, cycles), mécaniques, cohérence des banques — `npm run lint-contenu` |
 
 ## Processus de relecture (Florence)
 
-1. Hugo produit/modifie le JSON et les CSV (les CSV s'ouvrent dans un tableur, séparateur `;`).
+1. Hugo produit/modifie les mots dans l'**admin** (<http://localhost:8090/contenu/banques/admin.html>) ou directement dans les CSV (tableur, séparateur `;`). Toute création/modification passe le mot en statut `a-relire`.
 2. `npm run lint-contenu` valide tout et régénère `graphe-competences.md`.
-3. Florence relit la vue `.md` (ou le CSV en tableur) **par lots, pas au fil de l'eau** (doc 02 §7) ; la colonne `aVerifier` de la banque marque les découpages syllabiques à arbitrer (e caduc : « ba-nane » vs « ba-na-ne » — convention actuelle : **syllabes orales**).
-4. Ses corrections reviennent dans les fichiers → re-lint → le simulateur tourne sur le graphe corrigé.
+3. La relecture se fait dans le **mode correction** de l'admin : un mot à la fois, « ✓ c'est juste » (→ `valide`, ne réapparaît plus) ou « ✗ à corriger » (correction inline → `valide`). Les `aVerifier` passent en premier (découpages à arbitrer — e caduc : « ba-nane » vs « ba-na-ne » — convention actuelle : **syllabes orales**). Relire **par lots, pas au fil de l'eau** (doc 02 §7).
+4. Re-lint → le simulateur tourne sur le contenu corrigé.
 
 ## Conventions
 
