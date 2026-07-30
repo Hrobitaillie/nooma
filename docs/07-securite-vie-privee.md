@@ -16,7 +16,7 @@
 
 - **Zéro SDK tiers qui communique** : pas de Firebase (même Analytics « désactivé »), pas de Sentry/Crashlytics, pas d'attribution. Le motif n°1 de rejet en Kids Category est un **SDK détecté dans le binaire même inactif**. Audit des dépendances (transitive incluses) avant chaque release — à mettre en CI.
 - **Zéro permission dangereuse** : pas de localisation (interdite par Google Families de toute façon), pas de micro/caméra en v1 (le jour où la lecture à voix haute arrive en v2+, le micro se traite avec un dossier béton : traitement 100 % local, jamais d'enregistrement conservé).
-- 🔶 **Viser l'absence totale de permission INTERNET sur Android en v1** : techniquement possible pour une app 100 % offline, et c'est un argument d'audit massue (« l'app ne PEUT PAS envoyer de données »). ⚠️ À arbitrer : ça interdit aussi le paiement in-app et tout lien sortant → probablement tenable en beta, à réévaluer quand le paiement arrive (Phase 4).
+- ✅ **Absence totale de permission INTERNET sur Android en v1** (acté 30/07/2026) : techniquement possible pour une app 100 % offline, et c'est un argument d'audit massue (« l'app ne PEUT PAS envoyer de données »). ⚠️ Ça interdit aussi le paiement in-app, tout lien sortant — et tout co-jeu en réseau local (doc 03 §4) → à réévaluer quand le paiement arrive (Phase 4).
 - **Android** : `AD_ID` à retirer explicitement du manifest (souvent injecté par des SDK transitifs), `allowBackup` configuré finement (voir §4), aucun composant `exported` inutile.
 - **Pas de WebView, aucune** ⚠️ : risque technique (bridges JS) et risque de review (contenu web non maîtrisé dans une app enfants). La privacy policy s'ouvre dans le navigateur système, derrière le parental gate.
 - **Deep links : aucun en v1** (surface d'attaque et de confusion inutile).
@@ -37,7 +37,7 @@ Notre cible (5-7 ans) sait : appuyer longtemps (par imitation), résoudre 2+3, r
 - Le **sandbox OS + chiffrement matériel** (iOS Data Protection, Android File-Based Encryption) **suffit** pour ces données — le chiffrement applicatif systématique (SQLCipher etc.) serait du théâtre de sécurité qui complique les backups. Référentiel : OWASP MASVS v2, **profil MAS-L1** (+ MAS-R partiel sur le futur module d'achat uniquement). MAS-L2 est surdimensionné pour notre cas.
 - ⚠️ `EncryptedSharedPreferences` (Android) est **déprécié depuis avril 2025** — si un secret doit être stocké (clé HMAC d'achat), utiliser DataStore + Keystore/Tink. Ne pas suivre les vieux tutos.
 - **Import de sauvegardes = entrée non fiable** ⚠️ : le fichier JSON d'export/import (doc 06 §3) doit être validé strictement (schéma, bornes, version) — c'est LA porte d'entrée d'attaque d'une app offline.
-- Prénom de l'enfant 🔶 : proposer par défaut un **surnom choisi dans une liste** (« petit renard », « étoile filante »…) plutôt que le vrai prénom — zéro PII même locale, et c'est mignon. Le vrai prénom reste possible si le parent le saisit.
+- Prénom de l'enfant ✅ (décision inversée le 30/07/2026) : **vrai prénom par défaut** à la création du profil (l'attachement passe par le prénom ; les données restent locales de toute façon) — le surnom choisi dans une liste (« petit renard », « étoile filante »…) reste une **option**. Conséquence : Plouma ne prononce pas le prénom libre (pas de TTS embarqué) → interpellations génériques enregistrées par Florence ; les surnoms de la liste, eux, peuvent être enregistrés.
 
 ## 5. Intégrité des achats (Phase 4, pour mémoire)
 

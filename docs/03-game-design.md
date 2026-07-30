@@ -29,12 +29,12 @@ L'objectif « que l'enfant ne se rende pas compte qu'il apprend » a un nom en r
 
 [Lepper, Greene & Nisbett 1973](https://www.heartofcharacter.org/wp-content/uploads/Undermining_Childrens_Intrinsic_Interest_with_Ext-1.pdf) (enfants de maternelle) : une récompense **promise à l'avance** détruit l'intérêt spontané pour une activité aimée (8,6 % de temps libre consacré au dessin vs 16,7 % contrôle) — mais la **même récompense donnée par surprise ne nuit pas** (18,1 %). Méta-analyse (128 études) : récompenses tangibles attendues d = −0,40 ; **éloge verbal d = +0,33**.
 
-**Règles Plouma** 🔶 :
+**Règles Plouma** ✅ (actées 30/07/2026) :
 - **Interdit** : « finis ce niveau pour gagner X » — aucune récompense annoncée à l'avance.
 - Les autocollants et la poussière d'étoile arrivent **en surprise**, à la complétion, jamais en carotte.
 - Les récompenses sont **informationnelles** (jalons de maîtrise, souvenirs du voyage) pas transactionnelles.
-- Idée à copier de Khan Academy Kids : des récompenses **dirigées vers l'univers** (là-bas, les étincelles remplissent un camion de cadeaux *pour les personnages*) — offrir des choses *à* Plouma et aux habitants des biomes plutôt qu'accumuler pour soi. 🔶 Fort potentiel : l'enfant décore le monde, offre un chapeau à Plouma → générosité, pas consommation.
-- 🔶 **Récompense par défaut en v1 = « fragments de langue »** (décidé avec [04-progression-adaptative.md](04-progression-adaptative.md) §5.3). L'enfant collecte des fragments de la langue française que **Plouma apprend en même temps que lui** — lore : *Plouma vient sur Terre pour apprendre le français et progresse avec l'enfant*. C'est **informationnel** (un jalon d'apprentissage, pas une monnaie), donné **en surprise** (jamais annoncé), et cohérent avec l'évolution du langage de Plouma. Autocollants et tenues restent des récompenses **secondaires**, ajoutées plus tard.
+- Idée à copier de Khan Academy Kids : des récompenses **dirigées vers l'univers** (là-bas, les étincelles remplissent un camion de cadeaux *pour les personnages*) — offrir des choses *à* Plouma et aux habitants des biomes plutôt qu'accumuler pour soi. ✅ Acté (30/07/2026) : l'enfant décore le monde, offre un chapeau à Plouma → générosité, pas consommation.
+- ✅ **Récompense par défaut en v1 = « fragments de langue », concrétisés en « dictionnaire de Plouma »** (acté 30/07/2026, avec [04-progression-adaptative.md](04-progression-adaptative.md) §5.3). Au fil des exercices, **Plouma débloque des compréhensions de notre langage** et un **dictionnaire se remplit** : l'enfant collecte des fragments de la langue française que Plouma apprend en même temps que lui — lore : *Plouma vient sur Terre pour apprendre le français et progresse avec l'enfant*. C'est **informationnel** (un jalon d'apprentissage, pas une monnaie), donné **en surprise** (jamais annoncé), et cohérent avec l'évolution du langage de Plouma. 🔶 La **représentation** du dictionnaire (carnet de Plouma ? constellation ? objet du monde ?) reste à designer. Autocollants et tenues restent des récompenses **secondaires**, ajoutées plus tard.
 
 ### 2.3 L'effet mascotte (character effect) — le levier n°1 de Plouma
 
@@ -74,17 +74,17 @@ Sources : [analyse SMB3](https://www.gamedeveloper.com/design/super-mario-bros-3
 
 [Endless Alphabet](https://www.originatorkids.com/endless-alphabet/) : « no scores, no failure, no limits, no stress » — preuve qu'une app à succès peut n'avoir *aucune* pression. Plouma vise le milieu : la structure motivante de Mario/Candy Crush, l'innocuité d'Endless Alphabet.
 
-## 4. Modes de jeu 🔶 (typologie proposée)
+## 4. Modes de jeu — recentrés le 30/07/2026 (✅ décisions, 🔶 restes à cadrer)
 
-L'analyse des références (Khan Academy Kids, Duolingo ABC, Toca Boca, Sago Mini, LEGO Duplo World, Poio, Teach Your Monster to Read) fait émerger une double structure quasi universelle : **un chemin guidé adaptatif + un espace libre calme**. Proposition pour Plouma :
+L'analyse des références (Khan Academy Kids, Duolingo ABC, Toca Boca, Sago Mini, LEGO Duplo World, Poio, Teach Your Monster to Read) fait émerger une double structure quasi universelle : **un chemin guidé adaptatif + un espace libre calme**. Décisions Hugo du 30/07/2026 :
 
-| Mode | Description | Rôle |
+| Mode | Description | Statut |
 |---|---|---|
-| **L'Aventure** (cœur) | La carte-monde, les biomes, les niveaux générés (doc 04) | L'apprentissage principal |
-| **La maison de Plouma** | Espace calme sans objectif : album d'autocollants, customisation de Plouma, décoration | Sas de décompression, autonomie, attachement — le « coin Toca Boca » |
-| **Les histoires** | Mini-histoires audio-illustrées débloquées par la progression (Duolingo ABC débloque des histoires avec les étoiles) ; en fin d'année, l'enfant en lit des morceaux lui-même | Compréhension orale→écrite déguisée en moment doux ; utilisable aussi le soir avec le parent |
-| **Jouer à deux** 🔶 v2 | Mini-jeux coopératifs multi-touch parent-enfant (modèle LEGO Duplo World) — inspiration Overcooked : coopération joyeuse, pas compétition | Implique le parent, moment partagé — différenciateur fort, mais v2 (coût) |
-| **Rendez-vous** | Cadeau hebdomadaire (modèle Toca : le vendredi, non punitif), événements saisonniers additifs (Noël, printemps…) | Rétention saine par la nouveauté, pas par la peur de perdre |
+| **L'Aventure** ✅ | La carte-monde, les biomes, les niveaux générés (doc 04) | **Seul cœur de la v1** — l'apprentissage principal |
+| **La maison de Plouma** 🔶 | Espace calme sans objectif : customisation de Plouma, décoration — le « coin Toca Boca » | **En attente** : pertinence à requestionner (ni actée ni rejetée) |
+| **Les histoires** 🔶 | Mini-histoires audio-illustrées débloquées par la progression ; en fin d'année, l'enfant en lit des morceaux lui-même | **À cadrer** (contenu, coût de prod audio) — pas le cœur du besoin |
+| **Jouer à deux** 🔶 v2 | Mini-jeux coopératifs parent-enfant — inspiration Overcooked : coopération joyeuse, pas compétition | Piste v2 à explorer : **split-screen/multi-touch sur le même écran vs « lobby » local** — ⚠️ toute variante réseau (LAN/Wi-Fi) serait incompatible avec zéro permission INTERNET (doc 07 §2) ; le même-écran reste la voie compatible |
+| **Rendez-vous** ❌ | Cadeau hebdomadaire, événements saisonniers | **Retiré du périmètre pour l'instant** (décision 30/07/2026) — pourra revenir plus tard ; les « visites surprises » calendaires du Directeur (doc 04 §7) restent, elles, dans l'Aventure |
 
 ⚠️ **Pas de mode « quiz des parents », pas de daily quests, pas de streaks** : quasi absents des apps 4-8 ans respectées, et classés dark patterns pour ce public par la recherche récente ([étude 2026](https://www.sciencedirect.com/science/article/pii/S2212868926000024)).
 

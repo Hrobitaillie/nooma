@@ -19,6 +19,17 @@
 | 07/2026 | **Progression infinie adaptative** : biome = module de compétences, niveaux générés par le Directeur jusqu'à validation, changement de biome à la maîtrise, niveaux surprises/rappels — remplace « 5 mondes × 8-12 niveaux fixes » (formalisé doc 04, à confirmer ci-dessous) |
 | 07/2026 | Anti-dark-patterns comme principe produit ET argument public (doc 03 §5) — dont : Plouma jamais triste au départ de l'enfant |
 | 29/07/2026 | **Nom retenu : « Plouma »** (remplace « Nooma », abandonné pour marque FR identique + saturation) — renommage de `/docs` effectué ; réservation `plouma.fr`/`plouma.app` + avis CPI + dépôt INPI restant à faire (doc 09 §5.4) |
+| 30/07/2026 | **Modèle biomes/infini validé tel quel** (doc 04) : ~10-14 biomes (lancement 4-5), progression pilotée par la maîtrise et découplée du calendrier scolaire, session-menu 5-10 min (accueil → échauffement → cœur → dessert → clôture, 1-2 sessions/jour), typologie des 5 niveaux surprises (cadeau, écho, rêve, visite, défi) |
+| 30/07/2026 | **Encodage en v1** : « dictée muette » et « machine à mots » entrent dans le réservoir (17 → 19 mécaniques) — comble le manque n°1 (doc 02 §4.5) |
+| 30/07/2026 | **Récompense par défaut = fragments de langue, concrétisés en « dictionnaire de Plouma »** : au fil des exercices, Plouma débloque des compréhensions de notre langage → un dictionnaire se remplit (représentation UI à designer) + récompenses « tournées vers l'univers » (offrir plutôt qu'accumuler) (docs 03 §2.2, 04 §5.3) |
+| 30/07/2026 | **Modes de jeu recentrés** : l'Aventure = seul cœur v1 ; maison de Plouma **en attente** (pertinence à requestionner) ; histoires **à cadrer** (pas le cœur du besoin) ; rendez-vous hebdo **retiré** pour l'instant ; co-jeu parent = piste v2 à explorer (split-screen même écran vs lobby local — ⚠️ toute variante réseau serait incompatible avec zéro permission INTERNET) (doc 03 §4) |
+| 30/07/2026 | **Pédagogie pré-validée par Hugo, à confirmer par Florence** : progression des graphèmes + règle « 100 % déchiffrable » (doc 02 §2) ; paramètres du Directeur (cible 80-85 %, Leitner J+1/J+2-3/J+7/J+14, blocking→interleaving, mix 70-80/20-30) = **défauts du simulateur** ; police **Andika** par défaut (Belle Allure si cursive) (doc 05 §7) |
+| 30/07/2026 | **Stack Flutter + Flame + flutter_soloud + Drift actée sous réserve du Test A** (proto Blender→Flutter fluide sur tablette 2 Go = point de non-retour) (doc 06 §1) |
+| 30/07/2026 | **Event log append-only + projection** ; modèle de maîtrise v1 = **moyenne glissante pondérée + décroissance** (Elo/BKT = candidats v2, comparables en simulation) (doc 06 §3-4) |
+| 30/07/2026 | **Zéro permission INTERNET sur Android en v1** — argument d'audit ; réévalué en Phase 4 (paiement) (doc 07 §2) |
+| 30/07/2026 | **Vrai prénom par défaut** à la création du profil (renverse la proposition « surnom par défaut ») — le surnom reste une option. Conséquence : Plouma ne prononce pas le prénom libre (pas de TTS embarqué) → interpellations génériques enregistrées par Florence (doc 07 §4) |
+| 30/07/2026 | **Freemium validé** : 2 biomes complets gratuits + abonnement ~59-79 €/an dans l'espace parent ; **Kids Category Apple : oui** (docs 09 §3, 11 §2) |
+| 30/07/2026 | **Simulateur du Directeur** : construit en TypeScript zéro-dépendance dans `/cadrage/simulateur` (enfants virtuels, dashboard dans le viewer) ; portage Dart après le Test A, le simulateur servant d'oracle de non-régression |
 
 ## Propositions en attente de validation 🔶 (à trancher ensemble, par priorité)
 
@@ -27,28 +38,19 @@
 2. **Lettre de mission de l'orthophoniste conseil** (1 page, avec cession/autorisation écrite sur les contenus qu'elle rédige ou corrige). (doc 09 §5.2-5.3)
 
 ### Produit
-3. Modèle biomes/infini détaillé (doc 04) : ~10-14 biomes, découplage du calendrier scolaire, session-menu (échauffement/cœur/dessert), typologie des 5 niveaux surprises.
-4. Modes de jeu (doc 03 §4) : maison de Plouma, histoires, rendez-vous hebdo ; co-jeu parent v2.
-5. Récompenses « tournées vers l'univers » (offrir à Plouma/aux habitants plutôt qu'accumuler) (doc 03 §2.2).
-6. Ajout de mécaniques d'**encodage** (dictée muette, machine à mots) — manque identifié (doc 02 §4.5).
-7. Surnom par défaut plutôt que vrai prénom (doc 07 §4).
+3. **Maison de Plouma** : pertinence à requestionner (mise en attente le 30/07 — pas actée, pas rejetée) (doc 03 §4).
+4. **Coin histoires** : à cadrer (contenu, coût de prod audio) — pas le cœur du besoin (doc 03 §4).
+5. **Co-jeu parent (v2)** : arbitrer split-screen même écran vs lobby local (⚠️ réseau incompatible avec zéro INTERNET) (doc 03 §4).
+6. **Représentation du « dictionnaire de Plouma »** : design UI/UX de la collection de fragments de langue à produire (docs 03 §2.2, 04 §5.3, 05).
+7. **Sortie de biome : ~40 niveaux réels vs « 8-15 » attendus** (résultat du simulateur, 30/07) : assumer ~40 niveaux courts / ne compter que les niveaux cœur comme nœuds du chemin / assouplir la validation — la durée-calendrier (2-3,5 semaines/biome) est, elle, dans la cible (doc 04 §2).
 
 ### Pédagogie (avec l'orthophoniste)
-8. Progression des graphèmes (doc 02 §2) et règle « 100 % déchiffrable ».
-9. Paramètres du Directeur : cible 80-85 %, Leitner J+1/J+3/J+7/J+14, blocking→interleaving, mix 70-80/20-30 (doc 02 §5).
-10. Police d'affichage des lettres (a simple vs double étage, cursive) (doc 05 §7).
-11. Gestes Borel-Maisonny dans les mini-jeux : oui/non/comment (doc 02 §4.2).
-
-### Technique
-12. Stack **Flutter + Flame + flutter_soloud + Drift** (doc 06 §1) — recommandation ferme, à confirmer après Test A.
-13. Event log + projection ; Elo vs moyenne glissante en v1 (doc 06 §3-4).
-14. Absence totale de permission INTERNET en v1 (doc 07 §2) — à arbitrer vs paiement Phase 4.
+8. Confirmation par Florence des pré-validations du 30/07 : progression des graphèmes + « 100 % déchiffrable », paramètres du Directeur, police Andika.
+9. Gestes Borel-Maisonny dans les mini-jeux : oui/non/comment (doc 02 §4.2) — **reporté le 30/07**.
 
 ### Business
-15. Freemium : 2 biomes gratuits + abonnement ~59-79 €/an dans l'espace parent (doc 09 §3).
-16. Kids Category Apple : oui (recommandé doc 11 §2).
-17. Séquence financement : incubateur → Bourse French Tech + Édu-Up → CII (doc 09 §4).
-18. Télémétrie : option 1 (aucune en v1) + option 3 (rapport manuel parent) (doc 07 §7).
+10. Séquence financement : incubateur → Bourse French Tech + Édu-Up → CII (doc 09 §4) — **reporté le 30/07** (à revoir à la création de la SASU).
+11. Télémétrie : option 1 (aucune en v1) + option 3 (rapport manuel parent) (doc 07 §7) — **reporté le 30/07**.
 
 ## Rejeté ❌
 
@@ -62,6 +64,8 @@
 | 07/2026 | Streaks, timers, vies, daily quests, récompenses annoncées, mascotte triste | Dark patterns enfants — interdits par principe et par les référentiels (doc 03 §5) |
 | 07/2026 | Positionnement médical (« dys », « rééducation ») | Bascule en dispositif médical (CE, essais cliniques) — voie Poppins, hors de portée v1 (doc 10 §1) |
 | 07/2026 | Mondes téléchargeables à la demande (idée du brief) | Play Asset Delivery sans support Flutter officiel, iOS ODR déprécié → tout embarqué ≤200 Mo (doc 08 §2) |
+| 30/07/2026 | Surnom par défaut au lieu du prénom | Hugo tranche pour le **vrai prénom par défaut** (attachement) ; le surnom devient une simple option (doc 07 §4) |
+| 30/07/2026 | Mode « Rendez-vous » (cadeau hebdo, événements) | Retiré du périmètre pour l'instant — pourra revenir plus tard (doc 03 §4) |
 
 ## Dette documentaire
 

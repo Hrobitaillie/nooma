@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulateur du Directeur — Plouma</title>
+<style>
+  :root {
+    --bg: #faf7f2; --carte: #ffffff; --encre: #2b2620; --doux: #8a8177;
+    --ok: #2f9e63; --ko: #d0533b; --accent: #e8b23a; --trait: #e8e2d8;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.55 system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--encre); }
+  header { padding: 28px 32px 10px; }
+  header h1 { margin: 0 0 4px; font-size: 22px; }
+  header p { margin: 0; color: var(--doux); }
+  main { padding: 12px 32px 48px; max-width: 1100px; margin: 0 auto; }
+  .grille { display: grid; gap: 14px; }
+  .verdicts { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-bottom: 22px; }
+  .carte { background: var(--carte); border: 1px solid var(--trait); border-radius: 12px; padding: 16px 18px; }
+  .verdict { display: flex; gap: 12px; align-items: flex-start; }
+  .verdict .pastille { font-size: 20px; line-height: 1.3; }
+  .verdict .valeur { font-weight: 700; font-size: 17px; }
+  .verdict .nom { color: var(--doux); font-size: 13px; }
+  h2 { font-size: 16px; margin: 26px 0 10px; }
+  svg text { font: 11px system-ui, sans-serif; fill: var(--doux); }
+  .legende { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; font-size: 13px; color: var(--doux); }
+  .legende span::before { content: '—'; font-weight: 900; margin-right: 5px; color: var(--c); }
+  .compteurs { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+  .compteurs .valeur { font-size: 24px; font-weight: 700; }
+  .compteurs .nom { color: var(--doux); font-size: 13px; }
+  #meta { color: var(--doux); font-size: 13px; margin-top: 30px; }
+  #erreur { color: var(--ko); padding: 40px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>⭐ Simulateur du Directeur</h1>
+  <p>Enfants virtuels contre le moteur adaptatif — paramètres pré-validés du 30/07/2026 (docs 02 §5 & 04). Relancer : <code>npm run sim</code></p>
+</header>
+<main id="app"><div id="erreur" hidden></div></main>
+<script type="module">
+const COULEURS = { 'rapide': '#2f9e63', 'moyen': '#e8b23a', 'lent': '#d0843b', 'irrégulier': '#7b6bd0', 'en difficulté': '#d0533b' };
+const app = document.getElementById('app');
+
+function el(tag, attrs = {}, html = '') {
+  const e = document.createElement(tag);
+  Object.assign(e, attrs);
+  if (html) e.innerHTML = html;
+  return e;
+}
+
+function graphLignes(parProfil, semaines, cibleMin, cibleMax) {
+  const W = 1020, H = 260, m = { t: 14, r: 10, b: 26, l: 40 };
+  const x = (i) => m.l + (i / Math.max(1, semaines - 1)) * (W - m.l - m.r);
+  const y = (v) => m.t + (1 - (v - 0.5) / 0.5) * (H - m.t - m.b); // axe 50 % → 100 %
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%">`;
+  s += `<rect x="${m.l}" y="${y(cibleMax)}" width="${W - m.l - m.r}" height="${y(cibleMin) - y(cibleMax)}" fill="#2f9e6318"/>`;
+  for (const v of [0.5, 0.6, 0.7, 0.8, 0.9, 1]) {
+    s += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="#e8e2d8"/>`
+      + `<text x="4" y="${y(v) + 4}">${Math.round(v * 100)} %</text>`;
+  }
+  for (const [nom, p] of Object.entries(parProfil)) {
+    const pts = p.tauxParSemaine.map((v, i) => v == null ? null : `${x(i)},${y(v)}`).filter(Boolean);
+    s += `<polyline points="${pts.join(' ')}" fill="none" stroke="${COULEURS[nom]}" stroke-width="2.2"/>`;
+  }
+  for (let i = 0; i < semaines; i += 4) s += `<text x="${x(i)}" y="${H - 8}">S${i + 1}</text>`;
+  return s + '</svg>';
+}
+
+function graphBarres(entries, couleur = 'var(--accent)') {
+  const W = 1020, H = 200, m = { t: 12, r: 10, b: 26, l: 40 };
+  const max = Math.max(...entries.map(([, v]) => v), 1);
+  const bw = (W - m.l - m.r) / entries.length;
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%">`;
+  entries.forEach(([nom, v], i) => {
+    const h = (v / max) * (H - m.t - m.b);
+    const cx = m.l + i * bw;
+    s += `<rect x="${cx + bw * 0.14}" y="${H - m.b - h}" width="${bw * 0.72}" height="${h}" rx="6" fill="${typeof couleur === 'function' ? couleur(nom) : couleur}"/>`
+      + `<text x="${cx + bw / 2}" y="${H - m.b - h - 5}" text-anchor="middle" style="font-weight:700; fill:#2b2620">${v}</text>`
+      + `<text x="${cx + bw / 2}" y="${H - 8}" text-anchor="middle">${nom}</text>`;
+  });
+  return s + '</svg>';
+}
+
+try {
+  const r = await fetch('../out/results.json');
+  if (!r.ok) throw new Error('results.json introuvable');
+  const d = await r.json();
+
+  // Verdicts
+  const verdicts = el('div', { className: 'grille verdicts' });
+  for (const v of d.verdicts) {
+    verdicts.append(el('div', { className: 'carte verdict' },
+      `<div class="pastille">${v.ok ? '✅' : '❌'}</div><div><div class="valeur">${v.valeur}</div><div class="nom">${v.nom}</div></div>`));
+  }
+  app.append(verdicts);
+
+  // Taux de réussite hebdomadaire
+  app.append(el('h2', {}, 'Taux de réussite par semaine et par profil (bande verte = cible 78-87 %)'));
+  const c1 = el('div', { className: 'carte' }, graphLignes(d.parProfil, d.meta.semaines, d.meta.params.cibleReussiteMin, d.meta.params.cibleReussiteMax));
+  c1.append(el('div', { className: 'legende' }, Object.keys(d.parProfil)
+    .map((n) => `<span style="--c:${COULEURS[n]}">${n} (n=${d.parProfil[n].n})</span>`).join('')));
+  app.append(c1);
+
+  // Histogramme niveaux par biome
+  app.append(el('h2', {}, 'Niveaux joués avant de sortir d’un biome (profils hors difficulté)'));
+  const ordre = ['≤5', '6-10', '11-15', '16-20', '21-30', '>30'];
+  app.append(el('div', { className: 'carte' },
+    graphBarres(ordre.filter((b) => d.histoNiveauxParBiome[b]).map((b) => [b, d.histoNiveauxParBiome[b]]))));
+
+  // Jours par biome par profil
+  app.append(el('h2', {}, 'Jours pour valider un biome (médiane par profil)'));
+  app.append(el('div', { className: 'carte' },
+    graphBarres(Object.entries(d.parProfil).map(([n, p]) => [n, p.joursParBiomeMediane]), (n) => COULEURS[n])));
+
+  // Compteurs
+  app.append(el('h2', {}, 'Mécanismes de protection'));
+  const compteurs = el('div', { className: 'grille compteurs' });
+  for (const [valeur, nom] of [
+    [d.global.interventionsStagnation, 'interventions stagnation (bascule mécanique + cran −1)'],
+    [d.global.signauxParent, 'signaux discrets côté parent'],
+    [d.global.coinces, 'enfants passés par un « tapis roulant » (> 60 niveaux)'],
+    [d.global.violations, 'violations de garde-fous (doit rester 0)'],
+  ]) {
+    compteurs.append(el('div', { className: 'carte' }, `<div class="valeur">${valeur}</div><div class="nom">${nom}</div>`));
+  }
+  app.append(compteurs);
+
+  app.append(el('p', { id: 'meta' },
+    `${d.meta.enfants} enfants × ${d.meta.semaines} semaines · seed « ${d.meta.seed} » · ${d.meta.modules.length} biomes simulés · généré en ${(d.meta.dureeMs / 1000).toFixed(1)} s`));
+} catch (e) {
+  const err = document.getElementById('erreur');
+  err.hidden = false;
+  err.textContent = `Impossible de charger les résultats (${e.message}). Lancer d'abord : npm run sim`;
+}
+</script>
+</body>
+</html>

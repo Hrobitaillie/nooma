@@ -20,7 +20,7 @@ Conséquences pour Plouma :
 
 Autres modèles observés : Lingokids ~60 $/an, Holy Owly 60-96 €/an, Bayam ~90 €/an, Duolingo ABC **gratuit** (produit d'image), Khan Academy Kids **gratuit** (nonprofit), Lalilo gratuit pour les profs (racheté par Renaissance), Kaligo ~199 €/classe/an, HappyNeuron Pro **8 000 orthophonistes abonnés à 49-59 €/mois**.
 
-## 3. Recommandation de modèle 🔶
+## 3. Recommandation de modèle ✅ (acté par Hugo le 30/07/2026)
 
 **Freemium doux → abonnement annuel famille, décidé et payé par le parent, invisible pour l'enfant.**
 

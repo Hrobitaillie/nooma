@@ -10,7 +10,7 @@
 - **Sprenger-Charolles** : le français se lit mieux qu'il ne s'écrit (consistance graphème→phonème 74-96 % selon la position, phonème→graphème 66-87 %) ; enseigner d'abord les correspondances **fréquentes ET consistantes** : a, ou, o, é, eu, on, an, in, au/eau, ai/è, r, l, p, m, v, n, qu, b, f, ch, j, d, s/ss, oi. [Article](https://www.ac-noumea.nc/IMG/pdf/anae_sprenger_148.pdf).
 - **Guide Eduscol CP + étude Goigoux (131 classes)** : entrée graphémique, **tempo rapide — optimum à 14-15 graphèmes dans les 9 premières semaines** (moins de 8 pénalise surtout les élèves faibles) ; textes proposés **≥ 55 % déchiffrables**, et **100 % déchiffrables en lecture autonome** ; **dictée/encodage quotidiens** ; compréhension travaillée à l'oral tant que le décodage n'est pas automatisé. [Guide officiel (PDF)](https://eduscol.education.gouv.fr/sites/default/files/document/guide-pour-enseigner-la-lecture-et-l-ecriture-au-cp-67854.pdf).
 
-## 2. Progression des graphèmes 🔶 (proposition à faire valider/ajuster par l'orthophoniste)
+## 2. Progression des graphèmes ✅ pré-validée par Hugo (30/07/2026) — à confirmer/ajuster par l'orthophoniste
 
 Critères de séquencement consensuels :
 - **Fréquence + consistance** d'abord ; **consonnes continues** (f, s, ch, j, v, z, l, r, m, n — prononçables isolément) avant les occlusives (p, t, b, d, k, g) ;
@@ -66,8 +66,8 @@ Nos 17 mécaniques actuelles (brief §3, plan §3.3-3.5) restent valides. La rec
 - Phrase-image (sur/sous, avant/après), vrai/faux, remise en ordre
 - Compréhension orale d'histoires (dissociée du décodage — nos « Histoires de Plouma »)
 
-### 4.5 Encodage ⚠️ (le manque n°1 de notre design actuel)
-Le brief n'a **aucune mécanique de production** — or l'encodage quotidien est une recommandation forte (Eduscol, Dehaene). Mécaniques à ajouter 🔶 :
+### 4.5 Encodage ✅ (manque comblé — décision 30/07/2026)
+Le brief n'avait **aucune mécanique de production** — or l'encodage quotidien est une recommandation forte (Eduscol, Dehaene). ✅ **« Dictée muette » et « machine à mots » sont actées en v1** (le réservoir passe de 17 à 19 mécaniques) ; le tracé guidé reste 🔶 :
 - **Dictée muette** : une image (chat), l'enfant compose le mot avec des graphèmes mobiles en clay
 - **La machine à mots** : Plouma prononce, l'enfant assemble les graphèmes (pas les lettres une à une : les *graphèmes* — « ch » est une seule pièce)
 - Tracé guidé de lettres (pont vers l'écriture manuscrite, sans stylet en v1)
@@ -82,6 +82,8 @@ Le brief n'a **aucune mécanique de production** — or l'encodage quotidien est
 ## 5. Le moteur adaptatif : paramètres validés par la recherche
 
 Ces valeurs alimentent directement le Directeur ([04-progression-adaptative.md](04-progression-adaptative.md)) :
+
+> ✅ **Pré-validés par Hugo (30/07/2026) comme valeurs par défaut du simulateur** (`/cadrage/simulateur`) : cible 80-85 %, Leitner J+1/J+2-3/J+7/J+14, blocking→interleaving, mix 70-80/20-30. Le simulateur les éprouve sur des enfants virtuels ; Florence arbitre ensuite.
 
 ### 5.1 Cible de réussite : **80-85 %**
 Convergence remarquable de sources indépendantes : GraphoGame ~80 %, Duolingo ~80 %, Math Garden 75 %, « règle des 85 % » (Wilson et al., *Nature Communications* 2019 : taux d'erreur optimal ≈ 15,87 %). Pour des 5-7 ans sensibles à la frustration : viser le haut de la fourchette (80-85 %).

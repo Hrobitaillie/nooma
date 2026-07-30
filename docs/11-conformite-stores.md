@@ -14,7 +14,7 @@ Le choix **100 % offline / sans compte / sans pub / sans tracking** ✅ est un *
 
 ## 2. Apple — Kids Category (guideline 1.3)
 
-- **Choisir la Kids Category** 🔶 recommandé : review plus sévère, mais droit exclusif d'utiliser « pour enfants » dans les métadonnées (§2.3.8) + confiance parents + collections éditoriales Kids. Tranche d'âge : **6-8 ans**.
+- **Choisir la Kids Category** ✅ (acté par Hugo le 30/07/2026) : review plus sévère, mais droit exclusif d'utiliser « pour enfants » dans les métadonnées (§2.3.8) + confiance parents + collections éditoriales Kids. Tranche d'âge : **6-8 ans**.
 - Interdits : liens sortants, achats et « distractions » hors zone protégée par parental gate ; transmission de données personnelles/appareil à des tiers ; pub comportementale (en pratique : zéro pub, zéro analytics tiers).
 - **Parental gate** : tâche « de niveau adulte ». ⚠️ Pour des **pré-lecteurs** (notre cible exacte), Apple recommande une consigne **vocale** (ex. « maintenez les deux boutons et résolvez 23 + 41 ») — un simple « appuyez 3 secondes » est régulièrement rejeté. Le gate ne remplace PAS le consentement parental RGPD/COPPA si un jour on collecte des données.
 - ⚠️ **Motif n°1 de rejet : un SDK tiers détecté dans le binaire, même inactif** (Firebase Analytics, crash reporter embarqué par défaut par un framework). Auditer le binaire avant soumission (voir doc 07 §5).

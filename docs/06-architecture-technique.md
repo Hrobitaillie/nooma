@@ -3,7 +3,7 @@
 > ✅ = acté · 🔶 = proposition à valider · ⚠️ = mise en garde
 > Recherche technique juillet 2026, affirmations clés contre-vérifiées sur les sources officielles.
 
-## 1. Choix de stack : **Flutter + Flame + flutter_soloud + Drift** 🔶 (recommandation ferme)
+## 1. Choix de stack : **Flutter + Flame + flutter_soloud + Drift** ✅ (acté par Hugo le 30/07/2026, **sous réserve du Test A** — le proto sur tablette 2 Go reste le point de non-retour)
 
 ### 1.1 Le comparatif (résumé du raisonnement)
 
@@ -73,7 +73,9 @@ L'ancien plan disait « Hive/Isar ». **Les deux sont abandonnés** (Isar : dern
   2. Chemin garanti : **export/import d'un fichier JSON versionné** depuis l'espace parent (AirDrop/Quick Share/mail) — cross-plateforme Android↔iPad.
   3. ⚠️ QR code : inadapté comme canal principal (2 953 octets max) — éventuellement pour un résumé.
 
-## 4. Le Directeur : implémentation 🔶 (synthèse — le design produit est dans doc 04)
+## 4. Le Directeur : implémentation (synthèse — le design produit est dans doc 04)
+
+> ✅ Actés le 30/07/2026 : **event log + projection** (§3) et **moyenne glissante pondérée + décroissance** comme modèle de maîtrise v1 (Elo/BKT = candidats v2, comparables en simulation grâce au log rejouable). La logique est prototypée et éprouvée dans le **simulateur** `/cadrage/simulateur` (TypeScript, zéro dépendance) ; le portage Dart après le Test A en fera la lib définitive, le simulateur servant d'oracle de non-régression.
 
 - **Modèle de maîtrise recommandé : Elo éducatif** (Klinkenberg 2011, validé sur 3 648 enfants du même âge — Math Garden) : une note θ par enfant×compétence, une note β par item, appariement visant p(réussite) ≈ 0,75-0,85, mise à jour en une ligne. **~200 lignes de Dart, état en quelques Ko.** Avantage décisif pour nous : Elo **calibre automatiquement la difficulté réelle des items** — indispensable avec du contenu généré. (v1 peut démarrer avec la moyenne glissante du doc 04 et migrer vers Elo — le log d'événements permet de recalculer.)
 - **Rappels espacés** : Leitner simplifié (J+1 → J+3 → J+7 → J+14), voir doc 02 §5.4.
