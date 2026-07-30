@@ -44,3 +44,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # Contenu pédagogique versionné, copié depuis /contenu par tool/sync_contenu.sh
+  # (règle inviolable n°8 : tout le contenu = données, jamais en dur dans le code).
+  # Ce dossier est un artefact de build (voir .gitignore) : lancer sync_contenu.sh avant les tests.
+  assets:
+    - assets/contenu/
+    - assets/contenu/banques/

@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Contenu pédagogique copié depuis /contenu (racine) par tool/sync_contenu.sh.
+# Source de vérité = /contenu ; ces assets sont un artefact de build, jamais versionné.
+/assets/contenu/

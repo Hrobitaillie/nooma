@@ -48,6 +48,11 @@ jobs:
       - name: Audit des dépendances (zéro SDK réseau)
         run: ./tool/audit_dependances.sh
 
+      # Copie le contenu pédagogique (/contenu) vers les assets Flutter avant les tests.
+      # Ces assets ne sont pas versionnés (artefact de build) : à régénérer à chaque run.
+      - name: Synchronisation du contenu pédagogique
+        run: ./tool/sync_contenu.sh
+
       - name: Analyse statique (fatal-infos)
         run: flutter analyze --fatal-infos
 

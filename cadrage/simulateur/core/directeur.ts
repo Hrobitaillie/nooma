@@ -4,7 +4,7 @@
 // à jour la maîtrise, la pré-validation de module et le calendrier Leitner.
 
 import { PARAMS } from './params.ts';
-import { splitmix32, hashString, pick, type Rng } from './rng.ts';
+import { splitmix32, hashString, pick, shuffle, type Rng } from './rng.ts';
 import {
   ORDRE_MODULES, getModule, competencesDe, getCompetence, type Module,
 } from './graphe.ts';
@@ -157,7 +157,7 @@ export class Directeur {
 
     // 2. Cœur : phase confirmation (pré-validation du module) OU apprentissage en zone proximale.
     if (this.phase === 'confirmation') {
-      const melange = [...module.competences].sort(() =>rng() - 0.5).slice(0, 3);
+      const melange = shuffle(rng, module.competences).slice(0, 3);
       niveaux.push({
         type: 'confirmation',
         mecanique: this.choisirMecanique(rng, module),
@@ -183,7 +183,7 @@ export class Directeur {
     if (premiereDeLaSemaine && this.moduleIndex > 0) {
       const passees = [...this.etats.entries()].filter(([, e]) => e.validee).map(([id]) => id);
       if (passees.length >= 2) {
-        const choisies = [...passees].sort(() => rng() - 0.5).slice(0, 3);
+        const choisies = shuffle(rng, passees).slice(0, 3);
         niveaux.push({
           type: 'reve', mecanique: this.choisirMecanique(rng, module),
           cibles: choisies.map((c) => ({ competence: c, difficulte: this.etat(c).derniereDifficulte })),

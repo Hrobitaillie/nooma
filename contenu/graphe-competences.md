@@ -140,6 +140,6 @@ Comprendre au-delà du décodage : histoires écoutées, vocabulaire, premières
 
 ## Banques d'items
 
-- `banques/syllabes.csv` : **100 items**, 0 validés en relecture, dont 19 marqués « à vérifier » (découpage syllabique oral à arbitrer — e caduc).
+- `banques/syllabes.csv` : **100 items**, 2 validés en relecture, dont 17 marqués « à vérifier » (découpage syllabique oral à arbitrer — e caduc).
 
 *Progression des graphèmes cumulée (ordre d'introduction par module) :* a, i, o, u, é, e, l, r, f, s, m, v, ch, ou, p, t, b, on, an, en, in, oi, d, j, z, c, g, n, è, au, eau, ai, eu, gn, er, ez, ill.

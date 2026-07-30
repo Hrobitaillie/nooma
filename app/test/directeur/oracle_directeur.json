@@ -1,0 +1,765 @@
+{
+  "meta": {
+    "graine": "oracle-plouma-1",
+    "sessions": 10
+  },
+  "sessions": [
+    {
+      "jour": 0,
+      "session": 0,
+      "premiereDeLaSemaine": true,
+      "specs": [
+        {
+          "type": "echauffement",
+          "mecanique": "intrus-phonologique",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 0
+            }
+          ],
+          "nbEssais": 4
+        },
+        {
+          "type": "coeur",
+          "mecanique": "tape-la-syllabe",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 0
+            }
+          ],
+          "nbEssais": 6
+        },
+        {
+          "type": "coeur",
+          "mecanique": "tri-par-son",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 0
+            }
+          ],
+          "nbEssais": 6
+        }
+      ]
+    },
+    {
+      "jour": 2,
+      "session": 1,
+      "premiereDeLaSemaine": false,
+      "specs": [
+        {
+          "type": "echauffement",
+          "mecanique": "fabrique-de-syllabes",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 0
+            }
+          ],
+          "nbEssais": 4
+        },
+        {
+          "type": "coeur",
+          "mecanique": "boite-a-sons",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 1
+            }
+          ],
+          "nbEssais": 6
+        },
+        {
+          "type": "cadeau",
+          "mecanique": "fabrique-de-syllabes",
+          "cibles": [],
+          "nbEssais": 0
+        }
+      ]
+    },
+    {
+      "jour": 4,
+      "session": 2,
+      "premiereDeLaSemaine": false,
+      "specs": [
+        {
+          "type": "echauffement",
+          "mecanique": "intrus-phonologique",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 0
+            }
+          ],
+          "nbEssais": 4
+        },
+        {
+          "type": "coeur",
+          "mecanique": "tape-la-syllabe",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 2
+            }
+          ],
+          "nbEssais": 6
+        },
+        {
+          "type": "coeur",
+          "mecanique": "intrus-phonologique",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 3
+            }
+          ],
+          "nbEssais": 6
+        }
+      ]
+    },
+    {
+      "jour": 6,
+      "session": 3,
+      "premiereDeLaSemaine": false,
+      "specs": [
+        {
+          "type": "echauffement",
+          "mecanique": "tri-par-son",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 2
+            }
+          ],
+          "nbEssais": 4
+        },
+        {
+          "type": "coeur",
+          "mecanique": "tape-la-syllabe",
+          "cibles": [
+            {
+              "competence": "syl-seg3",
+              "difficulte": 0
+            }
+          ],
+          "nbEssais": 6
+        },
+        {
+          "type": "coeur",
+          "mecanique": "intrus-phonologique",
+          "cibles": [
+            {
+              "competence": "syl-seg3",
+              "difficulte": 0
+            },
+            {
+              "competence": "syl-seg2",
+              "difficulte": 3
+            }
+          ],
+          "nbEssais": 6
+        },
+        {
+          "type": "cadeau",
+          "mecanique": "boite-a-sons",
+          "cibles": [],
+          "nbEssais": 0
+        }
+      ]
+    },
+    {
+      "jour": 8,
+      "session": 4,
+      "premiereDeLaSemaine": false,
+      "specs": [
+        {
+          "type": "echauffement",
+          "mecanique": "intrus-phonologique",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 2
+            }
+          ],
+          "nbEssais": 4
+        },
+        {
+          "type": "coeur",
+          "mecanique": "tri-par-son",
+          "cibles": [
+            {
+              "competence": "syl-fusion",
+              "difficulte": 0
+            },
+            {
+              "competence": "syl-seg2",
+              "difficulte": 3
+            }
+          ],
+          "nbEssais": 6
+        }
+      ]
+    },
+    {
+      "jour": 10,
+      "session": 5,
+      "premiereDeLaSemaine": false,
+      "specs": [
+        {
+          "type": "echauffement",
+          "mecanique": "tape-la-syllabe",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 2
+            }
+          ],
+          "nbEssais": 4
+        },
+        {
+          "type": "coeur",
+          "mecanique": "intrus-phonologique",
+          "cibles": [
+            {
+              "competence": "syl-compare",
+              "difficulte": 0
+            }
+          ],
+          "nbEssais": 6
+        },
+        {
+          "type": "coeur",
+          "mecanique": "boite-a-sons",
+          "cibles": [
+            {
+              "competence": "syl-compare",
+              "difficulte": 0
+            },
+            {
+              "competence": "syl-seg2",
+              "difficulte": 3
+            }
+          ],
+          "nbEssais": 6
+        },
+        {
+          "type": "cadeau",
+          "mecanique": "tri-par-son",
+          "cibles": [],
+          "nbEssais": 0
+        }
+      ]
+    },
+    {
+      "jour": 12,
+      "session": 6,
+      "premiereDeLaSemaine": false,
+      "specs": [
+        {
+          "type": "echauffement",
+          "mecanique": "boite-a-sons",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 2
+            }
+          ],
+          "nbEssais": 4
+        },
+        {
+          "type": "coeur",
+          "mecanique": "intrus-phonologique",
+          "cibles": [
+            {
+              "competence": "syl-fusion",
+              "difficulte": 1
+            },
+            {
+              "competence": "syl-seg2",
+              "difficulte": 3
+            }
+          ],
+          "nbEssais": 6
+        }
+      ]
+    },
+    {
+      "jour": 14,
+      "session": 7,
+      "premiereDeLaSemaine": true,
+      "specs": [
+        {
+          "type": "echauffement",
+          "mecanique": "tape-la-syllabe",
+          "cibles": [
+            {
+              "competence": "syl-fusion",
+              "difficulte": 0
+            }
+          ],
+          "nbEssais": 4
+        },
+        {
+          "type": "coeur",
+          "mecanique": "boite-a-sons",
+          "cibles": [
+            {
+              "competence": "syl-seg3",
+              "difficulte": 1
+            }
+          ],
+          "nbEssais": 6
+        },
+        {
+          "type": "echo",
+          "mecanique": "tri-par-son",
+          "cibles": [
+            {
+              "competence": "syl-seg2",
+              "difficulte": 3
+            }
+          ],
+          "nbEssais": 4
+        }
+      ]
+    },
+    {
+      "jour": 16,
+      "session": 8,
+      "premiereDeLaSemaine": false,
+      "specs": [
+        {
+          "type": "echauffement",
+          "mecanique": "fabrique-de-syllabes",
+          "cibles": [
+            {
+              "competence": "syl-fusion",
+              "difficulte": 0
+            }
+          ],
+          "nbEssais": 4
+        },
+        {
+          "type": "coeur",
+          "mecanique": "boite-a-sons",
+          "cibles": [
+            {
+              "competence": "syl-compare",
+              "difficulte": 1
+            }
+          ],
+          "nbEssais": 6
+        },
+        {
+          "type": "coeur",
+          "mecanique": "tape-la-syllabe",
+          "cibles": [
+            {
+              "competence": "syl-compare",
+              "difficulte": 2
+            }
+          ],
+          "nbEssais": 6
+        }
+      ]
+    },
+    {
+      "jour": 18,
+      "session": 9,
+      "premiereDeLaSemaine": false,
+      "specs": [
+        {
+          "type": "echauffement",
+          "mecanique": "boite-a-sons",
+          "cibles": [
+            {
+              "competence": "syl-compare",
+              "difficulte": 1
+            }
+          ],
+          "nbEssais": 4
+        },
+        {
+          "type": "coeur",
+          "mecanique": "tape-la-syllabe",
+          "cibles": [
+            {
+              "competence": "syl-seg3",
+              "difficulte": 2
+            },
+            {
+              "competence": "syl-seg2",
+              "difficulte": 3
+            }
+          ],
+          "nbEssais": 6
+        },
+        {
+          "type": "echo",
+          "mecanique": "fabrique-de-syllabes",
+          "cibles": [
+            {
+              "competence": "syl-compare",
+              "difficulte": 2
+            }
+          ],
+          "nbEssais": 4
+        }
+      ]
+    }
+  ],
+  "etatsFinaux": {
+    "syl-seg2": {
+      "maitrise": 0.679672079687,
+      "validee": true,
+      "boiteLeitner": 1,
+      "rencontres": 77,
+      "derniereDifficulte": 3
+    },
+    "syl-seg3": {
+      "maitrise": 0.891375573296,
+      "validee": true,
+      "boiteLeitner": 0,
+      "rencontres": 18,
+      "derniereDifficulte": 2
+    },
+    "syl-fusion": {
+      "maitrise": 0.831804533045,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 14,
+      "derniereDifficulte": 1
+    },
+    "syl-compare": {
+      "maitrise": 0.762321637584,
+      "validee": true,
+      "boiteLeitner": 1,
+      "rencontres": 29,
+      "derniereDifficulte": 2
+    },
+    "syl-manip": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "rime-detect": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "rime-intrus": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "rime-prod": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "att-detect": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "pho-attaque": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "pho-fusion": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "pho-seg": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "pho-position": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "voy-son-lettre": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "cont-son-lettre": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "lettre-entendre": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "lettre-trace": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "cv-fusion": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "cv-gammes": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "cv-mots": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "cv-encodage": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "dig-son-lettre": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "dig-entendre": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "dig-mots": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "dig-encodage": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "prox-oreille": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "prox-lettres": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "prox-lecture": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "prox-encodage": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "mots-outils": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "mots-frequents": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "mots-muettes": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "mots-encodage": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "cplx-son-lettre": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "cplx-deux-graphies": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "cplx-mots": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "cplx-encodage": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "flu-flash": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "flu-logatomes": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "flu-chaines": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "flu-repetee": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "phr-lecture": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "phr-consignes": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "phr-ordre": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "comp-orale": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "comp-vocab": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    },
+    "comp-lue": {
+      "maitrise": 0,
+      "validee": false,
+      "boiteLeitner": 0,
+      "rencontres": 0,
+      "derniereDifficulte": 0
+    }
+  },
+  "evenements": [
+    {
+      "type": "validation-competence",
+      "detail": "syl-seg2",
+      "jour": 4
+    },
+    {
+      "type": "validation-competence",
+      "detail": "syl-compare",
+      "jour": 16
+    },
+    {
+      "type": "validation-competence",
+      "detail": "syl-seg3",
+      "jour": 18
+    }
+  ],
+  "moduleIndex": 0,
+  "historiqueBiomes": [],
+  "violationsSautDifficulte": 0,
+  "violationsMecanique": 0
+}

@@ -49,3 +49,20 @@ int hashString(String str) {
 T pick<T>(Rng rng, List<T> arr) {
   return arr[(rng() * arr.length).floor()];
 }
+
+/// Mélange Fisher-Yates DÉTERMINISTE — portage fidèle de `shuffle` de rng.ts.
+///
+/// Remplace le `[...].sort(() => rng() - 0.5)` du simulateur, irreproductible d'un
+/// langage à l'autre (l'ordre d'un tri à comparateur aléatoire dépend de V8 ≠ Dart).
+/// Ici l'ordre des tirages du rng est fixé : l'oracle croisé rejoue le mélange à
+/// l'identique. Ne mute pas l'entrée : renvoie une copie mélangée.
+List<T> shuffleRng<T>(Rng rng, List<T> arr) {
+  final List<T> out = List<T>.of(arr);
+  for (int i = out.length - 1; i > 0; i--) {
+    final int j = (rng() * (i + 1)).floor();
+    final T tmp = out[i];
+    out[i] = out[j];
+    out[j] = tmp;
+  }
+  return out;
+}
