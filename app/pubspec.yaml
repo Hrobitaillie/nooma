@@ -1,0 +1,46 @@
+name: plouma
+description: "Plouma — app Flutter/Flame de lecture pour enfants de CP, 100 % offline."
+# Empêche toute publication accidentelle sur pub.dev (paquet privé).
+publish_to: 'none'
+
+# Version applicative (versionName Android / CFBundleShortVersionString iOS).
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+# RÈGLE INVIOLABLE n°3 (CLAUDE.md) : versions FIGÉES (jamais de ^ ni de plage),
+# aucune dépendance hors allowlist (tool/dependances_autorisees.txt). Toute addition
+# = décision humaine explicite. Montées de version en tâche dédiée (breaking changes Flame).
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Moteur de jeu (doc 06 §1).
+  flame: 1.38.0
+
+  # Audio faible latence, recommandé par le cookbook officiel Flutter (doc 06 §1).
+  flutter_soloud: 4.1.3
+
+  # Données locales : Drift (SQLite), event log + projection (doc 06 §3).
+  drift: 2.34.3
+  drift_flutter: 0.3.1
+
+  # État applicatif (doc 06 §1).
+  # Épinglé 2.6.1 : riverpod 3.x tire une contrainte "test" incompatible avec le
+  # SDK Flutter 3.44.8 (meta 1.18.0 vs drift_dev/analyzer ^13). Montée en tâche dédiée.
+  flutter_riverpod: 2.6.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Génération du code Drift.
+  drift_dev: 2.34.5
+  build_runner: 2.15.1
+
+  # Lints recommandés (analysis_options.yaml). La CI utilise analyze --fatal-infos.
+  flutter_lints: 6.0.0
+
+flutter:
+  uses-material-design: true

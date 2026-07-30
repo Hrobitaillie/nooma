@@ -1,0 +1,72 @@
+name: App CI
+
+# CI de l'app Plouma. La CI est le vrai patron du projet (doc 06 §7) :
+# ce ne sont pas les yeux qui garantissent le code vibe codé, ce sont les tests et la CI.
+# Déclenchée sur tout changement du code de l'app ou du contenu pédagogique.
+
+on:
+  push:
+    paths:
+      - "app/**"
+      - "contenu/**"
+      - ".github/workflows/app-ci.yml"
+  pull_request:
+    paths:
+      - "app/**"
+      - "contenu/**"
+      - ".github/workflows/app-ci.yml"
+
+# Une seule exécution par branche : on annule les runs obsolètes.
+concurrency:
+  group: app-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # (a) App Flutter : versions figées, audit dépendances, analyse stricte, tests.
+  app:
+    name: Flutter — analyse, audit deps, tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Version Flutter PINNÉE (règle inviolable : versions figées, breaking changes Flame).
+      - name: Setup Flutter (stable pinnée)
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.8
+          channel: stable
+          cache: true
+
+      - name: Résolution des dépendances (pub get)
+        run: flutter pub get
+
+      # Barrière conformité Kids : bloque tout SDK réseau/analytics ou paquet hors allowlist.
+      - name: Audit des dépendances (zéro SDK réseau)
+        run: ./tool/audit_dependances.sh
+
+      - name: Analyse statique (fatal-infos)
+        run: flutter analyze --fatal-infos
+
+      - name: Tests
+        run: flutter test
+
+  # (b) Lint du contenu pédagogique (données dans /contenu, jamais en dur dans le code).
+  contenu:
+    name: Lint contenu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # Lint exécuté depuis la RACINE du dépôt (script npm défini dans package.json racine).
+      - name: Lint contenu
+        run: npm run lint-contenu

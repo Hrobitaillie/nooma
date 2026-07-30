@@ -12,7 +12,7 @@ fleur;1;fleur;f;1;syl-compare;;non;a-relire
 train;1;train;t;1;syl-compare;pain;non;a-relire
 roi;1;roi;r;2;syl-compare;;non;a-relire
 œuf;1;œuf;œ;2;syl-compare;;non;a-relire
-singe;1;singe;s;2;syl-compare;;oui;a-relire
+singe;2;sin-ge;s;2;syl-seg2|syl-compare;;non;valide
 pont;1;pont;p;2;syl-compare;pain;non;a-relire
 lapin;2;la-pin;l;1;syl-seg2|syl-fusion|syl-compare;sapin;non;a-relire
 sapin;2;sa-pin;s;1;syl-seg2|syl-fusion|syl-compare;lapin;non;a-relire
@@ -26,7 +26,7 @@ ciseaux;2;ci-seaux;s;2;syl-seg2|syl-fusion|syl-compare;oiseau;non;a-relire
 cadeau;2;ca-deau;k;1;syl-seg2|syl-fusion|syl-compare;gâteau;non;a-relire
 maison;2;mai-son;m;1;syl-seg2|syl-fusion|syl-compare;;non;a-relire
 souris;2;sou-ris;s;1;syl-seg2|syl-fusion|syl-compare;;non;a-relire
-cheval;2;che-val;ch;1;syl-seg2|syl-fusion|syl-compare;;oui;a-relire
+cheval;2;che-val;ch;1;syl-seg2|syl-fusion|syl-compare;;non;valide
 mouton;2;mou-ton;m;1;syl-seg2|syl-fusion|syl-compare;bouton;non;a-relire
 bouton;2;bou-ton;b;2;syl-seg2|syl-fusion|syl-compare;mouton;non;a-relire
 cochon;2;co-chon;k;1;syl-seg2|syl-fusion|syl-compare;;non;a-relire

@@ -1,0 +1,144 @@
+# Allowlist des dépendances autorisées — app Plouma
+#
+# Toute ligne non vide et non commentée = un nom de package autorisé dans pubspec.lock.
+# Un package présent dans pubspec.lock mais ABSENT de cette liste => échec de l'audit
+# (audit_dependances.sh, exit 1). Ajouter un package ici = DÉCISION HUMAINE EXPLICITE
+# (règle inviolable n°3 du CLAUDE.md). Versions figées dans pubspec.yaml, pas de ^.
+#
+# Interdits absolus (échec immédiat, indépendamment de cette liste) :
+#   tout nom contenant firebase, analytics, sentry, crashlytics, admob, ads.
+#
+# Le SDK Flutter/Dart et ses paquets implicites (flutter, flutter_test, sky_engine…)
+# n'ont pas à figurer ici : ils ne sont pas listés comme dépendances hosted dans le lock,
+# mais on les tolère explicitement au cas où (voir ci-dessous).
+
+# --- SDK implicites ---
+flutter
+flutter_test
+flutter_localizations
+sky_engine
+
+# --- Dépendances directes actées (doc 06 §1) ---
+flame
+flutter_soloud
+drift
+drift_flutter
+flutter_riverpod
+
+# --- Dépendances transitives légitimes (Flame) ---
+ordered_set
+collection
+meta
+vector_math
+
+# --- Dépendances transitives légitimes (Riverpod / state) ---
+riverpod
+state_notifier
+
+# --- Dépendances transitives légitimes (Drift / SQLite / stockage local) ---
+drift_dev
+sqlite3
+sqlite3_flutter_libs
+# sqlcipher_flutter_libs : bundle natif SQLCipher tiré par drift_flutter (chiffrement local, pas de réseau)
+sqlcipher_flutter_libs
+# sqlparser : parseur SQL de drift_dev (génération de code, dev)
+sqlparser
+path
+path_provider
+path_provider_android
+path_provider_foundation
+path_provider_linux
+path_provider_platform_interface
+path_provider_windows
+sqflite_common
+synchronised
+stream_channel
+# jni / objective_c / code_assets / native FFI de bas niveau tirés par path_provider et sqlite3
+jni
+jni_flutter
+jni_util
+objective_c
+code_assets
+hooks
+record_use
+native_toolchain_c
+# crypto : hachage local (build_daemon, sqlite3) — pas de réseau
+crypto
+
+# --- Dépendances transitives légitimes (soloud / FFI audio local) ---
+ffi
+http_parser
+logging
+# ⚠️ http : tiré par flutter_soloud (client HTTP standard Dart, capacité de chargement audio
+# distant). INERTE en v1 : l'app charge son audio depuis les assets locaux et n'a AUCUNE
+# permission INTERNET Android (règle inviolable n°2) — le paquet ne peut donc pas émettre.
+# Autorisé au titre de transitif d'une dépendance actée ; à re-vérifier à chaque montée soloud.
+http
+# web_socket : sous-jacent de http (WebSocket), inerte sans permission réseau
+web_socket
+
+# --- Chaîne de génération de code (build_runner / drift_dev) — DEV ONLY, hors binaire app ---
+# Ces paquets tournent sur la machine de build (build_runner : daemon local + serveur WebSocket
+# loopback pour la génération incrémentale). Ils ne sont PAS embarqués dans l'app livrée.
+_fe_analyzer_shared
+analyzer
+args
+boolean_selector
+build
+build_config
+build_daemon
+build_runner
+built_collection
+built_value
+charcode
+checked_yaml
+cli_util
+convert
+dart_style
+file
+fixnum
+glob
+graphs
+io
+json_annotation
+mime
+package_config
+pool
+pub_semver
+pubspec_parse
+recase
+source_gen
+stream_transform
+watcher
+yaml
+# Serveur local de développement du build_daemon (loopback uniquement) :
+http_multi_server
+shelf
+shelf_web_socket
+web_socket_channel
+
+# --- Tests / lints (dev only) ---
+flutter_lints
+lints
+test_api
+leak_tracker
+leak_tracker_flutter_testing
+leak_tracker_testing
+vm_service
+
+# --- Utilitaires transitifs courants (sans réseau sortant) ---
+async
+characters
+clock
+fake_async
+matcher
+material_color_utilities
+source_span
+stack_trace
+string_scanner
+term_glyph
+typed_data
+web
+plugin_platform_interface
+platform
+xdg_directories
