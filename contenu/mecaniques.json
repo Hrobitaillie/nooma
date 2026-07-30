@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "note": "Les 19 mécaniques actées (17 du brief + dictée muette + machine à mots, 30/07/2026). Liste canonique référencée par le graphe de compétences, le lint et le simulateur.",
+  "mecaniques": [
+    { "id": "tape-la-syllabe", "nom": "Tape la syllabe", "modalite": "rythme" },
+    { "id": "boite-a-sons", "nom": "La boîte à sons", "modalite": "toucher" },
+    { "id": "attrape-le-son", "nom": "Attrape le son", "modalite": "écouter" },
+    { "id": "jumeaux-presque-pareils", "nom": "Les jumeaux presque pareils", "modalite": "écouter" },
+    { "id": "intrus-phonologique", "nom": "L'intrus", "modalite": "écouter" },
+    { "id": "fabrique-de-syllabes", "nom": "La fabrique de syllabes", "modalite": "glisser" },
+    { "id": "chasse-au-grapheme", "nom": "La chasse au graphème", "modalite": "toucher" },
+    { "id": "tri-par-son", "nom": "Le tri par son", "modalite": "glisser" },
+    { "id": "trace-la-lettre", "nom": "Trace la lettre", "modalite": "tracer" },
+    { "id": "gammes-de-syllabes", "nom": "Les gammes de syllabes", "modalite": "lire" },
+    { "id": "mots-rigolos", "nom": "Les mots rigolos des étoiles", "modalite": "lire" },
+    { "id": "lecture-flash", "nom": "Lecture flash", "modalite": "lire" },
+    { "id": "karaoke", "nom": "Le karaoké", "modalite": "lire" },
+    { "id": "chaines-de-mots", "nom": "Les chaînes de mots", "modalite": "lire" },
+    { "id": "mot-image", "nom": "Mot-image", "modalite": "toucher" },
+    { "id": "consignes-a-executer", "nom": "Les consignes à exécuter", "modalite": "toucher" },
+    { "id": "phrase-image", "nom": "Phrase-image", "modalite": "toucher" },
+    { "id": "dictee-muette", "nom": "La dictée muette", "modalite": "composer" },
+    { "id": "machine-a-mots", "nom": "La machine à mots", "modalite": "composer" }
+  ]
+}

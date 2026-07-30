@@ -6,15 +6,15 @@
 ## Phase 0 — Cadrage & fondations (maintenant)
 
 **Produit/juridique :**
-- [ ] Valider ensemble les propositions 🔶 de cette doc (modèle biomes/infini, modes de jeu, stack, business model) → mettre à jour [13-decisions.md](13-decisions.md)
-- [ ] ⚠️ **Recherche d'antériorité marque « Plouma »** (INPI + EUIPO — une app « nooma » existe déjà en classe 9, voir doc 09 §5.4) → décision garder/renommer **avant toute com publique**
-- [ ] Lettre de mission de l'orthophoniste conseil (1 page : périmètre, confidentialité, IP des contenus relus/rédigés) (doc 09 §5.2-5.3)
-- [ ] Candidature incubateur (condition de la Bourse French Tech — doc 09 §4)
+- [x] Valider ensemble les propositions 🔶 de cette doc (modèle biomes/infini, modes de jeu, stack, business model) → **fait le 30/07/2026**, voir [13-decisions.md](13-decisions.md)
+- [ ] ⚠️ **Actions marque « Plouma »** (domaines, test oral, avis CPI, dépôt INPI) — **reportées à bien plus tard (décision 30/07)**, mais toujours obligatoires **avant toute com publique**
+- [ ] Lettre de mission de l'orthophoniste conseil (1 page : périmètre, confidentialité, IP des contenus relus/rédigés, autorisation voix) (doc 09 §5.2-5.3)
+- [ ] Candidature incubateur — en pause (financement reporté le 30/07, doc 09 §4)
 
 **Pédagogie (produite par Hugo, relue par l'orthophoniste conseil — démarre tout de suite, c'est le chemin critique) :**
-- [ ] Graphe de compétences v1 (modules → compétences → prérequis) — doc 02 §8
-- [ ] Progression des graphèmes validée (doc 02 §2)
-- [ ] Première banque d'items : module Syllabes (~100 mots tagués)
+- [x] Graphe de compétences v1 (12 modules, 47 compétences) — **produit le 30/07 dans `/contenu`, en attente de relecture Florence**
+- [x] Progression des graphèmes — **pré-validée par Hugo le 30/07** (intégrée au graphe), à confirmer par Florence
+- [x] Première banque d'items : module Syllabes — **100 mots tagués le 30/07 (`contenu/banques/syllabes.csv`)**, à relire par Florence
 - [ ] Charte des consignes/feedbacks de Plouma (éloge du processus — doc 03 §2.4)
 
 **Technique/DA :**

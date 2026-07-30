@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node cadrage/server.mjs",
     "flooow": "bash flooow/scripts/dev-local.sh",
-    "sim": "node --experimental-strip-types cadrage/simulateur/sim/run.ts"
+    "sim": "node --experimental-strip-types cadrage/simulateur/sim/run.ts",
+    "lint-contenu": "node contenu/lint.mjs"
   }
 }

@@ -27,7 +27,7 @@ Résultats : console + `out/results.json` → dashboard sur
 ```
 core/     le Directeur pur, sans UI — c'est LUI qui sera porté en Dart
   params.ts     tous les paramètres ajustables (α, seuils, Leitner, mix…)
-  graphe.ts     graphe de compétences réduit (6 modules/biomes, 23 compétences)
+  graphe.ts     charge le vrai graphe depuis /contenu (12 modules, 47 compétences)
   maitrise.ts   moyenne glissante pondérée + décroissance + règles de validation
   directeur.ts  session-menu, zone proximale, échos/rêves/cadeaux/défis,
                 pré-validation de module, stagnation
@@ -50,9 +50,10 @@ TypeScript exécuté par Node ≥ 22.6 (`--experimental-strip-types`), zéro dé
 
 ## Limites assumées
 
-- Le graphe (6 modules, 23 compétences) et le modèle d'enfant sont **synthétiques** : les
-  chiffres absolus n'ont pas valeur de prédiction — seuls les ordres de grandeur et les
-  comportements du moteur (adaptation, rappels, protections) sont significatifs.
+- Le graphe vient du vrai contenu (`/contenu`, v1 à relire par l'orthophoniste), mais le
+  **modèle d'enfant est synthétique** : les chiffres absolus n'ont pas valeur de
+  prédiction — seuls les ordres de grandeur et les comportements du moteur (adaptation,
+  rappels, protections) sont significatifs.
 - Les items ne sont pas modélisés individuellement (pas de banque de mots) : la règle
   « 100 % déchiffrable » est garantie par construction ici, elle sera une assertion testée
   côté Dart.

@@ -137,6 +137,8 @@ Statut : **amie proche en conseil métier** — pas d'association ni de rôle op
 
 ## 8. Livrables pédagogiques à produire 🔶 (produits par Hugo, **relus/validés par l'orthophoniste conseil**)
 
+> ✅ Livrables 1-2 et le début du 3 **produits le 30/07/2026 dans `/contenu`** (graphe 12 modules / 47 compétences, banque Syllabes 100 mots) — lint `npm run lint-contenu`, vue de relecture `contenu/graphe-competences.md`. **En attente de relecture par l'orthophoniste.**
+
 1. **Le graphe de compétences** (modules → compétences → prérequis) — fondation du Directeur
 2. **La progression des graphèmes** (validation/ajustement du §2)
 3. **Les banques d'items tagués** : mots (avec structure syllabique, graphèmes requis, fréquence), images nécessaires, distracteurs recommandés par item

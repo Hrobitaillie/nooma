@@ -30,6 +30,8 @@
 | 30/07/2026 | **Vrai prénom par défaut** à la création du profil (renverse la proposition « surnom par défaut ») — le surnom reste une option. Conséquence : Plouma ne prononce pas le prénom libre (pas de TTS embarqué) → interpellations génériques enregistrées par Florence (doc 07 §4) |
 | 30/07/2026 | **Freemium validé** : 2 biomes complets gratuits + abonnement ~59-79 €/an dans l'espace parent ; **Kids Category Apple : oui** (docs 09 §3, 11 §2) |
 | 30/07/2026 | **Simulateur du Directeur** : construit en TypeScript zéro-dépendance dans `/cadrage/simulateur` (enfants virtuels, dashboard dans le viewer) ; portage Dart après le Test A, le simulateur servant d'oracle de non-régression |
+| 30/07/2026 | **Graphe de compétences v1 + banque Syllabes v1 produits dans `/contenu`** (12 modules/biomes, 47 compétences, 100 mots tagués, lint `npm run lint-contenu`, vue de relecture `contenu/graphe-competences.md`) — **en attente de relecture par Florence**. Le simulateur tourne sur ce vrai graphe : sur 36 semaines simulées, profil rapide 12/12 modules, moyen 10/12, lent 8/12, en difficulté 4/12 — la différenciation par maîtrise fonctionne |
+| 30/07/2026 | **Actions marque reportées à bien plus tard** (décision Hugo) : réservation domaines, test oral, avis CPI, dépôt INPI — à faire impérativement **avant toute com publique** (le garde-fou de la roadmap reste) |
 
 ## Propositions en attente de validation 🔶 (à trancher ensemble, par priorité)
 

@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "statut": "v1 produite par Hugo le 30/07/2026 — EN ATTENTE DE RELECTURE par l'orthophoniste conseil",
+  "note": "Progression conforme docs/02 §2 : fréquence+consistance d'abord, consonnes continues avant occlusives, graphèmes complexes insécables, paires confusables séparées puis confrontées (b introduit au Village, d au Marais), mots-outils appris par cœur. Le son du graphème, jamais le nom de la lettre.",
+  "piliers": [
+    { "id": "P1", "nom": "Conscience phonologique" },
+    { "id": "P2", "nom": "Code grapho-phonémique & encodage" },
+    { "id": "P3", "nom": "Décodage & fluence" },
+    { "id": "P4", "nom": "Compréhension & vocabulaire" }
+  ],
+  "modules": [
+    {
+      "id": "syllabes",
+      "nom": "Syllabes",
+      "biome": "Prairie",
+      "pilier": "P1",
+      "ordre": 1,
+      "description": "Manipuler la syllabe orale : segmenter, fusionner, comparer, supprimer.",
+      "competences": [
+        { "id": "syl-seg2", "nom": "Segmenter un mot de 2 syllabes", "prerequis": [], "mecaniques": ["tape-la-syllabe", "boite-a-sons"], "graphemesIntroduits": [], "difficulte": 0.2 },
+        { "id": "syl-seg3", "nom": "Segmenter un mot de 3 syllabes et plus", "prerequis": ["syl-seg2"], "mecaniques": ["tape-la-syllabe", "boite-a-sons"], "graphemesIntroduits": [], "difficulte": 0.3 },
+        { "id": "syl-fusion", "nom": "Fusionner des syllabes entendues en un mot", "prerequis": ["syl-seg2"], "mecaniques": ["fabrique-de-syllabes", "boite-a-sons"], "graphemesIntroduits": [], "difficulte": 0.35 },
+        { "id": "syl-compare", "nom": "Comparer la longueur syllabique de deux mots", "prerequis": ["syl-seg2"], "mecaniques": ["intrus-phonologique", "tri-par-son"], "graphemesIntroduits": [], "difficulte": 0.3 },
+        { "id": "syl-manip", "nom": "Supprimer ou inverser une syllabe (avancé)", "prerequis": ["syl-seg3", "syl-fusion"], "mecaniques": ["boite-a-sons", "fabrique-de-syllabes"], "graphemesIntroduits": [], "difficulte": 0.5 }
+      ]
+    },
+    {
+      "id": "rimes",
+      "nom": "Rimes & attaques",
+      "biome": "Jardin",
+      "pilier": "P1",
+      "ordre": 2,
+      "description": "Les unités intra-syllabiques : entendre ce qui se ressemble en fin et en début de mot.",
+      "competences": [
+        { "id": "rime-detect", "nom": "Dire si deux mots riment", "prerequis": ["syl-seg2"], "mecaniques": ["boite-a-sons", "jumeaux-presque-pareils"], "graphemesIntroduits": [], "difficulte": 0.3 },
+        { "id": "rime-intrus", "nom": "Trouver l'intrus qui ne rime pas", "prerequis": ["rime-detect"], "mecaniques": ["intrus-phonologique", "tri-par-son"], "graphemesIntroduits": [], "difficulte": 0.4 },
+        { "id": "rime-prod", "nom": "Produire un mot qui rime", "prerequis": ["rime-detect"], "mecaniques": ["boite-a-sons", "mots-rigolos"], "graphemesIntroduits": [], "difficulte": 0.45 },
+        { "id": "att-detect", "nom": "Reconnaître une attaque commune (mots qui commencent pareil)", "prerequis": ["syl-seg2"], "mecaniques": ["intrus-phonologique", "tri-par-son", "attrape-le-son"], "graphemesIntroduits": [], "difficulte": 0.35 }
+      ]
+    },
+    {
+      "id": "phonemes",
+      "nom": "Phonèmes",
+      "biome": "Forêt",
+      "pilier": "P1",
+      "ordre": 3,
+      "description": "Descendre au son : isoler, fusionner, segmenter, localiser les phonèmes.",
+      "competences": [
+        { "id": "pho-attaque", "nom": "Isoler le phonème d'attaque d'un mot", "prerequis": ["att-detect", "syl-fusion"], "mecaniques": ["attrape-le-son", "boite-a-sons"], "graphemesIntroduits": [], "difficulte": 0.45 },
+        { "id": "pho-fusion", "nom": "Fusionner 2-3 phonèmes entendus", "prerequis": ["pho-attaque"], "mecaniques": ["fabrique-de-syllabes", "boite-a-sons"], "graphemesIntroduits": [], "difficulte": 0.5 },
+        { "id": "pho-seg", "nom": "Segmenter un mot court en phonèmes", "prerequis": ["pho-attaque"], "mecaniques": ["boite-a-sons", "tape-la-syllabe"], "graphemesIntroduits": [], "difficulte": 0.55 },
+        { "id": "pho-position", "nom": "Localiser un phonème (début / milieu / fin)", "prerequis": ["pho-seg"], "mecaniques": ["boite-a-sons", "attrape-le-son"], "graphemesIntroduits": [], "difficulte": 0.55 }
+      ]
+    },
+    {
+      "id": "lettres-1",
+      "nom": "Premières lettres",
+      "biome": "Clairière des lettres",
+      "pilier": "P2",
+      "ordre": 4,
+      "description": "Les premières correspondances graphème↔phonème : voyelles + consonnes continues (prononçables isolément) + « ch » et « ou » en unités insécables.",
+      "competences": [
+        { "id": "voy-son-lettre", "nom": "Associer son ↔ lettre : les voyelles a, i, o, u, é, e", "prerequis": ["pho-attaque"], "mecaniques": ["attrape-le-son", "chasse-au-grapheme", "tri-par-son"], "graphemesIntroduits": ["a", "i", "o", "u", "é", "e"], "difficulte": 0.35 },
+        { "id": "cont-son-lettre", "nom": "Associer son ↔ lettre : les continues l, r, f, s, m, v + ch, ou", "prerequis": ["voy-son-lettre"], "mecaniques": ["attrape-le-son", "chasse-au-grapheme", "tri-par-son"], "graphemesIntroduits": ["l", "r", "f", "s", "m", "v", "ch", "ou"], "difficulte": 0.45 },
+        { "id": "lettre-entendre", "nom": "Repérer un graphème connu dans un mot entendu et écrit", "prerequis": ["cont-son-lettre"], "mecaniques": ["chasse-au-grapheme", "attrape-le-son"], "graphemesIntroduits": [], "difficulte": 0.5 },
+        { "id": "lettre-trace", "nom": "Tracer les lettres connues au doigt", "prerequis": ["voy-son-lettre"], "mecaniques": ["trace-la-lettre"], "graphemesIntroduits": [], "difficulte": 0.4 }
+      ]
+    },
+    {
+      "id": "combinatoire",
+      "nom": "Combinatoire CV",
+      "biome": "Village",
+      "pilier": "P2",
+      "ordre": 5,
+      "description": "La fusion : consonne + voyelle = syllabe lue. Premières occlusives sourdes (p, t) et b — « d » volontairement repoussé au Marais (paires b/d séparées dans le temps).",
+      "competences": [
+        { "id": "cv-fusion", "nom": "Lire une syllabe CV (l+a → la)", "prerequis": ["cont-son-lettre", "pho-fusion"], "mecaniques": ["gammes-de-syllabes", "fabrique-de-syllabes"], "graphemesIntroduits": ["p", "t", "b"], "difficulte": 0.5 },
+        { "id": "cv-gammes", "nom": "Automatiser la lecture de syllabes (gammes)", "prerequis": ["cv-fusion"], "mecaniques": ["gammes-de-syllabes", "lecture-flash"], "graphemesIntroduits": [], "difficulte": 0.55 },
+        { "id": "cv-mots", "nom": "Lire des mots simples 100 % déchiffrables", "prerequis": ["cv-gammes"], "mecaniques": ["mot-image", "mots-rigolos"], "graphemesIntroduits": [], "difficulte": 0.6 },
+        { "id": "cv-encodage", "nom": "Composer une syllabe ou un mot entendu (encodage)", "prerequis": ["cv-fusion"], "mecaniques": ["machine-a-mots", "dictee-muette"], "graphemesIntroduits": [], "difficulte": 0.6 }
+      ]
+    },
+    {
+      "id": "digraphes",
+      "nom": "Digraphes",
+      "biome": "Rivière",
+      "pilier": "P2",
+      "ordre": 6,
+      "description": "Les sons à deux lettres, enseignés comme unités insécables : on, an/en, in, oi.",
+      "competences": [
+        { "id": "dig-son-lettre", "nom": "Associer son ↔ digraphe : on, an, en, in, oi", "prerequis": ["cv-fusion"], "mecaniques": ["attrape-le-son", "chasse-au-grapheme", "tri-par-son"], "graphemesIntroduits": ["on", "an", "en", "in", "oi"], "difficulte": 0.6 },
+        { "id": "dig-entendre", "nom": "Repérer un digraphe dans un mot", "prerequis": ["dig-son-lettre"], "mecaniques": ["chasse-au-grapheme", "attrape-le-son"], "graphemesIntroduits": [], "difficulte": 0.6 },
+        { "id": "dig-mots", "nom": "Lire des mots avec digraphes", "prerequis": ["dig-entendre", "cv-mots"], "mecaniques": ["mot-image", "mots-rigolos", "chaines-de-mots"], "graphemesIntroduits": [], "difficulte": 0.65 },
+        { "id": "dig-encodage", "nom": "Composer des mots avec digraphes (le digraphe est UNE pièce)", "prerequis": ["dig-mots", "cv-encodage"], "mecaniques": ["machine-a-mots", "dictee-muette"], "graphemesIntroduits": [], "difficulte": 0.7 }
+      ]
+    },
+    {
+      "id": "sons-proches",
+      "nom": "Sons proches",
+      "biome": "Marais",
+      "pilier": "P1",
+      "ordre": 7,
+      "description": "Confrontation volontaire des paires confusables APRÈS acquisition séparée : f/v, s/z, ch/j, p/b, t/d — et la paire visuelle b/d. Introduit d, j, z.",
+      "competences": [
+        { "id": "prox-oreille", "nom": "Discriminer des paires minimales à l'oreille (pain/bain, four/vous)", "prerequis": ["pho-position"], "mecaniques": ["jumeaux-presque-pareils", "tri-par-son"], "graphemesIntroduits": ["d", "j", "z"], "difficulte": 0.65 },
+        { "id": "prox-lettres", "nom": "Distinguer les jumelles visuelles b/d (et p/q)", "prerequis": ["prox-oreille", "cv-fusion"], "mecaniques": ["chasse-au-grapheme", "jumeaux-presque-pareils"], "graphemesIntroduits": [], "difficulte": 0.7 },
+        { "id": "prox-lecture", "nom": "Lire des paires minimales écrites (poule/boule)", "prerequis": ["prox-lettres", "cv-mots"], "mecaniques": ["mot-image", "jumeaux-presque-pareils"], "graphemesIntroduits": [], "difficulte": 0.7 },
+        { "id": "prox-encodage", "nom": "Encoder le bon son de la paire (dictée de paires)", "prerequis": ["prox-lecture"], "mecaniques": ["dictee-muette", "machine-a-mots"], "graphemesIntroduits": [], "difficulte": 0.75 }
+      ]
+    },
+    {
+      "id": "premiers-mots",
+      "nom": "Premiers mots",
+      "biome": "Colline",
+      "pilier": "P3",
+      "ordre": 8,
+      "description": "Le lexique décolle : mots-outils appris par cœur (présentés comme tels), mots fréquents, nouvelles consonnes c, g, n.",
+      "competences": [
+        { "id": "mots-outils", "nom": "Reconnaître les mots-outils par cœur (le, la, un, une, est, et…)", "prerequis": ["cv-mots"], "mecaniques": ["lecture-flash", "mot-image"], "graphemesIntroduits": ["c", "g", "n", "è"], "difficulte": 0.55 },
+        { "id": "mots-frequents", "nom": "Lire des mots fréquents déchiffrables", "prerequis": ["mots-outils", "dig-mots"], "mecaniques": ["mot-image", "chaines-de-mots", "lecture-flash"], "graphemesIntroduits": [], "difficulte": 0.6 },
+        { "id": "mots-muettes", "nom": "Repérer les lettres muettes (grisées) dans un mot", "prerequis": ["mots-frequents"], "mecaniques": ["chasse-au-grapheme", "mot-image"], "graphemesIntroduits": [], "difficulte": 0.6 },
+        { "id": "mots-encodage", "nom": "Écrire des mots fréquents (dictée muette)", "prerequis": ["mots-frequents", "prox-encodage"], "mecaniques": ["dictee-muette", "machine-a-mots"], "graphemesIntroduits": [], "difficulte": 0.7 }
+      ]
+    },
+    {
+      "id": "graphemes-complexes",
+      "nom": "Graphèmes complexes",
+      "biome": "Montagne",
+      "pilier": "P2",
+      "ordre": 9,
+      "description": "Plusieurs graphies pour un même son : au/eau, ai/è, eu, gn, er/ez, ill.",
+      "competences": [
+        { "id": "cplx-son-lettre", "nom": "Associer son ↔ graphies complexes (au/eau, ai, eu, gn)", "prerequis": ["dig-son-lettre"], "mecaniques": ["attrape-le-son", "chasse-au-grapheme", "tri-par-son"], "graphemesIntroduits": ["au", "eau", "ai", "eu", "gn", "er", "ez", "ill"], "difficulte": 0.7 },
+        { "id": "cplx-deux-graphies", "nom": "Accepter deux graphies du même son (o / au / eau)", "prerequis": ["cplx-son-lettre"], "mecaniques": ["tri-par-son", "chasse-au-grapheme"], "graphemesIntroduits": [], "difficulte": 0.75 },
+        { "id": "cplx-mots", "nom": "Lire des mots avec graphèmes complexes", "prerequis": ["cplx-son-lettre", "mots-frequents"], "mecaniques": ["mot-image", "mots-rigolos", "chaines-de-mots"], "graphemesIntroduits": [], "difficulte": 0.75 },
+        { "id": "cplx-encodage", "nom": "Encoder avec la graphie attendue", "prerequis": ["cplx-mots"], "mecaniques": ["dictee-muette", "machine-a-mots"], "graphemesIntroduits": [], "difficulte": 0.8 }
+      ]
+    },
+    {
+      "id": "fluence",
+      "nom": "Fluence",
+      "biome": "Grotte aux échos",
+      "pilier": "P3",
+      "ordre": 10,
+      "description": "Automatiser : lecture flash, lecture répétée avec modèle, chaînes de mots, logatomes (la langue des étoiles !).",
+      "competences": [
+        { "id": "flu-flash", "nom": "Lire un mot connu en moins de 2 s", "prerequis": ["mots-frequents"], "mecaniques": ["lecture-flash"], "graphemesIntroduits": [], "difficulte": 0.65 },
+        { "id": "flu-logatomes", "nom": "Décoder des pseudo-mots (mots rigolos des étoiles)", "prerequis": ["cplx-mots"], "mecaniques": ["mots-rigolos"], "graphemesIntroduits": [], "difficulte": 0.7 },
+        { "id": "flu-chaines", "nom": "Suivre une chaîne de mots (bal → bol → bar)", "prerequis": ["flu-flash"], "mecaniques": ["chaines-de-mots"], "graphemesIntroduits": [], "difficulte": 0.7 },
+        { "id": "flu-repetee", "nom": "Lecture répétée avec modèle audio (karaoké)", "prerequis": ["flu-flash"], "mecaniques": ["karaoke"], "graphemesIntroduits": [], "difficulte": 0.7 }
+      ]
+    },
+    {
+      "id": "phrases",
+      "nom": "Phrases",
+      "biome": "Vallée des histoires",
+      "pilier": "P4",
+      "ordre": 11,
+      "description": "De la suite de mots au sens : phrases 100 % déchiffrables, consignes à exécuter, remise en ordre.",
+      "competences": [
+        { "id": "phr-lecture", "nom": "Lire et comprendre une phrase courte (phrase → image)", "prerequis": ["flu-flash", "mots-outils"], "mecaniques": ["phrase-image"], "graphemesIntroduits": [], "difficulte": 0.7 },
+        { "id": "phr-consignes", "nom": "Exécuter une consigne lue (« touche le rond bleu sous l'arbre »)", "prerequis": ["phr-lecture"], "mecaniques": ["consignes-a-executer"], "graphemesIntroduits": [], "difficulte": 0.75 },
+        { "id": "phr-ordre", "nom": "Remettre une phrase en ordre", "prerequis": ["phr-lecture"], "mecaniques": ["phrase-image", "machine-a-mots"], "graphemesIntroduits": [], "difficulte": 0.75 }
+      ]
+    },
+    {
+      "id": "comprehension",
+      "nom": "Compréhension",
+      "biome": "Ciel nocturne",
+      "pilier": "P4",
+      "ordre": 12,
+      "description": "Comprendre au-delà du décodage : histoires écoutées, vocabulaire, premières lectures autonomes.",
+      "competences": [
+        { "id": "comp-orale", "nom": "Comprendre une histoire écoutée (questions par l'image)", "prerequis": ["phr-lecture"], "mecaniques": ["phrase-image", "consignes-a-executer"], "graphemesIntroduits": [], "difficulte": 0.65 },
+        { "id": "comp-vocab", "nom": "Vocabulaire : apparier mot et sens (distracteurs sémantiques)", "prerequis": ["comp-orale"], "mecaniques": ["mot-image", "tri-par-son"], "graphemesIntroduits": [], "difficulte": 0.7 },
+        { "id": "comp-lue", "nom": "Comprendre un très court texte lu seul", "prerequis": ["comp-orale", "phr-consignes"], "mecaniques": ["phrase-image", "consignes-a-executer"], "graphemesIntroduits": [], "difficulte": 0.8 }
+      ]
+    }
+  ]
+}
