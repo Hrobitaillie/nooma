@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Banque d'items — Syllabes · Plouma</title>
+<style>
+  :root {
+    --bg: #faf7f2; --carte: #ffffff; --encre: #2b2620; --doux: #8a8177;
+    --accent: #e8b23a; --trait: #e8e2d8; --syl-a: #2f9e63; --syl-b: #7b6bd0;
+    --alerte: #d0843b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.5 system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--encre); }
+  header { padding: 26px 32px 6px; }
+  header h1 { margin: 0 0 4px; font-size: 22px; }
+  header p { margin: 0; color: var(--doux); }
+  main { padding: 10px 32px 48px; max-width: 1100px; margin: 0 auto; }
+  .filtres { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 6px; align-items: center; }
+  .filtres input[type=search] {
+    padding: 8px 12px; border: 1px solid var(--trait); border-radius: 10px;
+    font: inherit; background: var(--carte); min-width: 180px;
+  }
+  .puce {
+    padding: 6px 12px; border: 1px solid var(--trait); border-radius: 999px;
+    background: var(--carte); cursor: pointer; font: inherit; color: var(--doux);
+  }
+  .puce.actif { background: var(--encre); color: #fff; border-color: var(--encre); }
+  #stats { color: var(--doux); font-size: 13px; margin: 4px 0 14px; }
+  .grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .mot {
+    background: var(--carte); border: 1px solid var(--trait); border-radius: 12px;
+    padding: 12px 14px; position: relative;
+  }
+  .mot .decoupage { font-size: 20px; font-weight: 700; letter-spacing: 0.3px; }
+  .mot .decoupage .s0 { color: var(--syl-a); }
+  .mot .decoupage .s1 { color: var(--syl-b); }
+  .mot .infos { color: var(--doux); font-size: 12.5px; margin-top: 4px; }
+  .mot .distracteurs { font-size: 12.5px; margin-top: 6px; }
+  .mot .distracteurs a { color: var(--syl-b); text-decoration: none; cursor: pointer; }
+  .badge {
+    position: absolute; top: 10px; right: 12px; font-size: 11px; font-weight: 700;
+    color: var(--alerte); border: 1px solid var(--alerte); border-radius: 999px; padding: 1px 8px;
+  }
+  .cible { outline: 3px solid var(--accent); }
+  nav { margin-top: 6px; font-size: 13px; }
+  nav a { color: var(--doux); }
+</style>
+</head>
+<body>
+<header>
+  <h1>🍎 Banque d'items — module Syllabes</h1>
+  <p>100 mots imagés, découpage en <strong>syllabes orales</strong> (colorisation alternée) — v1 à relire par l'orthophoniste. Source : <code>contenu/banques/syllabes.csv</code></p>
+  <nav><a href="../../cadrage/simulateur/dashboard/">← dashboard du simulateur</a> · <a href="../../cadrage/viewer/">viewer de doc</a></nav>
+</header>
+<main>
+  <div class="filtres" id="filtres">
+    <input type="search" id="recherche" placeholder="Chercher un mot…">
+  </div>
+  <div id="stats"></div>
+  <div class="grille" id="grille"></div>
+</main>
+<script type="module">
+const rep = await fetch('syllabes.csv');
+const lignes = (await rep.text()).trim().split('\n');
+const cles = lignes[0].split(';');
+const items = lignes.slice(1).map((l) => Object.fromEntries(l.split(';').map((v, i) => [cles[i], v])));
+
+const etat = { syllabes: null, attaque: null, aVerifier: false, texte: '' };
+
+const filtres = document.getElementById('filtres');
+function puce(label, get, set) {
+  const b = document.createElement('button');
+  b.className = 'puce';
+  b.textContent = label;
+  b.onclick = () => { set(); rendre(); };
+  b.maj = () => b.classList.toggle('actif', get());
+  filtres.append(b);
+}
+for (const n of ['1', '2', '3', '4']) {
+  puce(`${n} syll.`, () => etat.syllabes === n,
+    () => { etat.syllabes = etat.syllabes === n ? null : n; });
+}
+const attaques = [...new Set(items.map((i) => i.phonemeAttaque))].sort();
+const sel = document.createElement('select');
+sel.className = 'puce';
+sel.innerHTML = '<option value="">attaque : toutes</option>'
+  + attaques.map((a) => `<option>${a}</option>`).join('');
+sel.onchange = () => { etat.attaque = sel.value || null; rendre(); };
+filtres.append(sel);
+puce('⚠️ à vérifier', () => etat.aVerifier, () => { etat.aVerifier = !etat.aVerifier; });
+document.getElementById('recherche').oninput = (e) => { etat.texte = e.target.value.toLowerCase(); rendre(); };
+
+function carte(it) {
+  const syls = it.decoupage.split('-')
+    .map((s, i) => `<span class="s${i % 2}">${s}</span>`).join('<span style="color:var(--trait)">·</span>');
+  const dis = it.distracteursProches
+    ? `<div class="distracteurs">≈ ${it.distracteursProches.split('|')
+        .map((d) => `<a data-mot="${d}">${d}</a>`).join(', ')}</div>` : '';
+  return `<div class="mot" id="mot-${it.mot}">
+    ${it.aVerifier === 'oui' ? '<span class="badge">à vérifier</span>' : ''}
+    <div class="decoupage">${syls}</div>
+    <div class="infos">${it.syllabesOrales} syll. · attaque /${it.phonemeAttaque}/ · fréq. ${'★'.repeat(4 - Number(it.frequence))}</div>
+    ${dis}</div>`;
+}
+
+function rendre() {
+  for (const b of filtres.querySelectorAll('.puce')) b.maj?.();
+  const visibles = items.filter((it) =>
+    (!etat.syllabes || it.syllabesOrales === etat.syllabes)
+    && (!etat.attaque || it.phonemeAttaque === etat.attaque)
+    && (!etat.aVerifier || it.aVerifier === 'oui')
+    && (!etat.texte || it.mot.toLowerCase().includes(etat.texte)));
+  document.getElementById('grille').innerHTML = visibles.map(carte).join('');
+  const nAV = visibles.filter((i) => i.aVerifier === 'oui').length;
+  document.getElementById('stats').textContent =
+    `${visibles.length} mot(s) affiché(s) sur ${items.length} — dont ${nAV} à vérifier (e caduc)`;
+  for (const a of document.querySelectorAll('.distracteurs a')) {
+    a.onclick = () => {
+      const cible = document.getElementById(`mot-${a.dataset.mot}`);
+      if (!cible) return;
+      cible.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      cible.classList.add('cible');
+      setTimeout(() => cible.classList.remove('cible'), 1600);
+    };
+  }
+}
+rendre();
+</script>
+</body>
+</html>

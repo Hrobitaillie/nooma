@@ -10,6 +10,7 @@ consomme le simulateur aujourd'hui et l'app Flutter demain.
 | `graphe-competences.md` | **Vue de relecture générée** (ne pas éditer) — lisible dans le viewer |
 | `mecaniques.json` | Les 19 mécaniques actées (liste canonique référencée partout) |
 | `banques/syllabes.csv` | Banque du module Syllabes : 100 mots imagés tagués (syllabes orales, découpage, attaque, fréquence, distracteurs) |
+| `banques/index.html` | **Visualisation de la banque** (filtres, syllabes colorées, distracteurs) : <http://localhost:8090/contenu/banques/> |
 | `lint.mjs` | Validation : ids, prérequis (existence, ordre des modules, cycles), mécaniques, cohérence des banques — `npm run lint-contenu` |
 
 ## Processus de relecture (Florence)
