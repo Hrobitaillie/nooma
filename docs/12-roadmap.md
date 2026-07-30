@@ -20,7 +20,7 @@
 **Technique/DA :**
 - [ ] Acheter la **tablette de référence** 2 Go (doc 08 §1)
 - [ ] Palette 5 couleurs (hex) + fichier .blend « studio » partagé
-- [ ] Setup projet Flutter + CI (lint contenu, budget de poids, **audit dépendances bloquant**) + `CLAUDE.md` avec les règles inviolables (le projet sera majoritairement vibe codé — garde-fous doc 06 §7)
+- [x] Setup projet Flutter + CI + `CLAUDE.md` — **fait le 30/07** : `/app` (Flutter 3.44.8, deps actées épinglées, riverpod 2.6.1 en attendant une résolution 3.x), audit dépendances bloquant, CI analyze+test+lint contenu, premières briques du Directeur portées en Dart avec tests d'oracle croisé contre le simulateur. Reste : budget de poids en CI (au Test A)
 
 **Sortie : décisions actées, marque sécurisée, graphe de compétences v1.**
 
