@@ -32,8 +32,9 @@ class DonneesLobby {
 
 /// Provider dérivé (lecture seule) du graphe + de l'index de module courant du Directeur.
 final lobbyProvider = Provider<DonneesLobby?>((ref) {
-  final directeur = ref.watch(directeurProvider).valueOrNull;
-  if (directeur == null) return null;
+  final etatDirecteur = ref.watch(directeurProvider).valueOrNull;
+  if (etatDirecteur == null) return null;
+  final directeur = etatDirecteur.directeur;
   return DonneesLobby(directeur.graphe.modules, directeur.moduleIndex);
 });
 

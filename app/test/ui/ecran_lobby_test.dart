@@ -5,10 +5,12 @@
 // modules suffit à faire démarrer le Directeur, dont l'index de module courant vaut 0 au
 // lancement (tuile 0 = courant, tuiles 1..11 = futures → sous la brume).
 
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plouma/directeur/graphe.dart';
+import 'package:plouma/donnees/base.dart';
 import 'package:plouma/etat/session.dart';
 import 'package:plouma/ui/ecran_lobby.dart';
 
@@ -58,6 +60,8 @@ void main() {
         overrides: [
           grapheProvider.overrideWith((ref) async => _graphe12()),
           syllabesProvider.overrideWith((ref) async => const []),
+          // Base en mémoire : pas de fichier ni de wasm dans l'environnement de test.
+          baseLocaleProvider.overrideWithValue(BaseLocale(NativeDatabase.memory())),
         ],
         child: const MaterialApp(home: EcranLobby()),
       ),

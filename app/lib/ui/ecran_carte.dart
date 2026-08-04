@@ -59,8 +59,8 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
 
   /// Palette du biome courant (indexée sur l'ordre du graphe via le Directeur, EN LECTURE).
   BiomePalette _paletteCourante() {
-    final directeur = ref.read(directeurProvider).valueOrNull;
-    final int idx = directeur?.moduleIndex ?? 0;
+    final etatDirecteur = ref.read(directeurProvider).valueOrNull;
+    final int idx = etatDirecteur?.directeur.moduleIndex ?? 0;
     return ClayTheme.paletteBiome(idx);
   }
 
