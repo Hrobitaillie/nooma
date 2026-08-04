@@ -67,6 +67,214 @@ const API_JSON_DEFAUT = {
   '/cadrage/viewer/estimations.php': '{}',
 };
 
+// ─────────────────── Tableau de bord : agrégation lecture seule ───────────────
+// Chaque section a un fallback : un fichier absent ne fait JAMAIS planter l'endpoint.
+
+/** Lit un fichier du dépôt en texte, ou renvoie null s'il est absent/illisible. */
+async function lireTexte(rel) {
+  try {
+    return await readFile(join(RACINE, rel), 'utf8');
+  } catch {
+    return null;
+  }
+}
+
+/** Lit + parse un JSON du dépôt, ou renvoie null. */
+async function lireJson(rel) {
+  const t = await lireTexte(rel);
+  if (t === null) return null;
+  try {
+    return JSON.parse(t);
+  } catch {
+    return null;
+  }
+}
+
+/** Découpe une ligne CSV séparée par ';' (pas de guillemets dans nos banques). */
+function champsCsv(ligne) {
+  return ligne.split(';');
+}
+
+/** Agrège l'état d'une banque CSV (mot;…;aVerifier;statut). */
+function analyserBanque(nom, texte) {
+  const lignes = texte.split(/\r?\n/).filter((l) => l.trim() !== '');
+  if (lignes.length === 0) return { fichier: nom, mots: 0, valides: 0, aRelire: 0, aVerifier: 0 };
+  const entete = champsCsv(lignes[0]);
+  const iStatut = entete.indexOf('statut');
+  const iVerif = entete.indexOf('aVerifier');
+  let valides = 0, aRelire = 0, aVerifier = 0;
+  const corps = lignes.slice(1);
+  for (const l of corps) {
+    const c = champsCsv(l);
+    const statut = iStatut >= 0 ? (c[iStatut] || '').trim() : '';
+    const verif = iVerif >= 0 ? (c[iVerif] || '').trim().toLowerCase() : '';
+    if (statut === 'valide') valides++;
+    else if (statut === 'a-relire') aRelire++;
+    if (verif === 'oui') aVerifier++;
+  }
+  return { fichier: nom, mots: corps.length, valides, aRelire, aVerifier };
+}
+
+/** Section « contenu » : banques CSV + comptes du graphe de compétences + mécaniques. */
+async function sectionContenu() {
+  const out = { banques: [], mots: 0, valides: 0, aRelire: 0, aVerifier: 0, modules: null, competences: null, mecaniques: null };
+  try {
+    const { readdir } = await import('node:fs/promises');
+    const fichiers = (await readdir(join(RACINE, 'contenu', 'banques')))
+      .filter((f) => f.endsWith('.csv'))
+      .sort();
+    for (const f of fichiers) {
+      const texte = await lireTexte(join('contenu', 'banques', f));
+      if (texte === null) continue;
+      const b = analyserBanque(f, texte);
+      out.banques.push(b);
+      out.mots += b.mots;
+      out.valides += b.valides;
+      out.aRelire += b.aRelire;
+      out.aVerifier += b.aVerifier;
+    }
+  } catch { /* dossier absent → banques vides */ }
+
+  const graphe = await lireJson('contenu/graphe-competences.json');
+  if (graphe && Array.isArray(graphe.modules)) {
+    out.modules = graphe.modules.length;
+    out.competences = graphe.modules.reduce((n, m) => n + ((m.competences && m.competences.length) || 0), 0);
+  }
+  const meca = await lireJson('contenu/mecaniques.json');
+  if (meca && Array.isArray(meca.mecaniques)) out.mecaniques = meca.mecaniques.length;
+  return out;
+}
+
+/** Section « commentaires » : total / résolus / non résolus. */
+async function sectionCommentaires() {
+  const data = await lireJson('cadrage/viewer/comments.json');
+  const liste = data && Array.isArray(data.comments) ? data.comments : [];
+  const resolus = liste.filter((c) => c && c.resolved).length;
+  return { total: liste.length, resolus, nonResolus: liste.length - resolus };
+}
+
+/** Section « simulateur » : verdicts + méta (fichier committé, peut manquer). */
+async function sectionSimulateur() {
+  const data = await lireJson('cadrage/simulateur/out/results.json');
+  if (!data) return { present: false, verdicts: [], meta: null };
+  const verdicts = Array.isArray(data.verdicts)
+    ? data.verdicts.map((v) => ({ nom: v.nom, valeur: v.valeur, ok: !!v.ok }))
+    : [];
+  const m = data.meta || {};
+  return {
+    present: true,
+    verdicts,
+    okTotal: verdicts.filter((v) => v.ok).length,
+    total: verdicts.length,
+    meta: { enfants: m.enfants ?? null, semaines: m.semaines ?? null, seed: m.seed ?? null },
+  };
+}
+
+/** Section « suivi projet » : nœuds du graphe flooow par statut natif. */
+async function sectionSuivi() {
+  const g = await lireJson('flooow/data/nooma/nooma-project.graph.json');
+  const vide = { validee: 0, 'en-recette': 0, 'a-developper': 0, reportee: 0 };
+  if (!g || !Array.isArray(g.nodes)) return { statuts: vide, total: 0, note: 'graphe introuvable ou illisible' };
+
+  // Les groupes « SUIVI · … » sont des frames (type=frame, kind=module) dont le nom
+  // commence par « SUIVI ». Les features de suivi y sont rattachées par parentId, et
+  // portent le statut natif (validee/en-recette/a-developper/reportee) dans attrs.status.
+  const suiviIds = new Set(
+    g.nodes
+      .filter((n) => n.type === 'frame' && typeof n.attrs?.name === 'string' && n.attrs.name.startsWith('SUIVI'))
+      .map((n) => n.id),
+  );
+  const statutsSuivi = new Set(['validee', 'en-recette', 'a-developper', 'reportee']);
+  const compte = { ...vide };
+  let total = 0;
+  let note = null;
+
+  const rattachables = g.nodes.filter((n) => n.type === 'feature' && suiviIds.has(n.parentId));
+  if (suiviIds.size > 0 && rattachables.length > 0) {
+    for (const n of rattachables) {
+      const s = n.attrs?.status;
+      if (s in compte) compte[s]++;
+      total++;
+    }
+    note = `${rattachables.length} nœuds rattachés aux ${suiviIds.size} groupes « SUIVI · … »`;
+  } else {
+    // Rattachement ambigu → on compte tous les nœuds porteurs d'un statut de suivi.
+    for (const n of g.nodes) {
+      const s = n.attrs?.status;
+      if (statutsSuivi.has(s)) { if (s in compte) compte[s]++; total++; }
+    }
+    note = 'groupes SUIVI non identifiés — comptage de tous les nœuds porteurs d\'un statut de suivi';
+  }
+  return { statuts: compte, total, note };
+}
+
+/** Section « activité » : 15 dernières lignes de data/journal.log. */
+async function sectionActivite() {
+  try {
+    const brut = await readFile(join(DATA, 'journal.log'), 'utf8');
+    const lignes = brut.split(/\r?\n/).filter((l) => l.trim() !== '');
+    const dernieres = lignes.slice(-15).reverse();
+    const entrees = [];
+    for (const l of dernieres) {
+      try {
+        const e = JSON.parse(l);
+        entrees.push({ date: e.date || null, utilisateur: e.utilisateur || null, endpoint: e.endpoint || null, fichier: e.fichier || null, type: e.type || null });
+      } catch { /* ligne corrompue ignorée */ }
+    }
+    return { entrees };
+  } catch {
+    return { entrees: [] };
+  }
+}
+
+/** Section « serveur » : uptime, Node, état git du clone (tolérant aux erreurs). */
+async function sectionServeur() {
+  const base = {
+    uptimeSecondes: Math.round(process.uptime()),
+    node: process.version,
+    branche: null,
+    dernierCommit: null,
+    commitsEnAvance: null,
+    pushOk: null,
+  };
+  const opt = { cwd: RACINE, timeout: 5000 };
+  const gitLu = (args) => execFileP('git', args, opt).then((r) => r.stdout.trim()).catch(() => null);
+
+  base.branche = await gitLu(['rev-parse', '--abbrev-ref', 'HEAD']);
+  const sujet = await gitLu(['log', '-1', '--pretty=%s']);
+  const date = await gitLu(['log', '-1', '--pretty=%cI']);
+  if (sujet !== null) base.dernierCommit = { sujet, date };
+
+  // Nb de commits d'avance sur la ref distante de suivi de contenu.
+  // On tente @{u} puis origin/serveur/contenu. Si aucune n'existe → push en attente.
+  let avance = await gitLu(['rev-list', '--count', 'origin/serveur/contenu..HEAD']);
+  if (avance === null) avance = await gitLu(['rev-list', '--count', '@{u}..HEAD']);
+  if (avance === null) {
+    base.commitsEnAvance = null;
+    base.pushOk = false; // ref distante absente → deploy key manquante / push en attente
+  } else {
+    base.commitsEnAvance = Number(avance);
+    base.pushOk = true;
+  }
+  return base;
+}
+
+/** Assemble le JSON complet du tableau de bord. Chaque section est isolée. */
+async function tableauDeBord() {
+  const enrober = async (fn, fallback) => {
+    try { return await fn(); } catch { return fallback; }
+  };
+  const [contenu, commentaires, simulateur, suivi, activite, serveur] = await Promise.all([
+    enrober(sectionContenu, { banques: [] }),
+    enrober(sectionCommentaires, { total: 0, resolus: 0, nonResolus: 0 }),
+    enrober(sectionSimulateur, { present: false, verdicts: [], meta: null }),
+    enrober(sectionSuivi, { statuts: {}, total: 0, note: 'erreur' }),
+    enrober(sectionActivite, { entrees: [] }),
+    enrober(sectionServeur, { uptimeSecondes: Math.round(process.uptime()), node: process.version }),
+  ]);
+  return { genereLe: new Date().toISOString(), contenu, commentaires, simulateur, suivi, activite, serveur };
+}
+
 // ───────────────────────────── Aides ─────────────────────────────────────────
 function send(res, code, body, type = 'application/json; charset=utf-8') {
   res.writeHead(code, { 'Content-Type': type, 'Cache-Control': 'no-store' });
@@ -212,14 +420,40 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // --- API : tableau de bord (agrégation LECTURE SEULE) ----------------------
+  if (path === '/api/tableau-de-bord') {
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      send(res, 405, '{"ok":false,"error":"method not allowed"}');
+      return;
+    }
+    try {
+      const data = await tableauDeBord();
+      send(res, 200, JSON.stringify(data));
+    } catch (e) {
+      send(res, 500, JSON.stringify({ ok: false, error: 'agrégation impossible' }));
+    }
+    return;
+  }
+  // Aucun autre chemin /api/ n'existe : jamais d'écriture ici.
+  if (path.startsWith('/api/')) {
+    send(res, 404, '{"ok":false,"error":"not found"}');
+    return;
+  }
+
   // --- Statique (liste blanche stricte) --------------------------------------
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     send(res, 405, 'method not allowed', 'text/plain');
     return;
   }
   if (path === '/') {
-    res.writeHead(302, { Location: '/cadrage/viewer/' });
-    res.end();
+    // La racine = le tableau de bord de l'atelier (hub vers doc, admin, outils).
+    try {
+      const accueil = await readFile(join(RACINE, 'serveur', 'accueil', 'index.html'));
+      send(res, 200, accueil, MIME['.html']);
+    } catch {
+      res.writeHead(302, { Location: '/cadrage/viewer/' });
+      res.end();
+    }
     return;
   }
   if (path === '/robots.txt') {
@@ -229,14 +463,28 @@ const server = createServer(async (req, res) => {
 
   let fichier = path.slice(1); // sans le / initial
   if (fichier.endsWith('/')) fichier += 'index.html';
+
+  // Correspondance spéciale : /accueil/… → serveur/accueil/… (la SPA de l'atelier).
+  // On préfixe simplement par « serveur/ » AVANT normalisation, puis on applique
+  // exactement les mêmes protections (traversée / dotfiles / *.orig|bak).
+  if (fichier === 'accueil' || fichier === 'accueil/' || fichier.startsWith('accueil/')) {
+    fichier = 'serveur/' + fichier;
+  }
+
   const complet = normalize(join(RACINE, fichier));
   const relatif = relative(RACINE, complet).replaceAll('\\', '/');
+
+  // Racines servies : la liste blanche + la SPA de l'atelier (serveur/accueil/ uniquement).
+  const racineOk =
+    RACINES_SERVIES.some((r) => relatif.startsWith(r)) ||
+    relatif === 'serveur/accueil/index.html' ||
+    relatif.startsWith('serveur/accueil/');
 
   // Traversée hors dépôt, racine non listée, dotfiles, fichiers de travail : refus.
   const segments = relatif.split('/');
   const interdit =
     relatif.startsWith('..') ||
-    !RACINES_SERVIES.some((r) => relatif.startsWith(r)) ||
+    !racineOk ||
     segments.some((s) => s.startsWith('.')) ||
     /\.(orig|bak)$/.test(relatif);
   if (interdit) {
@@ -257,6 +505,6 @@ server.headersTimeout = 15_000;
 
 server.listen(PORT, HOTE, () => {
   console.log(`Atelier Plouma → http://${HOTE}:${PORT}/cadrage/viewer/`);
-  console.log(`  admin banque → http://${HOTE}:${PORT}/contenu/banques/admin.html`);
+  console.log(`  relecture    → http://${HOTE}:${PORT}/#/relecture`);
   console.log(`  git auto: ${GIT_AUTO ? 'ON (branche courante)' : 'off'} · journal: ${join(DATA, 'journal.log')}`);
 });

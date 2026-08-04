@@ -206,4 +206,4 @@ for (const [nom, p] of Object.entries(parProfil)) {
   );
 }
 console.log(`\nInterventions stagnation : ${global.interventionsStagnation} · signaux parent : ${global.signauxParent}`);
-console.log('Dashboard : http://localhost:8090/cadrage/simulateur/dashboard/ (npm start)');
+console.log('Dashboard : http://localhost:8090/#/simulateur (npm start)');

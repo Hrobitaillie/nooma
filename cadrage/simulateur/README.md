@@ -10,7 +10,7 @@ npm run sim -- --enfants 2000 --semaines 30 --seed nooma
 ```
 
 Résultats : console + `out/results.json` → dashboard sur
-<http://localhost:8090/cadrage/simulateur/dashboard/> (serveur du viewer, `npm start`).
+<http://localhost:8090/#/simulateur> (vue native du dashboard de l’atelier, `npm start`).
 
 ## Ce qui est vérifié
 
