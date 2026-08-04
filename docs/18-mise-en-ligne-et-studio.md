@@ -46,24 +46,25 @@ Aujourd'hui le serveur local écrit directement dans le working tree (`comments.
 Les prises (lourdes, binaires, à fort churn — plusieurs prises par ligne, re-takes) **ne vont ni dans le git principal ni en LFS** :
 
 - LFS rejeté : quotas GitHub, coût, et l'historique des prises *écartées* n'a aucune valeur versionnée — c'est du stock, pas du code.
-- **Stockage : disque serveur** (`data/studio/`, ~51 Go libres sur pilodev, largement suffisant : 500 lignes × 4 prises × ~1 Mo ≈ 2 Go) + **sauvegarde externe quotidienne** (§8.4).
+- **Stockage : disque serveur** (`data/studio/`, ~180 Go libres sur chappie, largement suffisant : 500 lignes × 4 prises × ~1 Mo ≈ 2 Go) + **sauvegarde externe quotidienne** (§8.4).
 - **Exception — le pack exporté** : les prises *retenues*, converties et nommées canoniquement (§5.6), sont synchronisées vers `app/assets/` et **committées dans git** : c'est un artefact final, borné par le budget poids (doc 08), dont le build de l'app a besoin. Les métadonnées (registre, index des prises) sont du JSON léger et restent versionnées.
 
 ---
 
-## 2. Réalité serveur (inspection pilodev du 04/08/2026, lecture seule)
+## 2. Réalité serveur (inspection **chappie** du 04/08/2026, lecture seule — cible actée par Hugo)
+
+> ℹ️ Une première version de ce plan visait « pilodev » (infra de l'agence Pilot'in) ; Hugo a tranché : **la cible est chappie, son serveur personnel** — ce qui simplifie tout (gouvernance, RGPD, pérennité).
 
 | Élément | Constat |
 |---|---|
-| OS / matériel | Rocky Linux 9.5, 70 Go disque dont **51 Go libres** |
-| Node | **v22.22.1** (notre serveur exige ≥ 18 : ✅ tel quel) |
-| Caddy | **v2.11.4** avec plugins caddy-security (portail authp `auth.pilot-in.net`, users.json local, JWT) et **rate_limit** |
-| Exposition | **Cloudflare Tunnel** (`cloudflared`) : ingress wildcard `*.d.pilot-in.net`, `*.p.pilot-in.net`, **`*.t.pilot-in.net`**, `*.demo.pilot-in.net` → Caddy en `127.0.0.1:9080`. TLS public géré par Cloudflare ; Caddy en `local_certs`. **Aucune modification DNS nécessaire** pour un nouveau sous-domaine sous ces wildcards : un bloc Caddy suffit. |
-| Process | Services Node lancés en **systemd** (pattern existant, ex. `bao2.service`) ; podman 5.2.2 dispo |
-| Outils | git 2.43.5 ✅ ; **ffmpeg absent** ⚠️ → conversion audio via conteneur podman (image ffmpeg) ou installation dnf (§5.6) |
-| Snippet maison | `(security-headers)` existant : `X-Robots-Tag "noindex, nofollow"`, nosniff, CSP report-only — exactement ce qu'il nous faut (§8.2) |
+| OS / matériel | Ubuntu 22.04.5 LTS (IP 82.165.150.136, IONOS), 233 Go disque dont **180 Go libres** |
+| Panneau | **Plesk Obsidian 18.0.79** : vhosts nginx→apache, MariaDB, DNS (named), Let's Encrypt, fail2ban |
+| Domaines déjà servis | `justhugo.fr` (+ sous-domaines popcorn/sandbox/siteforge/jarvis), `tacotaf.com`, `satori-energie.fr` |
+| Node | **v22.19.0** ✅ — des apps Node tournent déjà (jarvis dans un vhost, **flooow dans `/opt/flooow`** via tsx : le pattern « app Node hors vhost + proxy » existe donc déjà) |
+| Process | pas de systemd unit vu pour flooow (process pnpm) — on fera PROPREMENT : unit systemd dédiée (§3.4) |
+| Outils | git 2.43.5 ✅ ; **ffmpeg absent** ⚠️ → `apt install ffmpeg` (serveur root perso, trivial sur Ubuntu — §5.6) ; ni Caddy ni podman (et pas besoin) |
 
-⚠️ **Gouvernance** : pilodev est l'infra de **Pilot'in** (l'agence), domaine `pilot-in.net`, portail SSO de l'agence. Y héberger un projet personnel + la **voix de Florence** (donnée personnelle exploitée commercialement, §8.3) demande : (a) l'accord explicite de l'agence, (b) de **ne pas** brancher Florence sur le SSO Pilot'in (comptes dédiés, §3.3). Recommandation tranchée en §9-D1 : pilodev pour les phases 1-2 (outillage doc/admin), **VPS personnel avant la mise en prod du studio**.
+✅ **Gouvernance : aucune** — serveur personnel de Hugo, hébergeur IONOS (datacenters UE, à confirmer d'un clic dans l'espace client pour le RGPD §8.3). La voix de Florence reste sous la responsabilité directe de Hugo. L'ancienne décision D1 (pilodev vs VPS) est **résolue : tout vit sur chappie, studio compris**.
 
 ---
 
@@ -71,25 +72,24 @@ Les prises (lourdes, binaires, à fort churn — plusieurs prises par ligne, re-
 
 **But** : Florence lit la doc et utilise le mode correction depuis chez elle. Rien de plus, mais durci.
 
-### 3.1 Sous-domaine + Caddy
+### 3.1 Sous-domaine + Plesk/nginx
 
-- Sous-domaine **neutre et discret** (marque reportée, cf. §8.5) : recommandation **`atelier.t.pilot-in.net`** 🔶 (couvert par le wildcard existant → zéro action DNS/tunnel).
-- Bloc Caddy dans le pattern maison :
+- Sous-domaine : **`plouma.justhugo.fr`** ✅ (créé par Hugo dans Plesk le 04/08 — DNS auto, **certificat Let's Encrypt en un clic**, aucun contenu dans le docroot). ⚠️ Le plan recommandait un nom neutre sans « plouma » (marque reportée, §8.2) ; choix assumé par Hugo — risque faible car l'outil est derrière auth + noindex + zéro lien public, mais **ne jamais y mettre de page publique**, et re-évaluer le nom si le dépôt INPI traîne.
+- Le proxy et le mur d'auth se posent dans Plesk → *Apache & nginx Settings* du sous-domaine → **directives nginx additionnelles** :
 
-```caddyfile
-http://atelier.t.pilot-in.net:9080 {
-	bind 127.0.0.1
-	import security-headers          # noindex, nosniff, CSP…
-	basic_auth {                     # cf. §3.3
-		hugo <bcrypt>
-		florence <bcrypt>
-	}
-	rate_limit { zone atelier { key {remote_host} events 30 window 1m } }  # sur les POST
-	reverse_proxy 127.0.0.1:8090 {
-		header_up X-Utilisateur {http.auth.user.id}
-	}
+```nginx
+# Fichier créé à la main : htpasswd -B -c /etc/nginx/plouma-atelier.htpasswd hugo (puis florence)
+auth_basic "Atelier Plouma";
+auth_basic_user_file /etc/nginx/plouma-atelier.htpasswd;
+add_header X-Robots-Tag "noindex, nofollow" always;
+limit_req zone=atelier burst=10 nodelay;      # zone déclarée côté conf nginx globale (POST)
+location / {
+	proxy_pass http://127.0.0.1:8090;
+	proxy_set_header X-Utilisateur $remote_user;   # l'identité pour signer commits/prises
+	client_max_body_size 25m;                       # les prises audio (§5)
 }
 ```
+*(+ cocher « désactiver le proxy vers Apache » : nginx sert seul le proxy.)*
 
 ### 3.2 Durcissement du serveur Node ⚠️ (obligatoire avant exposition)
 
@@ -97,24 +97,24 @@ http://atelier.t.pilot-in.net:9080 {
 
 1. **Liste blanche des racines servies** : `cadrage/`, `docs/`, `contenu/` uniquement ; refus explicite de `.git`, dotfiles, `*.orig`.
 2. **Limite de corps** sur tous les POST (ex. 2 Mo) + timeout de requête.
-3. **Confiance d'identité** : le serveur écoute `127.0.0.1` uniquement et lit `X-Utilisateur` (posé par Caddy après basic auth) — jamais de logique d'auth dans Node en phase 1, c'est Caddy qui porte le mur.
+3. **Confiance d'identité** : le serveur écoute `127.0.0.1` uniquement et lit `X-Utilisateur` (posé par nginx après basic auth, `$remote_user`) — jamais de logique d'auth dans Node en phase 1, c'est nginx qui porte le mur.
 4. Journal d'accès en écriture (append `data/journal.log` : date, utilisateur, endpoint, fichier) — c'est notre « audit trail » à coût nul.
 5. Validation existante des banques (nom de fichier, en-tête CSV) conservée, complétée d'un **passage du lint** avant écriture quand c'est bon marché (§6 phase 4 pour la version complète).
 
-### 3.3 Authentification : basic auth Caddy par utilisateur ✅ recommandé
+### 3.3 Authentification : basic auth nginx par utilisateur ✅ recommandé
 
-- **2 comptes** (`hugo`, `florence`), mots de passe forts générés, hash bcrypt (`caddy hash-password`). Pas d'inscription, pas de reset en ligne (Hugo régénère à la main si besoin).
-- Pourquoi pas le portail authp de Pilot'in : mélange des contextes (comptes agence / projet perso), cookie domaine `pilot-in.net`, dépendance à une infra qu'on quittera peut-être (§9-D1).
+- **2 comptes** (`hugo`, `florence`), mots de passe forts générés, hash bcrypt (`htpasswd -B`). Pas d'inscription, pas de reset en ligne (Hugo régénère à la main si besoin).
 - Pourquoi pas un login applicatif : du code d'auth à écrire et maintenir dans un serveur zéro-dépendance — pour 2 utilisateurs, basic auth sur HTTPS est **réel et suffisant**. On bascule vers un login applicatif seulement si le studio exige des sessions riches (pas le cas au design actuel).
+- Ne PAS utiliser la « protection par mot de passe » Plesk (répertoires Apache) : elle ne couvre pas proprement un proxy nginx → les directives nginx du §3.1 font foi.
 - Le nom d'utilisateur remonte via `X-Utilisateur` → signe les commentaires, les commits (§1.3) et les prises (§5.4).
 
 ### 3.4 Process & exploitation
 
-- **systemd** (pattern maison) : `atelier.service` → `node /srv/atelier/repo/serveur/serveur.mjs`, `Restart=on-failure`, `User` dédié non-root, `Environment=PORT=8090`. Podman inutile pour un process Node nu — on garde podman pour ffmpeg (§5.6).
+- **systemd** : `plouma-atelier.service` → `node /opt/plouma-atelier/repo/serveur/serveur.mjs`, `Restart=on-failure`, `User` dédié non-root, `Environment=PORT=8090`. On s'installe dans `/opt` comme flooow (pattern existant sur chappie), mais AVEC une unit propre — flooow tourne aujourd'hui en process pnpm nu, à ne pas imiter (au passage : lui donner aussi une unit serait une bonne hygiène, hors périmètre).
 - Déploiement : `git pull` du repo sur le serveur (le même clone que §1.3) + `systemctl restart atelier`. Un alias/script suffit, pas de CI de déploiement à ce stade.
 - **Sauvegardes** dès la phase 1 : cf. §8.4.
 
-**Sortie de phase 1** : Florence ouvre `https://atelier.t.pilot-in.net`, s'authentifie, lit le doc 17, annote dans le viewer, corrige des mots dans l'admin — et chaque écriture atterrit dans la branche `serveur/contenu`.
+**Sortie de phase 1** : Florence ouvre `https://plouma.justhugo.fr`, s'authentifie, lit le doc 17, annote dans le viewer, corrige des mots dans l'admin — et chaque écriture atterrit dans la branche `serveur/contenu`.
 
 ---
 
@@ -188,7 +188,7 @@ Pas une table dédiée : la file est une **requête** sur l'inventaire — ligne
 - **Capture** : `MediaRecorder` sur `getUserMedia` (`echoCancellation:false, noiseSuppression:false, autoGainControl:false` — on veut le micro nu), 48 kHz. Format produit par le navigateur : **WebM/Opus** (Chrome/Firefox/Edge) ou **MP4/AAC** (Safari). **On stocke la prise source telle quelle** (c'est l'original, on ne transcode jamais deux fois) + Web Audio API pour le vu-mètre et la mesure de pic/RMS à l'envoi.
 - ⚠️ Le studio impose HTTPS (getUserMedia) — couvert par la phase 1. Recommander à Florence **Chrome ou Firefox** (Opus > AAC à débit égal) sans l'exiger.
 - **Format du pack app** : l'app utilise **flutter_soloud** (WAV/MP3/OGG Vorbis/FLAC — pas d'Opus). **Cible : OGG Vorbis mono ~q4, normalisation loudness EBU R128 (≈ -16 LUFS, true peak -1.5 dB), silence trimé** en tête/queue. Chemin : `source (webm/mp4) → ffmpeg → ogg` à l'export (§5.6). Un seul format embarqué pour tout (phonèmes compris) : simple, et le décodage SoLoud est négligeable sur des fichiers de 1-3 s.
-- ffmpeg absent de pilodev → **conteneur podman** (`podman run --rm -v …  docker.io/…/ffmpeg`) piloté par le serveur Node à l'export, ou `dnf install ffmpeg` (RPM Fusion) si accord admin. Le conteneur évite de toucher au système : recommandé.
+- ffmpeg absent de chappie → **`apt install ffmpeg`** (Ubuntu, serveur perso root : trivial et sans risque) ; le serveur Node l'appelle en sous-processus à l'export.
 
 ### 5.4 Modèle de données des prises (serveur, hors git — cf. §1.4)
 
@@ -257,7 +257,7 @@ serveur/                  # NOUVEAU — l'outil pérenne
   serveur.mjs             # évolution de cadrage/server.mjs (statique + API + auth header + git)
   api/                    # modules : banques, commentaires, studio, export
   studio/                 # front d'enregistrement + inventaire + arbitrage (même style zéro-build que le viewer)
-  deploiement/            # Caddyfile.snippet, atelier.service, script de déploiement, doc d'exploitation
+  deploiement/            # directives nginx (snippet Plesk), plouma-atelier.service, script de déploiement, doc d'exploitation
 cadrage/                  # inchangé (viewer, catalogue, simulateur) — servi par serveur/
 contenu/
   voix/lignes.json        # NOUVEAU — le registre (§4)
@@ -272,12 +272,12 @@ data/                     # serveur uniquement, GITIGNORÉ : audio des prises, e
 
 ## 8. Sécurité & conformité
 
-1. **Transport & exposition** : HTTPS partout (Cloudflare Tunnel + Caddy), serveur Node jamais exposé directement (bind 127.0.0.1), aucune écriture sans auth, rate-limit sur les POST, limite de taille de corps, liste blanche statique (§3.2).
-2. **Discrétion** : pas de page publique, `X-Robots-Tag: noindex, nofollow` (déjà dans le snippet maison) + `robots.txt Disallow: /` en ceinture-bretelles, aucun lien depuis quoi que ce soit de public, **aucune mention « Plouma » dans le sous-domaine ni les titres de pages** (les actions marque sont reportées, doc 13) — l'outil s'appelle « l'atelier ».
+1. **Transport & exposition** : HTTPS partout (Let's Encrypt via Plesk), serveur Node jamais exposé directement (bind 127.0.0.1, proxy nginx), aucune écriture sans auth, rate-limit sur les POST, limite de taille de corps, liste blanche statique (§3.2).
+2. **Discrétion** : pas de page publique, `X-Robots-Tag: noindex, nofollow` (directive nginx §3.1) + `robots.txt Disallow: /` en ceinture-bretelles, aucun lien depuis quoi que ce soit de public. ⚠️ Le sous-domaine choisi (`plouma.justhugo.fr`) expose le nom avant le dépôt INPI — assumé par Hugo (04/08) car derrière auth/noindex ; en contrepartie, discipline stricte : zéro contenu public sur ce vhost, zéro mention du sous-domaine dans une com.
 3. **La voix de Florence = donnée personnelle (RGPD) + attribut de la personnalité** ⚠️ :
    - **L'autorisation écrite d'exploitation de la voix (lettre de mission, doc 09 §5.2) devient un prérequis BLOQUANT à la mise en prod du studio** — elle était « à faire », l'enregistrement en ligne systématique de centaines de prises la rend indispensable *avant* la première session. Contenu minimal : usage commercial dans l'app, durée, supports, mention du nom oui/non, **sort des enregistrements en cas de retrait** (les prises brutes sont supprimables ; le pack embarqué d'une version déjà publiée ne l'est pas rétroactivement — l'écrire noir sur blanc).
-   - Hébergement **UE** requis (pilodev = OK à vérifier pour la localisation ; le tunnel Cloudflare fait transiter les flux — acceptable pour un outil interne, à réévaluer au passage VPS §9-D1). Droit d'accès/retrait : trivial (2 personnes, fichiers plats).
-4. **Sauvegardes** : le seul irremplaçable est `data/` (les prises — la doc et le contenu sont dans git). **Quotidien** : archive incrémentale de `data/` (restic ou rsync) vers un stockage **hors pilodev** (machine de Hugo ou bucket objet UE). Après chaque session d'enregistrement : Hugo vérifie que la sauvegarde du jour est passée (le journal §3.2 l'affiche dans l'admin). Test de restauration une fois par trimestre.
+   - Hébergement **UE** requis : chappie = IONOS (datacenters UE, Allemagne — à confirmer d'un clic dans l'espace client). Flux directs sans intermédiaire (pas de CDN/tunnel). Droit d'accès/retrait : trivial (2 personnes, fichiers plats).
+4. **Sauvegardes** : le seul irremplaçable est `data/` (les prises — la doc et le contenu sont dans git). **Quotidien** : archive incrémentale de `data/` (restic ou rsync) vers un stockage **hors chappie** (machine de Hugo ou bucket objet UE ; le backup manager Plesk peut compléter mais ne pas s'y fier seul). Après chaque session d'enregistrement : Hugo vérifie que la sauvegarde du jour est passée (le journal §3.2 l'affiche dans l'admin). Test de restauration une fois par trimestre.
 5. **Données enfants : néant** ✅ confirmé — l'outillage ne manipule que du contenu éditorial et les comptes Hugo/Florence. Aucune donnée d'enfant n'existe côté serveur (l'app est offline, doc 07 §1) ; rien dans ce plan ne l'entame.
 
 ---
@@ -286,17 +286,17 @@ data/                     # serveur uniquement, GITIGNORÉ : audio des prises, e
 
 ### 9.1 Checklist ordonnée (de zéro au premier lot enregistré)
 
-1. ☐ Accord Pilot'in pour héberger l'atelier sur pilodev (ou D1 → VPS direct)
+1. ☑ Sous-domaine `plouma.justhugo.fr` créé dans Plesk (fait le 04/08) — activer le certificat Let's Encrypt
 2. ☐ Créer `serveur/` (déplacement + durcissement §3.2 de server.mjs)
-3. ☐ Clone du repo sur pilodev + deploy key limitée à `serveur/contenu` + commit/push auto
-4. ☐ Bloc Caddy `atelier.t.pilot-in.net` + basic auth (2 comptes) + rate-limit ; `atelier.service` systemd
+3. ☐ Clone du repo dans `/opt/plouma-atelier` sur chappie + deploy key limitée à `serveur/contenu` + commit/push auto
+4. ☐ Directives nginx du sous-domaine (basic auth 2 comptes, rate-limit, proxy 8090) ; `plouma-atelier.service` systemd
 5. ☐ Sauvegarde quotidienne de `data/` + test de restauration
 6. ☐ **Recette avec Florence** : login, viewer, un commentaire, un mot corrigé — fin de phase 1
 7. ☐ Registre `contenu/voix/lignes.json` + extension lint + génération mots/phonèmes (§4.2)
 8. ☐ Extraction des textes en dur du Dart vers le registre (ids) — fin de phase 2 (inventaire en ligne)
 9. ☐ **Lettre de mission signée, volet voix inclus** (§8.3) — GO/NO-GO
 10. ☐ Achat du micro USB (~100-150 €, doc 05 §5) + choix de la pièce chez Florence
-11. ☐ Studio : capture + file d'attente + envoi (§5.1-5.3), puis arbitrage (§5.5), puis export ffmpeg/podman (§5.6)
+11. ☐ Studio : capture + file d'attente + envoi (§5.1-5.3), puis arbitrage (§5.5), puis export ffmpeg (§5.6)
 12. ☐ Session étalon avec Florence (réglage niveaux, ligne étalon) → **premier lot : les phonèmes**
 13. ☐ Premier export du pack → PR → app — la boucle complète a tourné
 14. ☐ Phase 4 (admin config) quand le besoin réel se présente
@@ -305,7 +305,7 @@ data/                     # serveur uniquement, GITIGNORÉ : audio des prises, e
 
 | Phase | Effort |
 |---|---|
-| 1 — mise en ligne durcie | **1-1,5 j** (durcissement 0,5 ; Caddy/systemd/git 0,5 ; recette 0,5) |
+| 1 — mise en ligne durcie | **1-1,5 j** (durcissement 0,5 ; Plesk/nginx/systemd/git 0,5 ; recette 0,5) |
 | 2 — registre + extraction Dart | **1,5-2 j** (schéma+lint 0,5 ; extraction Dart 0,5-1 ; inventaire 0,5) |
 | 3 — studio | **4-6 j** (capture/UX 2 ; prises/arbitrage 1-1,5 ; export ffmpeg 1 ; polish sessions réelles 1) |
 | 4 — admin config | **2-3 j** (formulaires graphe + garde-fous) |
@@ -314,12 +314,12 @@ data/                     # serveur uniquement, GITIGNORÉ : audio des prises, e
 
 | # | Décision | Recommandation |
 |---|---|---|
-| D1 | **Hébergement** : pilodev (agence) vs VPS personnel | Pilodev **avec accord** pour phases 1-2 (coût nul, infra prête) ; **VPS perso (~5 €/mois, Caddy+systemd identiques) avant la prod du studio** — la voix de Florence sous responsabilité de Hugo n'a pas sa place durablement sur l'infra d'un tiers |
+| D1 | **Hébergement** | ✅ **Résolue (04/08) : chappie**, serveur personnel de Hugo (Plesk/IONOS) — toutes phases, studio compris ; aucune question de gouvernance tierce |
 | D2 | **Retour git** : commit/push auto sur branche vs export manuel | **Branche `serveur/contenu` + PR** (§1.3) |
 | D3 | **Audio & git** : LFS vs hors git | **Hors git** ; seul le pack exporté est committé dans `app/assets` (§1.4) |
-| D4 | **Auth** : basic auth Caddy vs login applicatif | **Basic auth Caddy**, 2 comptes, header `X-Utilisateur` (§3.3) |
+| D4 | **Auth** : basic auth nginx vs login applicatif | **Basic auth nginx** (htpasswd bcrypt, directives Plesk), 2 comptes, header `X-Utilisateur` (§3.3) |
 | D5 | **Formats audio** : source + pack | **Source WebM/Opus conservée telle quelle ; pack OGG Vorbis mono normalisé R128** (flutter_soloud ne lit pas l'Opus) (§5.3) |
-| D6 | **Nom du sous-domaine** (neutre) | **`atelier`** (`atelier.t.pilot-in.net`, puis `atelier.<domaine-perso>`) — zéro allusion à la marque |
+| D6 | **Nom du sous-domaine** | ✅ **Résolue (04/08) : `plouma.justhugo.fr`** créé par Hugo — expose le nom avant l'INPI (assumé, mitigé par auth+noindex+zéro contenu public, §8.2) |
 | D7 | **Lettre de mission + autorisation voix avant prod studio** | Non négociable — planifier la signature pendant la phase 2 pour ne pas bloquer la 3 (§8.3) |
 | D8 | **Params du Directeur en ligne** | **Lecture seule** ; édition locale adossée au simulateur (§6) |
 | D9 | **Stockage des prises** : JSON plats vs SQLite | **JSON plats** (2 utilisateurs, écriture atomique) ; `node:sqlite` si l'outil grossit (§5.4) |
