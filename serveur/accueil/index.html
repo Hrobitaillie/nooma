@@ -59,7 +59,24 @@
     background:#22314f; color:#93a2c4; border:1px solid #2c3d61;
   }
 
+  .zone { min-width:0; display:flex; flex-direction:column; }
   .contenu { padding:26px 30px 60px; max-width:1180px; }
+
+  /* ── Vue outil (iframe dans la coquille) ──────────────────── */
+  #vue-outil { display:none; flex-direction:column; height:100vh; position:sticky; top:0; }
+  .app.mode-outil #vue-outil { display:flex; }
+  .app.mode-outil main.contenu { display:none; }
+  .outil-barre {
+    display:flex; align-items:center; gap:12px; padding:10px 18px;
+    background:var(--carte); border-bottom:1px solid var(--trait);
+  }
+  .outil-barre h1 { margin:0; font-size:15px; letter-spacing:-.2px; }
+  .outil-barre .droite { margin-left:auto; display:flex; gap:8px; }
+  .outil-cadres { flex:1; position:relative; background:var(--bg); }
+  .outil-cadres iframe {
+    position:absolute; inset:0; width:100%; height:100%; border:0; display:none; background:#fff;
+  }
+  .outil-cadres iframe.visible { display:block; }
   .topbar { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:22px; }
   .topbar h1 { margin:0; font-size:22px; letter-spacing:-.4px; }
   .topbar .fil { color:var(--doux); font-size:13px; margin-top:3px; }
@@ -200,25 +217,25 @@
     </div>
 
     <div class="nav-groupe">Pilotage</div>
-    <a class="nav-item actif" href="/">
+    <a class="nav-item actif" href="#/" data-route="#/">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
       Tableau de bord
     </a>
-    <a class="nav-item" href="/cadrage/viewer/">
+    <a class="nav-item" href="#/docs" data-route="#/docs">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       Documentation
     </a>
 
     <div class="nav-groupe">Contenu</div>
-    <a class="nav-item" href="/contenu/banques/admin.html">
+    <a class="nav-item" href="#/relecture" data-route="#/relecture">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
       Relecture des mots
     </a>
-    <a class="nav-item" href="/contenu/banques/">
+    <a class="nav-item" href="#/banque" data-route="#/banque">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
       Banque de mots
     </a>
-    <a class="nav-item" href="/cadrage/simulateur/dashboard/">
+    <a class="nav-item" href="#/simulateur" data-route="#/simulateur">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg>
       Simulateur
     </a>
@@ -235,6 +252,24 @@
   </aside>
 
   <!-- ── Contenu ────────────────────────────────────────── -->
+  <div class="zone">
+
+  <!-- Vue outil : les outils s'ouvrent ICI, dans la coquille du dashboard. -->
+  <div id="vue-outil">
+    <div class="outil-barre">
+      <h1 id="outil-titre">Outil</h1>
+      <div class="droite">
+        <button class="btn" id="outil-recharger" type="button" title="Recharger l'outil">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        </button>
+        <a class="btn" id="outil-externe" href="#" target="_blank" rel="noopener" title="Ouvrir dans un onglet">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="outil-cadres" id="outil-cadres"></div>
+  </div>
+
   <main class="contenu">
     <div class="topbar">
       <div>
@@ -283,11 +318,11 @@
       <article class="carte large">
         <div class="c-tete">
           <h2><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Relecture du contenu</h2>
-          <a class="lien" href="/contenu/banques/">Voir la banque →</a>
+          <a class="lien" href="#/banque">Voir la banque →</a>
         </div>
         <div id="banques"><div class="vide sq-cache">Chargement…</div></div>
         <div class="action-carte">
-          <a class="btn primaire" href="/contenu/banques/admin.html">
+          <a class="btn primaire" href="#/relecture">
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             Continuer la relecture
           </a>
@@ -314,7 +349,7 @@
       <article class="carte moyenne">
         <div class="c-tete">
           <h2><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg> Simulateur du Directeur</h2>
-          <a class="lien" href="/cadrage/simulateur/dashboard/">Détails →</a>
+          <a class="lien" href="#/simulateur">Détails →</a>
         </div>
         <div id="verdicts"><div class="vide sq-cache">Chargement…</div></div>
         <div class="sim-meta sq-cache" id="sim-meta"></div>
@@ -337,6 +372,7 @@
       </article>
     </section>
   </main>
+  </div><!-- /.zone -->
 </div>
 
 <script type="module">
@@ -550,6 +586,57 @@ async function charger() {
 $('recharger').addEventListener('click', charger);
 charger();
 setInterval(charger, 60_000);
+
+/* ── Routeur de coquille : les outils s'ouvrent DANS le dashboard ─────────────
+   Chaque outil vit dans une iframe même-origine, créée au premier accès puis
+   conservée (on ne perd pas l'état — ex. une session de relecture en cours). */
+const OUTILS = {
+  '#/docs': { titre: 'Documentation projet', url: '/cadrage/viewer/' },
+  '#/relecture': { titre: 'Relecture des mots', url: '/contenu/banques/admin.html' },
+  '#/banque': { titre: 'Banque de mots', url: '/contenu/banques/' },
+  '#/simulateur': { titre: 'Simulateur du Directeur', url: '/cadrage/simulateur/dashboard/' },
+};
+const app = document.querySelector('.app');
+const cadres = $('outil-cadres');
+const iframes = new Map();
+
+function cadrePour(route) {
+  let f = iframes.get(route);
+  if (!f) {
+    f = document.createElement('iframe');
+    f.src = OUTILS[route].url;
+    f.title = OUTILS[route].titre;
+    cadres.append(f);
+    iframes.set(route, f);
+  }
+  return f;
+}
+
+function router() {
+  const route = OUTILS[location.hash] ? location.hash : '#/';
+  document.querySelectorAll('.nav-item[data-route]').forEach((n) =>
+    n.classList.toggle('actif', n.dataset.route === route));
+  if (route === '#/') {
+    app.classList.remove('mode-outil');
+    return;
+  }
+  const outil = OUTILS[route];
+  app.classList.add('mode-outil');
+  $('outil-titre').textContent = outil.titre;
+  $('outil-externe').href = outil.url;
+  cadrePour(route); // crée l'iframe au premier accès
+  for (const [r, f] of iframes) f.classList.toggle('visible', r === route);
+}
+
+$('outil-recharger').addEventListener('click', () => {
+  const route = OUTILS[location.hash] ? location.hash : null;
+  if (!route) return;
+  const f = iframes.get(route);
+  if (f) f.src = OUTILS[route].url; // vrai rechargement de l'outil
+});
+
+window.addEventListener('hashchange', router);
+router();
 </script>
 </body>
 </html>
