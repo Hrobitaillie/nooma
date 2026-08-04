@@ -26,6 +26,11 @@ dependencies:
   drift: 2.34.3
   drift_flutter: 0.3.1
 
+  # sqlite3 : déjà tiré en transitif par drift ; promu en dépendance DIRECTE (version figée =
+  # celle du lock) pour le REPLI EN MÉMOIRE du web (WasmSqlite3, donnees/ouverture_web.dart)
+  # si le wasm ne charge pas. Aucun réseau (déjà dans l'allowlist). Version alignée sur le lock.
+  sqlite3: 3.5.0
+
   # État applicatif (doc 06 §1).
   # Épinglé 2.6.1 : riverpod 3.x tire une contrainte "test" incompatible avec le
   # SDK Flutter 3.44.8 (meta 1.18.0 vs drift_dev/analyzer ^13). Montée en tâche dédiée.

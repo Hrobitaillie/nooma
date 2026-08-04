@@ -142,3 +142,16 @@ web
 plugin_platform_interface
 platform
 xdg_directories
+
+# --- Binaires web (NON gérés par pub : fichiers statiques servis depuis app/web/) ---
+# Ces deux binaires ne sont PAS des packages Dart (donc absents de pubspec.lock, ignorés par
+# l'audit) mais leur PROVENANCE est tracée ici par exigence de conformité (règle n°3).
+# Téléchargés depuis la release GitHub OFFICIELLE drift 2.34.3 (versions synchronisées avec
+# le package drift épinglé — drift publie le sqlite3.wasm contre lequel il est testé) :
+#   sqlite3.wasm
+#     https://github.com/simolus3/drift/releases/download/drift-2.34.3/sqlite3.wasm
+#     sha256 41cf968998241465d8b1dfffb1eb60dd10c35de5022a3647e14174ea3af84143
+#   drift_worker.js  (release drift 2.34.3)
+#     https://github.com/simolus3/drift/releases/download/drift-2.34.3/drift_worker.js
+#     sha256 4db0469de8ceabad8d5cd3d920614486ba587e100e39523f36f704a3aec5f26c
+# Aucune capacité réseau : servis en local, exécutés dans un worker sandboxé du navigateur.
