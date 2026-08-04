@@ -12,6 +12,7 @@
 //
 // En-tête flottant (verre dépoli/clay) : nom du biome, étoile Plouma, bouton « vue biomes ».
 
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -42,6 +43,41 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
 
   /// Index du nœud actif qui vient de sortir du sol (pour animer sa pousse une seule fois).
   int? _noeudQuiPousse;
+
+  /// Centrage initial du nœud actif : fait une seule fois, après le premier layout.
+  bool _centrageInitialFait = false;
+
+  /// Dernière géométrie calculée par le LayoutBuilder (pour centrer depuis _jouerSession).
+  GeometrieChemin? _geo;
+  double _hauteurBoite = 0;
+  double _hauteurVue = 0;
+
+  /// Offset de scroll (reverse: 0 = bas) qui place le nœud [index] au centre de l'écran.
+  double _offsetPourCentrer(int index) {
+    final geo = _geo;
+    if (geo == null || index < 0 || index >= geo.ancres.length) return 0;
+    // Le chemin est ancré en BAS de la boîte : distance du nœud au bas de la boîte.
+    final double depuisBas = geo.taille.height - geo.ancres[index].dy;
+    final double maxExt = math.max(0.0, _hauteurBoite - _hauteurVue);
+    return (depuisBas - _hauteurVue / 2).clamp(0.0, maxExt);
+  }
+
+  /// Centre le nœud actif de l'état courant (jump au premier affichage, animé ensuite).
+  void _centrerNoeudActif({required bool anime}) {
+    final etat = ref.read(carteProvider);
+    if (etat == null || !_scroll.hasClients) return;
+    final int index = etat.noeuds.indexWhere((n) => n.statut == StatutNoeud.actif);
+    final double cible = _offsetPourCentrer(index);
+    if (anime) {
+      _scroll.animateTo(
+        cible,
+        duration: const Duration(milliseconds: 750),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      _scroll.jumpTo(cible);
+    }
+  }
 
   @override
   void initState() {
@@ -97,15 +133,9 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
     // Le nœud qui devient actif (au-dessus de l'ancien) doit sortir du sol.
     setState(() => _noeudQuiPousse = avantJoues + 1);
 
-    // Scroll doux vers le haut : le chemin a poussé, on suit la pousse.
+    // Scroll doux : le chemin a poussé, on recentre le nouveau nœud actif à l'écran.
     await Future<void>.delayed(const Duration(milliseconds: 120));
-    if (_scroll.hasClients) {
-      _scroll.animateTo(
-        _scroll.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 750),
-        curve: Curves.easeInOut,
-      );
-    }
+    if (mounted) _centrerNoeudActif(anime: true);
   }
 
   /// Ouvre la vue biomes (lobby).
@@ -160,33 +190,63 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
   }
 
   /// Le chemin serpentant + les nœuds posés dessus, dans un scroll ancré en bas.
+  ///
+  /// La boîte scrollable fait AU MOINS la hauteur de l'écran et le chemin y est ancré en
+  /// BAS : en début de partie (chemin court), le premier niveau est donc en bas de l'écran ;
+  /// dès que le chemin dépasse l'écran, on scrolle, et le nœud actif est centré.
   Widget _chemin(EtatCarte etat, BiomePalette palette) {
     return LayoutBuilder(
       builder: (context, contraintes) {
         final double largeur = contraintes.maxWidth;
+        final double hauteurVue = contraintes.maxHeight;
         final geo = GeometrieChemin.construire(
           nbNoeuds: etat.noeuds.length,
           largeur: largeur,
         );
+        final double hauteurBoite = math.max(geo.taille.height, hauteurVue);
+        // Ancrage bas : le haut du chemin dans la boîte.
+        final double hautChemin = hauteurBoite - geo.taille.height;
+
+        // Mémorise la géométrie pour le centrage (initial et après une session).
+        _geo = geo;
+        _hauteurBoite = hauteurBoite;
+        _hauteurVue = hauteurVue;
+        if (!_centrageInitialFait) {
+          _centrageInitialFait = true;
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) => _centrerNoeudActif(anime: false),
+          );
+        }
+
         return SingleChildScrollView(
           controller: _scroll,
-          reverse: true, // ancre en bas : le nœud actif est visible au démarrage
+          reverse: true, // offset 0 = bas du chemin
           child: SizedBox(
             width: largeur,
-            height: geo.taille.height,
+            height: hauteurBoite,
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                // Le tracé du chemin (une seule couche repeinte).
-                RepaintBoundary(
-                  child: CustomPaint(
-                    size: geo.taille,
-                    painter: CheminPainter(trace: geo.trace, palette: palette),
+                // Le tracé du chemin (une seule couche repeinte), ancré en bas de la boîte.
+                Positioned(
+                  left: 0,
+                  top: hautChemin,
+                  width: largeur,
+                  height: geo.taille.height,
+                  child: RepaintBoundary(
+                    child: CustomPaint(
+                      size: geo.taille,
+                      painter: CheminPainter(trace: geo.trace, palette: palette),
+                    ),
                   ),
                 ),
-                // Les nœuds, posés SUR les ancres de la courbe.
+                // Les nœuds, posés SUR les ancres de la courbe (décalées de l'ancrage bas).
                 for (int i = 0; i < etat.noeuds.length; i++)
-                  _positionnerNoeud(etat.noeuds[i], geo.ancres[i], palette),
+                  _positionnerNoeud(
+                    etat.noeuds[i],
+                    geo.ancres[i] + Offset(0, hautChemin),
+                    palette,
+                  ),
               ],
             ),
           ),
