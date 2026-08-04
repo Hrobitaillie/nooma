@@ -106,7 +106,12 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
     final etat = ref.read(carteProvider);
     if (etat == null || etat.sessionEnCours) return;
 
-    final banque = ref.read(syllabesProvider).valueOrNull ?? const [];
+    // ⚠️ syllabesProvider est un FutureProvider PARESSEUX : au premier tap il n'a même pas
+    // commencé à charger — un read(...).valueOrNull renverrait null et la session se jouerait
+    // sur une banque VIDE (tous les essais s'auto-complètent : écran qui « clignote »).
+    // On attend donc le vrai chargement.
+    final banque = await ref.read(syllabesProvider.future);
+    if (!mounted) return;
     final voix = ref.read(serviceVoixProvider);
 
     final niveaux = notifier.genererProchaineSession();
