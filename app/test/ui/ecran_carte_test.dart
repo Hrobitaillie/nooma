@@ -59,5 +59,8 @@ void main() {
 
     // L'en-tête montre le biome courant.
     expect(find.text('Prairie'), findsOneWidget);
+
+    // Le bouton « vue biomes » (accès au lobby) est présent dans l'en-tête flottant.
+    expect(find.byKey(const Key('bouton-lobby')), findsOneWidget);
   });
 }
