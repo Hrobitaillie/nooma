@@ -41,6 +41,11 @@ Graphe _grapheTest() {
 
 void main() {
   testWidgets('la carte affiche le biome et un nœud actif', (tester) async {
+    tester.view.physicalSize = const Size(400, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -60,6 +65,17 @@ void main() {
 
     // Le nœud actif existe (clé dédiée).
     expect(find.byKey(const Key('noeud-actif')), findsOneWidget);
+
+    // Régression (bug du Stack dimensionné sur l'en-tête) : la zone scrollable remplit
+    // l'écran, et en début de partie le nœud actif est dans la MOITIÉ BASSE de l'écran
+    // (le chemin est ancré en bas), pas caché sous l'en-tête ni hors écran.
+    expect(
+      tester.getRect(find.byType(SingleChildScrollView)).height,
+      moreOrLessEquals(800, epsilon: 1),
+    );
+    final Offset centreActif = tester.getCenter(find.byKey(const Key('noeud-actif')));
+    expect(centreActif.dy, greaterThan(400));
+    expect(centreActif.dy, lessThan(800));
 
     // L'en-tête montre le biome courant.
     expect(find.text('Prairie'), findsOneWidget);

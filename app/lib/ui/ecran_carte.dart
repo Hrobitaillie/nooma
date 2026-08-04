@@ -169,6 +169,10 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
       body: etat == null
           ? const Center(child: CircularProgressIndicator())
           : Stack(
+              // ⚠️ Tous les enfants sont Positioned : le Stack prend alors tout l'écran.
+              // (Avec un enfant non-positionné — l'en-tête —, le Stack se dimensionnait
+              // sur LUI (~86 px) et toutes les couches Positioned.fill s'écrasaient en
+              // haut de l'écran, nœuds hors écran et scroll impossible.)
               children: [
                 // Couches de décor fixes derrière le scroll (parallax appliqué à l'intérieur).
                 Positioned.fill(
@@ -177,11 +181,16 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
                 // Le chemin scrollable au premier plan.
                 Positioned.fill(child: _chemin(etat, palette)),
                 // En-tête flottant au-dessus de tout.
-                SafeArea(
-                  child: _EnTeteBiome(
-                    biome: etat.biome,
-                    palette: palette,
-                    onLobby: _ouvrirLobby,
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: SafeArea(
+                    child: _EnTeteBiome(
+                      biome: etat.biome,
+                      palette: palette,
+                      onLobby: _ouvrirLobby,
+                    ),
                   ),
                 ),
               ],
