@@ -1,0 +1,29 @@
+# Unit systemd de l'atelier Plouma (doc 18 §3.4).
+# À déposer dans /etc/systemd/system/plouma-atelier.service puis :
+#   systemctl daemon-reload && systemctl enable --now plouma-atelier
+
+[Unit]
+Description=Atelier Plouma (viewer docs + admin contenu)
+After=network.target
+
+[Service]
+Type=simple
+User=plouma
+Group=plouma
+WorkingDirectory=/opt/plouma-atelier/repo
+ExecStart=/usr/bin/node serveur/serveur.mjs
+Environment=PORT=8090
+Environment=HOTE=127.0.0.1
+Environment=GIT_AUTO=1
+Environment=DATA_DIR=/opt/plouma-atelier/data
+Restart=on-failure
+RestartSec=3
+
+# Durcissement léger
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ReadWritePaths=/opt/plouma-atelier
+
+[Install]
+WantedBy=multi-user.target

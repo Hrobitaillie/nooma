@@ -4,7 +4,7 @@
   "description": "Cadrage du projet Nooma — viewer de doc + catalogue de fonctionnalités (npm start)",
   "type": "module",
   "scripts": {
-    "start": "node cadrage/server.mjs",
+    "start": "node serveur/serveur.mjs",
     "flooow": "bash flooow/scripts/dev-local.sh",
     "sim": "node --experimental-strip-types cadrage/simulateur/sim/run.ts",
     "lint-contenu": "node contenu/lint.mjs"
