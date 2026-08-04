@@ -98,6 +98,54 @@ for (const fichier of banques) {
   statsBanques.push({ fichier, nb: items.length, aVerifier, valides: items.filter((i) => i.statut === 'valide').length, items });
 }
 
+// ————— Registre des lignes de texte (doc 18 §4) —————
+// Valide contenu/voix/lignes.json : ids uniques kebab-case, types dans l'enum, texte non vide,
+// variables déclarées ⊆ variables utilisées {x} dans le texte. Le statut audio ne vit PAS ici
+// (dérivé du studio) ; ce registre = le TEXTE + sa métadonnée éditoriale.
+const TYPES_LIGNES = new Set(['consigne', 'feedback', 'phoneme', 'babillage', 'mot', 'interpellation', 'histoire']);
+const STATUTS_LIGNES = new Set(['actif', 'prevu']);
+const RE_ID_LIGNE = /^[a-z0-9]+(-[a-z0-9]+)*$/; // kebab-case strict
+let statsLignes = null;
+
+try {
+  const registre = JSON.parse(readFileSync(join(ROOT, 'voix', 'lignes.json'), 'utf8'));
+  const lignes = Array.isArray(registre.lignes) ? registre.lignes : [];
+  const ids = new Set();
+  const parType = {};
+  let actifs = 0, prevus = 0;
+
+  for (const l of lignes) {
+    const id = String(l.id ?? '');
+    if (!id) { erreurs.push(`lignes.json : une ligne sans id`); continue; }
+    if (!RE_ID_LIGNE.test(id)) erreurs.push(`lignes.json : id « ${id} » pas en kebab-case`);
+    if (ids.has(id)) erreurs.push(`lignes.json : id en double « ${id} »`);
+    ids.add(id);
+
+    if (typeof l.texte !== 'string' || l.texte.trim() === '') {
+      erreurs.push(`lignes.json : « ${id} » — texte vide`);
+    }
+    if (!TYPES_LIGNES.has(l.type)) erreurs.push(`lignes.json : « ${id} » — type invalide « ${l.type} »`);
+    parType[l.type] = (parType[l.type] || 0) + 1;
+
+    const statut = l.statut ?? 'actif';
+    if (!STATUTS_LIGNES.has(statut)) erreurs.push(`lignes.json : « ${id} » — statut invalide « ${statut} »`);
+    if (statut === 'prevu') prevus++; else actifs++;
+
+    // variables déclarées ⊆ variables {x} présentes dans le texte.
+    const declarees = Array.isArray(l.variables) ? l.variables.map(String) : [];
+    const utilisees = new Set([...String(l.texte ?? '').matchAll(/\{([a-zA-Z0-9_]+)\}/g)].map((m) => m[1]));
+    for (const v of declarees) {
+      if (!utilisees.has(v)) erreurs.push(`lignes.json : « ${id} » — variable déclarée « ${v} » absente du texte`);
+    }
+    for (const v of utilisees) {
+      if (!declarees.includes(v)) avertissements.push(`lignes.json : « ${id} » — variable « {${v}} » du texte non déclarée`);
+    }
+  }
+  statsLignes = { total: lignes.length, parType, actifs, prevus };
+} catch (e) {
+  avertissements.push(`lignes.json : registre absent ou illisible (${e.code || e.message}) — vue des lignes vide`);
+}
+
 // ————— Vue lisible (relecture orthophoniste) —————
 const nbComps = comps.size;
 let md = `# Graphe de compétences — v1 à relire\n\n> ⚠️ **Document généré** par \`npm run lint-contenu\` depuis \`contenu/graphe-competences.json\` — ne pas éditer à la main.\n> ${graphe.statut}\n\n${graphe.note}\n\n**${graphe.modules.length} modules (= biomes) · ${nbComps} compétences · 4 piliers.**\n`;
@@ -119,6 +167,13 @@ for (const b of statsBanques) {
 md += `\n*Progression des graphèmes cumulée (ordre d'introduction par module) :* `;
 md += ordonnes.flatMap((m) => m.competences.flatMap((c) => c.graphemesIntroduits)).join(', ') + '.\n';
 
+if (statsLignes) {
+  const parType = Object.entries(statsLignes.parType).map(([t, n]) => `${n} ${t}`).join(', ');
+  md += `\n## Lignes de texte (registre voix)\n\n`;
+  md += `**${statsLignes.total} lignes** au registre (\`voix/lignes.json\`) : ${statsLignes.actifs} actives, ${statsLignes.prevus} prévues.\n\n`;
+  md += `Par type : ${parType || '—'}. *(Les mots des banques et les phonèmes du graphe sont des lignes DÉRIVÉES, agrégées par le studio, non listées ici.)*\n`;
+}
+
 writeFileSync(join(ROOT, 'graphe-competences.md'), md);
 
 // ————— Rapport —————
@@ -129,4 +184,8 @@ if (erreurs.length > 0) {
   process.exit(1);
 }
 console.log(`✅ Contenu valide : ${graphe.modules.length} modules, ${nbComps} compétences, ${statsBanques.map((b) => `${b.nb} items (${b.fichier})`).join(', ')}.`);
+if (statsLignes) {
+  const parType = Object.entries(statsLignes.parType).map(([t, n]) => `${n} ${t}`).join(', ');
+  console.log(`✅ Registre voix : ${statsLignes.total} lignes (${statsLignes.actifs} actives, ${statsLignes.prevus} prévues) — ${parType}.`);
+}
 console.log('Vue de relecture régénérée : contenu/graphe-competences.md');

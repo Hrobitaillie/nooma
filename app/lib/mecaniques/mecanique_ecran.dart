@@ -50,6 +50,7 @@ Widget ecranPourMecanique({
   required List<ItemSyllabes> banque,
   required ServiceVoix voix,
   required NiveauTermine onTermine,
+  RegistreVoix registre = const RegistreVoix.vide(),
   TirageIndice? tirage,
 }) {
   switch (spec.mecanique) {
@@ -59,6 +60,7 @@ Widget ecranPourMecanique({
         spec: spec,
         banque: banque,
         voix: voix,
+        registre: registre,
         onTermine: onTermine,
         tirage: tirage,
       );
@@ -68,6 +70,7 @@ Widget ecranPourMecanique({
         spec: spec,
         banque: banque,
         voix: voix,
+        registre: registre,
         onTermine: onTermine,
         tirage: tirage,
       );
@@ -77,6 +80,7 @@ Widget ecranPourMecanique({
         spec: spec,
         banque: banque,
         voix: voix,
+        registre: registre,
         onTermine: onTermine,
         tirage: tirage,
       );

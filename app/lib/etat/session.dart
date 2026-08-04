@@ -54,6 +54,14 @@ final syllabesProvider = FutureProvider<List<ItemSyllabes>>((ref) async {
   return ref.watch(serviceContenuProvider).chargerSyllabes();
 });
 
+/// Le registre des lignes de texte prononcées (doc 18 §4), chargé depuis les assets.
+///
+/// Tolérant : assets absents (tests) → registre vide, l'app retombe sur les replis durs des
+/// mécaniques. Les mécaniques consomment les lignes par id via [RegistreVoix.resoudre].
+final registreVoixProvider = FutureProvider<RegistreVoix>((ref) async {
+  return ref.watch(serviceContenuProvider).chargerLignes();
+});
+
 /// Graine du profil (dev : fixe → parcours reproductible pour la QA, doc 04 §8).
 /// En prod, dérivée d'un identifiant de profil local.
 const String graineProfil = 'plouma-dev-profil-1';

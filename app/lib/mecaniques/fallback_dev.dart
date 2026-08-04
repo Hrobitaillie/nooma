@@ -24,6 +24,10 @@ class EcranFallbackDev extends StatefulWidget {
   final NiveauSpec spec;
   final List<ItemSyllabes> banque;
   final ServiceVoix voix;
+
+  /// Registre des lignes de texte (doc 18 §4), résolu par id avec repli DUR. Défaut : vide.
+  final RegistreVoix registre;
+
   final NiveauTermine onTermine;
   final TirageIndice? tirage;
 
@@ -32,6 +36,7 @@ class EcranFallbackDev extends StatefulWidget {
     required this.spec,
     required this.banque,
     required this.voix,
+    this.registre = const RegistreVoix.vide(),
     required this.onTermine,
     this.tirage,
   });
@@ -78,14 +83,16 @@ class _EcranFallbackDevState extends State<EcranFallbackDev> {
       return;
     }
     _dernierMot = item.mot;
-    await widget.voix.dire('Combien de syllabes dans : ${item.mot} ?');
+    await widget.voix.dire(widget.registre.resoudre('consigne-dev-combien-syllabes',
+        repli: 'Combien de syllabes dans : ${item.mot} ?', variables: {'mot': item.mot}));
   }
 
   Future<void> _choisir(int nb) async {
     final item = _item;
     if (item == null) return;
     if (nb == item.syllabesOrales) {
-      unawaited(widget.voix.dire('Oui, bien écouté !'));
+      unawaited(widget.voix.dire(widget.registre
+          .resoudre('feedback-dev-oui-bien-ecoute', repli: 'Oui, bien écouté !')));
       _enregistrer(succes: !_aEuAide, avecAide: _aEuAide);
       await Future<void>.delayed(const Duration(milliseconds: 700));
       if (!mounted) return;
@@ -94,7 +101,9 @@ class _EcranFallbackDevState extends State<EcranFallbackDev> {
       // Jamais de négatif : Plouma redonne le mot, syllabe par syllabe, et l'enfant refait.
       _aEuAide = true;
       final syllabes = item.decoupage.split('-');
-      await widget.voix.dire('Écoute encore : ${syllabes.join(", ")}.');
+      final joint = syllabes.join(', ');
+      await widget.voix.dire(widget.registre.resoudre('consigne-dev-ecoute-encore',
+          repli: 'Écoute encore : $joint.', variables: {'syllabes': joint}));
       if (!mounted) return;
       setState(() {}); // reste sur le même item pour retenter (avecAide)
     }

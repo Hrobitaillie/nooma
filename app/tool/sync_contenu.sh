@@ -17,11 +17,12 @@ DEST="$APP_DIR/assets/contenu"
 echo "Synchronisation du contenu : $SRC → $DEST"
 
 rm -rf "$DEST"
-mkdir -p "$DEST/banques"
+mkdir -p "$DEST/banques" "$DEST/voix"
 
 cp "$SRC/graphe-competences.json" "$DEST/graphe-competences.json"
 cp "$SRC/mecaniques.json" "$DEST/mecaniques.json"
 cp "$SRC"/banques/*.csv "$DEST/banques/"
+cp "$SRC/voix/lignes.json" "$DEST/voix/lignes.json"
 
 echo "Contenu synchronisé :"
-ls -1 "$DEST" "$DEST/banques"
+ls -1 "$DEST" "$DEST/banques" "$DEST/voix"

@@ -10,6 +10,7 @@ consomme le simulateur aujourd'hui et l'app Flutter demain.
 | `graphe-competences.md` | **Vue de relecture générée** (ne pas éditer) — lisible dans le viewer |
 | `mecaniques.json` | Les 19 mécaniques actées (liste canonique référencée partout) |
 | `banques/syllabes.csv` | Banque du module Syllabes : 100 mots imagés tagués (syllabes orales, découpage, attaque, fréquence, distracteurs) |
+| `voix/lignes.json` | **Registre des lignes de texte** (doc 18 §4) : toutes les lignes que l'app prononce (consignes, feedbacks, rituels…), extraites du code Dart (règle « contenu = données »). Id STABLE en kebab-case, texte, type, variables `{x}`, priorité, statut (`actif`/`prevu`). L'état AUDIO n'y vit PAS (dérivé du studio). Les MOTS des banques et les phonèmes du graphe sont des lignes **dérivées** (id `mot-<mot>` / `phoneme-<graphème>`), agrégées par le studio — non dupliquées ici (cf. `sourcesDerivees`). Inventaire : <http://localhost:8090/#/lignes> |
 | *(dashboard)* | **Relecture et visualisation des banques** = vues natives de l’atelier : <http://localhost:8090/#/relecture> et <http://localhost:8090/#/banque> (en ligne : plouma.justhugo.fr) |
 | `lint.mjs` | Validation : ids, prérequis (existence, ordre des modules, cycles), mécaniques, cohérence des banques — `npm run lint-contenu` |
 

@@ -30,6 +30,11 @@ class EcranTapeLaSyllabe extends StatefulWidget {
   final NiveauSpec spec;
   final List<ItemSyllabes> banque;
   final ServiceVoix voix;
+
+  /// Registre des lignes de texte (doc 18 §4) : les consignes/feedbacks sont résolus par id,
+  /// avec repli DUR si l'id manque. Par défaut vide → replis durs.
+  final RegistreVoix registre;
+
   final NiveauTermine onTermine;
 
   /// Hasard injectable (indice dans [0, max)). Par défaut : Random réel.
@@ -40,6 +45,7 @@ class EcranTapeLaSyllabe extends StatefulWidget {
     required this.spec,
     required this.banque,
     required this.voix,
+    this.registre = const RegistreVoix.vide(),
     required this.onTermine,
     this.tirage,
   });
@@ -114,8 +120,10 @@ class _EcranTapeLaSyllabeState extends State<EcranTapeLaSyllabe>
       return;
     }
     _dernierMot = item.mot;
-    await widget.voix.dire('Écoute bien : ${item.mot} !');
-    await widget.voix.dire('Tape les syllabes !');
+    await widget.voix.dire(widget.registre.resoudre('consigne-ecoute-mot',
+        repli: 'Écoute bien : ${item.mot} !', variables: {'mot': item.mot}));
+    await widget.voix.dire(widget.registre
+        .resoudre('consigne-tape-syllabes', repli: 'Tape les syllabes !'));
     if (!mounted) return;
     setState(() => _phase = _Phase.saisie);
   }
@@ -143,7 +151,9 @@ class _EcranTapeLaSyllabeState extends State<EcranTapeLaSyllabe>
   Future<void> _reussir() async {
     setState(() => _phase = _Phase.reussite);
     // Éloge du PROCESSUS, jamais de la personne (doc 03 §2.4).
-    unawaited(widget.voix.dire('Bravo, tu as bien écouté le mot !'));
+    unawaited(widget.voix.dire(widget.registre.resoudre(
+        'feedback-bravo-ecoute-mot',
+        repli: 'Bravo, tu as bien écouté le mot !')));
     _enregistrer(succes: !_aEuAide, avecAide: _aEuAide);
     await Future<void>.delayed(const Duration(milliseconds: 1400));
     if (!mounted) return;
@@ -156,7 +166,8 @@ class _EcranTapeLaSyllabeState extends State<EcranTapeLaSyllabe>
     _aEuAide = true;
     setState(() => _phase = _Phase.modelling);
     final syllabes = item.decoupage.split('-');
-    await widget.voix.dire('Regarde, je te montre.');
+    await widget.voix.dire(widget.registre
+        .resoudre('consigne-montre', repli: 'Regarde, je te montre.'));
     for (final syl in syllabes) {
       if (!mounted) return;
       _pulse.forward(from: 1.0).then((_) => _pulse.reverse());
@@ -164,7 +175,8 @@ class _EcranTapeLaSyllabeState extends State<EcranTapeLaSyllabe>
       await Future<void>.delayed(const Duration(milliseconds: 260));
     }
     if (!mounted) return;
-    await widget.voix.dire('À toi ! Tape les syllabes !');
+    await widget.voix.dire(widget.registre
+        .resoudre('consigne-a-toi-tape', repli: 'À toi ! Tape les syllabes !'));
     if (!mounted) return;
     _compteur.reinitialiser();
     setState(() => _phase = _Phase.saisie);

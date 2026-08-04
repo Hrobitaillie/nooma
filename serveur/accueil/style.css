@@ -310,6 +310,108 @@ select.puce { color:var(--encre); }
 .sim-compteur .valeur { font-size:25px; font-weight:700; letter-spacing:-.5px; }
 .sim-compteur .nom { color:var(--doux); font-size:12.5px; margin-top:3px; }
 
+/* ── Vue Lignes de texte (inventaire du studio, doc 18 §4) ── */
+.lg-filtres { display:flex; gap:10px; flex-wrap:wrap; margin:4px 0 14px; }
+.lg-recherche { flex:1 1 220px; min-width:180px; padding:8px 12px; border:1px solid var(--trait-fort);
+  border-radius:var(--r-s); font:inherit; font-size:13px; color:var(--encre); background:var(--carte); }
+.lg-recherche:focus { outline:none; border-color:var(--accent); }
+.lg-select { padding:8px 12px; border:1px solid var(--trait-fort); border-radius:var(--r-s);
+  font:inherit; font-size:13px; font-weight:600; color:var(--doux); background:var(--carte); cursor:pointer; }
+.lg-note-studio { display:flex; align-items:flex-start; gap:8px; padding:10px 13px; margin-bottom:14px;
+  background:var(--accent-fond); border:1px solid #d6e0f2; border-radius:var(--r-s);
+  color:var(--accent-fort); font-size:12.5px; line-height:1.5; }
+.lg-note-studio svg { flex:none; margin-top:1px; }
+.lg-note-studio code { background:#fff; padding:1px 5px; border-radius:5px; font-size:12px; }
+.lg-table { width:100%; border-collapse:collapse; font-size:13px; }
+.lg-table th { text-align:left; color:var(--doux); font-weight:600; font-size:11.5px; text-transform:uppercase;
+  letter-spacing:.03em; padding:8px 10px; border-bottom:1px solid var(--trait-fort); }
+.lg-table th.c, .lg-table td.c { text-align:center; }
+.lg-table td { padding:9px 10px; border-bottom:1px solid var(--trait); vertical-align:top; }
+.lg-table tbody tr:hover { background:var(--accent-fond); }
+.lg-id { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; color:var(--accent-fort); white-space:nowrap; }
+.lg-texte { color:var(--encre); max-width:360px; }
+.lg-source { color:var(--tres-doux); font-size:12px; white-space:nowrap; }
+.lg-type { display:inline-block; padding:2px 9px; border-radius:99px; font-size:11.5px; font-weight:600;
+  background:var(--trait); color:var(--doux); }
+.lg-type.t-consigne { background:var(--accent-fond); color:var(--accent-fort); }
+.lg-type.t-feedback { background:var(--vert-fond); color:var(--vert); }
+.lg-type.t-mot { background:var(--orange-fond); color:var(--orange); }
+.lg-type.t-phoneme { background:#efeafc; color:#6b4fb0; }
+.lg-audio { display:inline-block; padding:2px 8px; border-radius:99px; font-size:11px; font-weight:600; }
+.lg-audio.aucun { background:var(--trait); color:var(--tres-doux); }
+.lg-audio.ok { background:var(--vert-fond); color:var(--vert); }
+.lg-audio.prop { background:var(--accent-fond); color:var(--accent-fort); }
+.lg-audio.warn { background:var(--orange-fond); color:var(--orange); }
+.lg-prevu-tag { display:inline-block; padding:1px 6px; border-radius:99px; font-size:10px; font-weight:600;
+  background:var(--orange-fond); color:var(--orange); vertical-align:middle; margin-left:4px; letter-spacing:0; }
+
+/* ── Vue Studio d'enregistrement (doc 18 §5) ──────────────── */
+.st-kpis { margin-bottom:18px; }
+.st-lancer { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin:6px 0 20px; }
+.st-gros { font-size:15px; padding:12px 22px; }
+.st-hint { color:var(--tres-doux); font-size:12.5px; }
+.st-id { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; color:var(--tres-doux); margin-top:3px; }
+.st-liste td { vertical-align:middle; }
+.st-var { font-style:italic; color:var(--accent); font-weight:700; }
+
+/* file : état vide (tout enregistré) */
+.st-fini { text-align:center; padding:50px 20px; color:var(--doux); font-size:16px; }
+.st-fini .st-emoji { font-size:38px; display:block; margin-bottom:14px; }
+.st-fini small { display:block; margin-top:8px; color:var(--tres-doux); font-size:13px; }
+
+/* écran d'enregistrement plein cadre */
+.st-enreg { max-width:760px; margin:0 auto; }
+.st-enreg-tete { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.st-compteur { color:var(--doux); font-size:12.5px; }
+.st-carte-ligne { background:var(--carte); border:1px solid var(--trait); border-radius:var(--r);
+  box-shadow:var(--ombre); padding:28px 30px; text-align:center; margin-bottom:20px; }
+.st-carte-ligne .lg-type { margin-bottom:14px; }
+.st-grand-texte { font-size:38px; font-weight:800; line-height:1.2; letter-spacing:-.5px; margin:6px 0 14px; }
+.st-var-note { background:var(--orange-fond); border:1px solid #e6cfa6; color:#8a5a1a; border-radius:var(--r-s);
+  padding:10px 14px; font-size:12.5px; line-height:1.5; margin:12px 0; text-align:left; }
+.st-indication { color:var(--doux); font-size:14px; margin-top:8px; }
+.st-contexte { color:var(--tres-doux); font-size:12.5px; margin-top:8px; }
+.st-idligne { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; color:var(--tres-doux); margin-top:12px; }
+
+/* vu-mètre */
+.st-vu { height:18px; background:var(--trait); border-radius:99px; overflow:hidden; margin:0 0 10px; }
+.st-vu-barre { height:100%; width:0%; background:var(--accent); border-radius:99px; transition:width .05s linear, background .2s; }
+.st-etat-micro { text-align:center; color:var(--doux); font-size:13.5px; margin-bottom:18px; min-height:20px; }
+.st-etat-micro.err { color:var(--rouge); font-weight:600; }
+.st-boutons { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.st-b { min-width:130px; }
+.st-prises-existantes { text-align:center; color:var(--doux); font-size:12.5px; margin-top:16px; }
+
+/* arbitrage */
+.st-arb-tete { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:16px; }
+.st-arb-stats { display:flex; gap:18px; font-size:13px; color:var(--doux); flex-wrap:wrap; }
+.st-arb-stats b { color:var(--encre); }
+.st-arb-stats .st-warn b { color:var(--orange); }
+.st-rapport { border-radius:var(--r-s); padding:11px 15px; font-size:13px; margin-bottom:16px; }
+.st-rapport.ok { background:var(--vert-fond); color:var(--vert); }
+.st-rapport.partiel { background:var(--orange-fond); color:var(--orange); }
+.st-rapport.err { background:var(--rouge-fond); color:var(--rouge); }
+.st-rapport ul { margin:8px 0 0; padding-left:18px; }
+.st-arb-liste { display:flex; flex-direction:column; gap:16px; }
+.st-arb-carte { background:var(--carte); border:1px solid var(--trait); border-radius:var(--r); box-shadow:var(--ombre); padding:16px 18px; }
+.st-arb-ligne-tete { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:14px; }
+.st-arb-texte { font-size:16px; font-weight:600; margin-left:8px; }
+.st-prises { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
+.st-prise { border:1px solid var(--trait-fort); border-radius:var(--r-s); padding:11px 13px; background:var(--bg); }
+.st-prise.retenue { border-color:var(--vert); background:var(--vert-fond); }
+.st-prise.ecartee { opacity:.62; }
+.st-prise-tete { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.st-prise-tete b { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; }
+.st-prise-statut { font-size:10.5px; font-weight:700; padding:1px 8px; border-radius:99px; text-transform:uppercase; letter-spacing:.3px; }
+.st-prise-statut.retenue { background:var(--vert); color:#fff; }
+.st-prise-statut.proposee { background:var(--accent-fond); color:var(--accent-fort); }
+.st-prise-statut.ecartee { background:var(--trait); color:var(--tres-doux); }
+.st-prise audio { width:100%; height:34px; margin:2px 0; }
+.st-prise-meta { font-size:11.5px; color:var(--doux); margin:5px 0 8px; }
+.st-prise-note { width:100%; padding:6px 9px; border:1px solid var(--trait-fort); border-radius:7px; font:inherit; font-size:12.5px; margin-bottom:8px; background:#fff; color:var(--encre); }
+.st-prise-actions { display:flex; gap:7px; flex-wrap:wrap; }
+.st-prise-actions .btn { padding:5px 11px; font-size:12px; }
+
 /* ── Vue Docs (iframe conservée) ──────────────────────────── */
 .docs-cadre { width:100%; height:100%; border:0; background:#fff; display:block; }
 

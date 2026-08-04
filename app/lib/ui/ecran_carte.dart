@@ -112,6 +112,11 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
     // On attend donc le vrai chargement.
     final banque = await ref.read(syllabesProvider.future);
     if (!mounted) return;
+    // Registre des lignes de texte (doc 18 §4) : chargé comme la banque (FutureProvider
+    // paresseux). chargerLignes() est déjà tolérant (assets absents → registre vide), donc les
+    // mécaniques retombent sur leurs textes en dur — jamais de plantage.
+    final registre = await ref.read(registreVoixProvider.future);
+    if (!mounted) return;
     final voix = ref.read(serviceVoixProvider);
 
     final niveaux = notifier.genererProchaineSession();
@@ -125,6 +130,7 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
           niveaux: niveaux,
           banque: banque,
           voix: voix,
+          registre: registre,
           onSessionTerminee: (r) => Navigator.of(context).pop(r),
         ),
       ),

@@ -18,6 +18,9 @@ class EcranSession extends StatefulWidget {
   final List<ItemSyllabes> banque;
   final ServiceVoix voix;
 
+  /// Registre des lignes de texte (doc 18 §4). Par défaut vide → replis durs des mécaniques.
+  final RegistreVoix registre;
+
   /// Appelé quand toute la session est jouée : liste des ResultatNiveau (1 par niveau).
   final void Function(List<ResultatNiveau> resultats) onSessionTerminee;
 
@@ -26,6 +29,7 @@ class EcranSession extends StatefulWidget {
     required this.niveaux,
     required this.banque,
     required this.voix,
+    this.registre = const RegistreVoix.vide(),
     required this.onSessionTerminee,
   });
 
@@ -64,13 +68,19 @@ class _EcranSessionState extends State<EcranSession> {
   /// de dispatch des mécaniques (tape-la-syllabe, boite-a-sons, repli [DEV]).
   Widget _ecranPour(NiveauSpec spec, Key key) {
     if (spec.type == TypeNiveau.cadeau) {
-      return EcranCadeau(key: key, voix: widget.voix, onTermine: _niveauTermine);
+      return EcranCadeau(
+        key: key,
+        voix: widget.voix,
+        registre: widget.registre,
+        onTermine: _niveauTermine,
+      );
     }
     return ecranPourMecanique(
       key: key,
       spec: spec,
       banque: widget.banque,
       voix: widget.voix,
+      registre: widget.registre,
       onTermine: _niveauTermine,
     );
   }

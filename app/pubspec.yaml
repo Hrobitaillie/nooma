@@ -56,3 +56,4 @@ flutter:
   assets:
     - assets/contenu/
     - assets/contenu/banques/
+    - assets/contenu/voix/

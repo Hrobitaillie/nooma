@@ -48,4 +48,40 @@ void main() {
       expect(ServiceContenu.parserSyllabes('mot;a;b;c;d;e;f;g;h\n'), isEmpty);
     });
   });
+
+  group('ServiceContenu.parserLignes + RegistreVoix', () {
+    const json = '{"version":1,"lignes":['
+        '{"id":"consigne-ecoute-mot","texte":"Écoute bien : {mot} !","type":"consigne","variables":["mot"]},'
+        '{"id":"feedback-bravo","texte":"Bravo !","type":"feedback","variables":[]},'
+        '{"id":"sans-texte","texte":"","type":"consigne"}'
+        ']}';
+
+    test('parse le registre en ignorant les entrées à texte vide', () {
+      final r = ServiceContenu.parserLignes(json);
+      // La ligne « sans-texte » (texte vide) est ignorée → repli utilisé pour cet id.
+      expect(r.resoudre('sans-texte', repli: 'REPLI'), 'REPLI');
+      expect(r.resoudre('feedback-bravo', repli: 'autre'), 'Bravo !');
+    });
+
+    test('resoudre interpole les variables {x} du registre', () {
+      final r = ServiceContenu.parserLignes(json);
+      expect(
+        r.resoudre('consigne-ecoute-mot', repli: 'x', variables: {'mot': 'lapin'}),
+        'Écoute bien : lapin !',
+      );
+    });
+
+    test('id absent ⇒ repli (interpolé) : l\'app ne casse jamais', () {
+      final r = ServiceContenu.parserLignes(json);
+      expect(
+        r.resoudre('id-inconnu', repli: 'Écoute : {mot} !', variables: {'mot': 'chat'}),
+        'Écoute : chat !',
+      );
+    });
+
+    test('RegistreVoix.vide ⇒ toujours le repli', () {
+      const r = RegistreVoix.vide();
+      expect(r.resoudre('quoi', repli: 'défaut'), 'défaut');
+    });
+  });
 }

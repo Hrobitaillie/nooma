@@ -35,6 +35,10 @@ class EcranBoiteASons extends StatefulWidget {
   final NiveauSpec spec;
   final List<ItemSyllabes> banque;
   final ServiceVoix voix;
+
+  /// Registre des lignes de texte (doc 18 §4), résolues par id avec repli DUR. Défaut : vide.
+  final RegistreVoix registre;
+
   final NiveauTermine onTermine;
 
   /// Hasard injectable (indice dans [0, max)). Par défaut : Random réel (graine fixe en dev).
@@ -45,6 +49,7 @@ class EcranBoiteASons extends StatefulWidget {
     required this.spec,
     required this.banque,
     required this.voix,
+    this.registre = const RegistreVoix.vide(),
     required this.onTermine,
     this.tirage,
   });
@@ -128,12 +133,15 @@ class _EcranBoiteASonsState extends State<EcranBoiteASons>
       return;
     }
     _dernierMot = item.mot;
-    await widget.voix.dire('Écoute bien : ${item.mot} !');
+    await widget.voix.dire(widget.registre.resoudre('consigne-ecoute-mot',
+        repli: 'Écoute bien : ${item.mot} !', variables: {'mot': item.mot}));
     // En difficulté 0-1, on répète volontiers le mot (doc mission §1).
     if (_difficulte <= 1) {
-      await widget.voix.dire('${item.mot}.');
+      await widget.voix.dire(widget.registre.resoudre('consigne-repeter-mot',
+          repli: '${item.mot}.', variables: {'mot': item.mot}));
     }
-    await widget.voix.dire('Mets un jeton pour chaque bout du mot !');
+    await widget.voix.dire(widget.registre.resoudre('consigne-jeton-par-bout',
+        repli: 'Mets un jeton pour chaque bout du mot !'));
     if (!mounted) return;
     setState(() => _phase = _Phase.saisie);
   }
@@ -179,7 +187,9 @@ class _EcranBoiteASonsState extends State<EcranBoiteASons>
   Future<void> _reussir() async {
     setState(() => _phase = _Phase.reussite);
     // Éloge du PROCESSUS, jamais de la personne (doc 03 §2.4).
-    unawaited(widget.voix.dire('Bravo, tu as bien compté les syllabes !'));
+    unawaited(widget.voix.dire(widget.registre.resoudre(
+        'feedback-bravo-compte-syllabes',
+        repli: 'Bravo, tu as bien compté les syllabes !')));
     _enregistrer(succes: !_aEuAide, avecAide: _aEuAide);
     await Future<void>.delayed(const Duration(milliseconds: 1400));
     if (!mounted) return;
@@ -198,7 +208,8 @@ class _EcranBoiteASonsState extends State<EcranBoiteASons>
       _boite.reinitialiser();
       _deposes.clear();
     });
-    await widget.voix.dire('Regarde, je te montre.');
+    await widget.voix.dire(widget.registre
+        .resoudre('consigne-montre', repli: 'Regarde, je te montre.'));
     final syllabes = sequenceModelling(item.mot, item.decoupage);
     for (int k = 0; k < syllabes.length; k++) {
       if (!mounted) return;
@@ -212,7 +223,8 @@ class _EcranBoiteASonsState extends State<EcranBoiteASons>
       await Future<void>.delayed(const Duration(milliseconds: 280));
     }
     if (!mounted) return;
-    await widget.voix.dire('À toi ! Un jeton pour chaque bout.');
+    await widget.voix.dire(widget.registre.resoudre('consigne-a-toi-jeton',
+        repli: 'À toi ! Un jeton pour chaque bout.'));
     if (!mounted) return;
     // On re-remplit la rangée : l'enfant refait tout seul.
     setState(() {
