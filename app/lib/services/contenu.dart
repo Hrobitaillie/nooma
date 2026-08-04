@@ -63,6 +63,15 @@ class ServiceContenu {
     return Graphe.depuisJson(grapheJson, mecaniquesJson);
   }
 
+  /// Version du contenu pédagogique (champ `version` du graphe), tracée dans chaque
+  /// `learning_event` pour la reproductibilité (doc 06 §3). Repli « 0 » si absent.
+  Future<String> versionContenu() async {
+    final String grapheStr = await rootBundle.loadString(CheminsContenu.graphe);
+    final Map<String, dynamic> grapheJson =
+        jsonDecode(grapheStr) as Map<String, dynamic>;
+    return '${grapheJson['version'] ?? 0}';
+  }
+
   /// Charge la banque de syllabes depuis le CSV (séparateur « ; »).
   Future<List<ItemSyllabes>> chargerSyllabes() async {
     final String csv = await rootBundle.loadString(CheminsContenu.syllabes);

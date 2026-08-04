@@ -3,10 +3,12 @@
 // On surcharge les providers async (graphe, syllabes) pour éviter la dépendance aux assets :
 // un graphe minimal suffit à faire démarrer le Directeur et donc la carte.
 
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plouma/directeur/graphe.dart';
+import 'package:plouma/donnees/base.dart';
 import 'package:plouma/etat/session.dart';
 import 'package:plouma/ui/ecran_carte.dart';
 
@@ -44,6 +46,8 @@ void main() {
         overrides: [
           grapheProvider.overrideWith((ref) async => _grapheTest()),
           syllabesProvider.overrideWith((ref) async => const []),
+          // Base en mémoire : pas de fichier / path_provider dans un test.
+          baseLocaleProvider.overrideWithValue(BaseLocale(NativeDatabase.memory())),
         ],
         child: const MaterialApp(home: EcranCarte()),
       ),

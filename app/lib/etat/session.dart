@@ -1,26 +1,28 @@
-// État de la boucle de session (Riverpod) — le Directeur vit ici, en mémoire.
+// État de la boucle de session (Riverpod) — le Directeur vit ici, RECONSTRUIT depuis la base.
 //
 // Responsabilités :
-//   - héberger le Directeur (profil de l'enfant) dans un provider, pour toute la durée de vie
-//     de l'app (persistance Drift = TODO, hors périmètre de cette tranche — voir plus bas) ;
+//   - héberger le Directeur (profil de l'enfant) dans un provider, RECONSTRUIT au démarrage
+//     par rejeu du log (donnees/persistance.dart) → survit au redémarrage (macOS/desktop ET web) ;
 //   - exposer les données de la carte (nœuds joués, nœud actif, nœuds à venir) ;
 //   - orchestrer une session : tap sur le nœud actif → generateSession → enchaînement des
-//     NiveauSpec → recevoirSession → croissance du chemin.
+//     NiveauSpec → recevoirSession → PERSISTANCE (event log + projection) → croissance du chemin.
 //
-// jour = jours écoulés depuis une date d'ancrage (stockée en mémoire, ici « maintenant » au
-// démarrage). session = compteur incrémenté à chaque session terminée. premiereDeLaSemaine
-// est dérivé du compteur (approximation : ~1 session/jour → toutes les 7 sessions).
+// jour logique = jours calendaires écoulés depuis l'ancre (date du 1er événement persisté).
+// session = compteur persisté (numéro de la prochaine session = nb de sessions déjà jouées).
+// premiereDeLaSemaine = première session d'une semaine calendaire depuis l'ancre.
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../directeur/directeur.dart';
 import '../directeur/graphe.dart';
+import '../donnees/base.dart';
+import '../donnees/persistance.dart';
 import '../services/contenu.dart';
 import '../services/voix.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Providers de dépendances (contenu, voix). Chargés une fois.
+// Providers de dépendances (contenu, voix, base). Chargés une fois.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Le service de contenu (assets pédagogiques). Stateless, réutilisable.
@@ -33,6 +35,15 @@ final serviceVoixProvider = Provider<ServiceVoix>((ref) {
   return v;
 });
 
+/// La base locale Drift (event log + projection). Une par app, fermée à la disposition.
+///
+/// Surchargeable dans les tests (NativeDatabase.memory()) via `overrideWithValue`.
+final baseLocaleProvider = Provider<BaseLocale>((ref) {
+  final base = BaseLocale();
+  ref.onDispose(base.close);
+  return base;
+});
+
 /// Le graphe de compétences, chargé depuis les assets (async).
 final grapheProvider = FutureProvider<Graphe>((ref) async {
   return ref.watch(serviceContenuProvider).chargerGraphe();
@@ -41,6 +52,29 @@ final grapheProvider = FutureProvider<Graphe>((ref) async {
 /// La banque de syllabes, chargée depuis les assets (async).
 final syllabesProvider = FutureProvider<List<ItemSyllabes>>((ref) async {
   return ref.watch(serviceContenuProvider).chargerSyllabes();
+});
+
+/// Graine du profil (dev : fixe → parcours reproductible pour la QA, doc 04 §8).
+/// En prod, dérivée d'un identifiant de profil local.
+const String graineProfil = 'plouma-dev-profil-1';
+
+/// La couche de persistance (dépend du graphe + de la base).
+final persistanceProvider = FutureProvider<Persistance>((ref) async {
+  final graphe = await ref.watch(grapheProvider.future);
+  final base = ref.watch(baseLocaleProvider);
+  // Version du contenu (traçabilité) ; repli « 0 » si les assets ne sont pas chargés (tests).
+  String version = '0';
+  try {
+    version = await ref.watch(serviceContenuProvider).versionContenu();
+  } catch (_) {
+    // rootBundle indisponible (env. de test sans assets) : on garde le repli.
+  }
+  return Persistance(
+    base: base,
+    graphe: graphe,
+    graine: graineProfil,
+    versionContenu: version,
+  );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -124,34 +158,28 @@ const List<TypeNiveau> _apercuAVenir = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Le Directeur, hébergé en mémoire pour la durée de vie de l'app.
+// Le Directeur, RECONSTRUIT depuis la base au démarrage (rejeu du log).
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Compteur de session et date d'ancrage, pour dériver (jour, session).
-class _Calendrier {
-  final DateTime ancre;
-  int session;
+/// État de session reconstruit : Directeur + numéro de prochaine session.
+class EtatDirecteur {
+  final Directeur directeur;
+  final int prochaineSession;
 
-  _Calendrier(this.ancre, this.session);
-
-  /// Jours écoulés depuis l'ancre.
-  int get jour => DateTime.now().difference(ancre).inDays;
-
-  /// Approximation : ~1 session/jour ⇒ la 1re session de chaque bloc de 7 est « de semaine ».
-  bool get premiereDeLaSemaine => session % 7 == 0;
+  const EtatDirecteur({required this.directeur, required this.prochaineSession});
 }
 
-/// Provider du Directeur (profil de l'enfant). Vit tant que l'app tourne.
+/// Provider du Directeur (profil de l'enfant), RECONSTRUIT depuis la base par rejeu (doc 06 §3).
 ///
-/// TODO(persistance) : brancher Drift (event log append-only + projection skill_progress,
-/// doc 06 §3) pour survivre au redémarrage. HORS PÉRIMÈTRE de cette tranche : Drift sur web
-/// exige le setup WASM (sqlite3.wasm), non traité ici. En attendant, profil neuf à chaque
-/// lancement (le Directeur démarre au premier module / biome Prairie).
-final directeurProvider = FutureProvider<Directeur>((ref) async {
-  final graphe = await ref.watch(grapheProvider.future);
-  // Graine fixe en dev : deux lancements ⇒ même première session (reproductible pour la QA,
-  // doc 04 §8). En prod, dérivée d'un identifiant de profil local.
-  return Directeur(graphe, 'plouma-dev-profil-1');
+/// Au démarrage, on rejoue le log persisté : l'état reconstruit est identique à un parcours
+/// live (approche « replay », voir donnees/persistance.dart). Persiste sur macOS/desktop ET web.
+final directeurProvider = FutureProvider<EtatDirecteur>((ref) async {
+  final persistance = await ref.watch(persistanceProvider.future);
+  final reconstruit = await persistance.chargerOuInitialiser();
+  return EtatDirecteur(
+    directeur: reconstruit.directeur,
+    prochaineSession: reconstruit.prochainNumeroSession,
+  );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -160,16 +188,42 @@ final directeurProvider = FutureProvider<Directeur>((ref) async {
 
 /// Pilote la carte et la boucle de session. Découplé de l'UI (testable).
 ///
-/// [directeur] peut être `null` tant que le contenu charge : l'état reste alors `null` et
-/// aucune action n'a d'effet (l'UI affiche un indicateur de chargement).
+/// [etat] peut être `null` tant que le contenu / la reconstruction chargent : l'état reste
+/// alors `null` et aucune action n'a d'effet (l'UI affiche un indicateur de chargement).
 class CarteNotifier extends StateNotifier<EtatCarte?> {
   final Directeur? directeur;
-  final _Calendrier _cal;
+  final Persistance? persistance;
+  int _session;
 
-  CarteNotifier(this.directeur)
-      : _cal = _Calendrier(DateTime.now(), 0),
+  // Contexte calendaire courant (jour logique + première de la semaine), PRÉCALCULÉ de façon
+  // asynchrone pour garder l'API du notifier synchrone (l'UI n'est pas modifiée). Rafraîchi
+  // au démarrage et après chaque session. En attendant le premier calcul : (jour 0, 1re).
+  int _jour = 0;
+  bool _premiere = true;
+
+  // File d'attente des écritures (append-only + projection) : sérialisées, non bloquantes
+  // pour l'UI. L'état en mémoire (Directeur) reste la source de vérité pendant la session.
+  Future<void> _fileEcriture = Future<void>.value();
+
+  CarteNotifier(this.directeur, this.persistance, int prochaineSession)
+      : _session = prochaineSession,
         super(null) {
-    if (directeur != null) state = _construireCarte(nbJoues: 0);
+    if (directeur != null) {
+      state = _construireCarte(nbJoues: _session);
+      _rafraichirContexte();
+    }
+  }
+
+  /// Recalcule (jour, premiereDeLaSemaine) depuis la base, sans bloquer l'UI.
+  void _rafraichirContexte() {
+    final p = persistance;
+    if (p == null) return;
+    final int maintenant = DateTime.now().millisecondsSinceEpoch;
+    // ignore: discarded_futures
+    p.contexteProchaineSession(maintenant).then((ctx) {
+      _jour = ctx.jour;
+      _premiere = ctx.premiereDeLaSemaine;
+    });
   }
 
   /// Construit la carte : [nbJoues] nœuds pleins (bas), 1 actif, puis les nœuds à venir.
@@ -205,11 +259,7 @@ class CarteNotifier extends StateNotifier<EtatCarte?> {
   List<NiveauSpec> genererProchaineSession() {
     final d = directeur;
     if (d == null) return const [];
-    return d.generateSession(
-      _cal.jour,
-      _cal.session,
-      _cal.premiereDeLaSemaine,
-    );
+    return d.generateSession(_jour, _session, _premiere);
   }
 
   /// Marque le début d'une session (l'UI ouvre l'écran de jeu).
@@ -219,35 +269,65 @@ class CarteNotifier extends StateNotifier<EtatCarte?> {
     state = s.copyWith(sessionEnCours: true);
   }
 
-  /// Ingère les résultats, fait avancer le Directeur, fait pousser le chemin.
+  /// Ingère les résultats, fait avancer le Directeur, PERSISTE (log + projection), pousse le chemin.
   ///
-  /// Retourne les événements produits par le Directeur (biome franchi, signal parent…) pour
-  /// que l'UI les remonte (SnackBar/log dans cette tranche).
+  /// Synchrone (l'UI n'est pas modifiée) : l'écriture en base est SÉRIALISÉE et non bloquante
+  /// (file `_fileEcriture`). L'état en mémoire du Directeur est déjà avancé — la base ne fait
+  /// que le refléter durablement. Retourne les événements produits par le Directeur.
   List<EvenementDirecteur> terminerSession(List<ResultatNiveau> resultats) {
     final d = directeur;
     if (d == null) return const [];
-    final avant = d.evenements.length;
-    d.recevoirSession(resultats, _cal.jour, _cal.session);
-    _cal.session++;
 
-    final s = state;
-    final int nbJoues = s == null
-        ? 1
-        : s.noeuds.where((n) => n.statut == StatutNoeud.joue).length + 1;
+    final int maintenant = DateTime.now().millisecondsSinceEpoch;
+    final int jour = _jour;
+    final bool premiere = _premiere;
+    final int numero = _session;
+
+    final avant = d.evenements.length;
+    d.recevoirSession(resultats, jour, numero);
+    _session++;
+
+    // Persistance atomique (log append-only + ligne session + projection), en file d'attente.
+    final p = persistance;
+    if (p != null) {
+      _fileEcriture = _fileEcriture.then((_) => p.enregistrerSession(
+            numeroSession: numero,
+            jourLogique: jour,
+            premiereDeLaSemaine: premiere,
+            maintenantMs: maintenant,
+            specsEtResultats: resultats,
+            directeur: d,
+          ));
+      _rafraichirContexte();
+    }
 
     // Le chemin pousse : un nœud joué de plus, nouveau nœud actif, aperçu régénéré.
-    state = _construireCarte(nbJoues: nbJoues);
+    state = _construireCarte(nbJoues: _session);
 
     return d.evenements.sublist(avant);
   }
+
+  /// Attend que toutes les écritures en file soient terminées (tests, extinction propre).
+  Future<void> ecrituresTerminees() => _fileEcriture;
+
+  /// Reset dev (kDebugMode) : vide la base. L'appelant recharge ensuite les providers.
+  Future<void> reinitialiser() async {
+    await _fileEcriture; // ne pas courir contre une écriture en cours
+    await persistance?.reset();
+  }
 }
 
-/// Provider du notifier de carte (dépend du Directeur async).
+/// Provider du notifier de carte (dépend du Directeur async reconstruit + de la persistance).
 ///
-/// Tant que le Directeur charge, le notifier a un Directeur `null` et l'état reste `null`
+/// Tant que la reconstruction charge, le notifier a un Directeur `null` et l'état reste `null`
 /// (l'UI affiche un indicateur de chargement).
 final carteProvider =
     StateNotifierProvider<CarteNotifier, EtatCarte?>((ref) {
-  final directeur = ref.watch(directeurProvider).valueOrNull;
-  return CarteNotifier(directeur);
+  final etat = ref.watch(directeurProvider).valueOrNull;
+  final persistance = ref.watch(persistanceProvider).valueOrNull;
+  return CarteNotifier(
+    etat?.directeur,
+    persistance,
+    etat?.prochaineSession ?? 0,
+  );
 });
