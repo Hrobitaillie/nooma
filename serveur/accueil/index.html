@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Atelier — tableau de bord</title>
+<style>
+  :root { --bg:#faf7f2; --carte:#fff; --encre:#2b2620; --doux:#8a8177; --accent:#e8b23a; --trait:#e8e2d8; --vert:#2f9e63; --violet:#7b6bd0; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:16px/1.55 system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--encre); min-height:100vh; }
+  main { max-width:880px; margin:0 auto; padding:48px 24px 64px; }
+  header h1 { margin:0; font-size:30px; display:flex; align-items:center; gap:12px; }
+  header p { color:var(--doux); margin:6px 0 0; }
+  .etoile { width:40px; height:40px; }
+  .grille { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; margin-top:32px; }
+  a.tuile { display:block; background:var(--carte); border:1px solid var(--trait); border-radius:16px; padding:20px 22px; text-decoration:none; color:var(--encre); box-shadow:0 2px 8px #0000000a; transition:transform .12s, box-shadow .12s; }
+  a.tuile:hover { transform:translateY(-2px); box-shadow:0 8px 20px #00000014; }
+  .tuile .ico { font-size:26px; }
+  .tuile h2 { margin:8px 0 4px; font-size:17px; }
+  .tuile p { margin:0; color:var(--doux); font-size:13.5px; }
+  .tuile.avenir { opacity:.55; pointer-events:none; }
+  .badge { display:inline-block; font-size:11px; font-weight:700; color:var(--violet); border:1px solid var(--violet); border-radius:99px; padding:1px 8px; margin-left:6px; vertical-align:2px; }
+  footer { margin-top:40px; color:var(--doux); font-size:12.5px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1><svg class="etoile" viewBox="0 0 40 40"><defs><radialGradient id="g" cx="40%" cy="35%"><stop offset="0%" stop-color="#f6d67a"/><stop offset="100%" stop-color="#e8b23a"/></radialGradient></defs><path d="M20 3 Q22.5 12 29 13.5 Q36 15 31.5 21 Q27.5 26 30 33 Q31.5 39 24.5 35.5 Q20 33.5 15.5 35.5 Q8.5 39 10 33 Q12.5 26 8.5 21 Q4 15 11 13.5 Q17.5 12 20 3 Z" fill="url(#g)"/><circle cx="16.5" cy="19" r="1.8" fill="#2b2620"/><circle cx="23.5" cy="19" r="1.8" fill="#2b2620"/><circle cx="14" cy="23" r="1.6" fill="#f2a9a9" opacity=".8"/><circle cx="26" cy="23" r="1.6" fill="#f2a9a9" opacity=".8"/></svg>
+      L'atelier</h1>
+    <p>Le tableau de bord du projet — documentation, contenu pédagogique et outils.</p>
+  </header>
+
+  <div class="grille">
+    <a class="tuile" href="/cadrage/viewer/">
+      <div class="ico">📚</div>
+      <h2>Documentation projet</h2>
+      <p>Les docs 1-18 et le catalogue de fonctionnalités — avec commentaires en marge.</p>
+    </a>
+    <a class="tuile" href="/contenu/banques/admin.html">
+      <div class="ico">✅</div>
+      <h2>Relecture des mots</h2>
+      <p>Le mode correction : un mot à la fois, valider ou corriger. C'est ici que ça se passe !</p>
+    </a>
+    <a class="tuile" href="/contenu/banques/">
+      <div class="ico">🍎</div>
+      <h2>Banque de mots</h2>
+      <p>Les 100 mots du module Syllabes en visualisation (filtres, syllabes colorées).</p>
+    </a>
+    <a class="tuile" href="/cadrage/simulateur/dashboard/">
+      <div class="ico">📊</div>
+      <h2>Simulateur du Directeur</h2>
+      <p>Les enfants virtuels contre le moteur adaptatif — verdicts et courbes.</p>
+    </a>
+    <a class="tuile avenir" href="#">
+      <div class="ico">🎙️</div>
+      <h2>Studio d'enregistrement <span class="badge">bientôt</span></h2>
+      <p>Enregistrer les voix de l'app, ligne par ligne, avec file d'attente et prises multiples.</p>
+    </a>
+    <a class="tuile avenir" href="#">
+      <div class="ico">🗂️</div>
+      <h2>Lignes de texte <span class="badge">bientôt</span></h2>
+      <p>L'inventaire de tout ce que l'app prononce, avec l'état audio de chaque ligne.</p>
+    </a>
+  </div>
+
+  <footer>Espace privé · les modifications sont enregistrées et versionnées automatiquement.</footer>
+</main>
+</body>
+</html>

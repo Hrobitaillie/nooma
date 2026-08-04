@@ -8,14 +8,14 @@ After=network.target
 
 [Service]
 Type=simple
-User=plouma
-Group=plouma
-WorkingDirectory=/opt/plouma-atelier/repo
+User=hugo
+Group=psacln
+WorkingDirectory=/var/www/vhosts/justhugo.fr/plouma.justhugo.fr/repo
 ExecStart=/usr/bin/node serveur/serveur.mjs
 Environment=PORT=8090
 Environment=HOTE=127.0.0.1
 Environment=GIT_AUTO=1
-Environment=DATA_DIR=/opt/plouma-atelier/data
+Environment=DATA_DIR=/var/www/vhosts/justhugo.fr/plouma.justhugo.fr/data
 Restart=on-failure
 RestartSec=3
 
@@ -23,7 +23,7 @@ RestartSec=3
 NoNewPrivileges=yes
 PrivateTmp=yes
 ProtectSystem=full
-ReadWritePaths=/opt/plouma-atelier
+ReadWritePaths=/var/www/vhosts/justhugo.fr/plouma.justhugo.fr
 
 [Install]
 WantedBy=multi-user.target

@@ -218,8 +218,14 @@ const server = createServer(async (req, res) => {
     return;
   }
   if (path === '/') {
-    res.writeHead(302, { Location: '/cadrage/viewer/' });
-    res.end();
+    // La racine = le tableau de bord de l'atelier (hub vers doc, admin, outils).
+    try {
+      const accueil = await readFile(join(RACINE, 'serveur', 'accueil', 'index.html'));
+      send(res, 200, accueil, MIME['.html']);
+    } catch {
+      res.writeHead(302, { Location: '/cadrage/viewer/' });
+      res.end();
+    }
     return;
   }
   if (path === '/robots.txt') {
