@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "note": "Registre des lignes de texte que l'app prononce (doc 18 §4). Le TEXTE et sa métadonnée éditoriale vivent ici ; l'état AUDIO est dérivé des prises côté studio (data/studio/), jamais versionné ici. Extraction des textes en dur du Dart (règle inviolable n°8 : contenu = données). Les MOTS des banques ne sont PAS dupliqués ici : voir « sourcesDerivees ».",
+  "sourcesDerivees": {
+    "note": "Sources dont chaque entrée engendre une ligne implicite, agrégée par le serveur/studio (pas de saisie manuelle, pas de duplication dans ce fichier).",
+    "regles": [
+      {"source": "contenu/banques/*.csv", "convention": "chaque mot → une ligne implicite id « mot-<mot> », type « mot »", "statut": "actif"},
+      {"source": "contenu/graphe-competences.json", "convention": "chaque graphème introduit → une ligne implicite id « phoneme-<graphème> », type « phoneme », priorité 1 (lot critique doc 05 §5)", "statut": "prevu"}
+    ]
+  },
+  "types": ["consigne", "feedback", "phoneme", "babillage", "mot", "interpellation", "histoire"],
+  "statuts": ["actif", "prevu"],
+  "lignes": [
+    {
+      "id": "consigne-ecoute-mot",
+      "texte": "Écoute bien : {mot} !",
+      "type": "consigne",
+      "contexte": "tape-la-syllabe / boite-a-sons — lancement de l'écoute du mot",
+      "ecran": "tape-la-syllabe",
+      "indication": "ton complice, débit lent, on met le mot en valeur",
+      "variables": ["mot"],
+      "priorite": 1,
+      "statut": "actif"
+    },
+    {
+      "id": "consigne-repeter-mot",
+      "texte": "{mot}.",
+      "type": "consigne",
+      "contexte": "boite-a-sons — répétition du mot en difficulté 0-1",
+      "ecran": "boite-a-sons",
+      "indication": "simple répétition posée du mot",
+      "variables": ["mot"],
+      "priorite": 2,
+      "statut": "actif"
+    },
+    {
+      "id": "consigne-ecoute-attente",
+      "texte": "Écoute bien…",
+      "type": "consigne",
+      "contexte": "tape-la-syllabe / boite-a-sons — libellé de la phase d'écoute (affiché)",
+      "ecran": "tape-la-syllabe",
+      "indication": "invitation douce à tendre l'oreille",
+      "variables": [],
+      "priorite": 2,
+      "statut": "actif"
+    },
+    {
+      "id": "consigne-tape-syllabes",
+      "texte": "Tape les syllabes !",
+      "type": "consigne",
+      "contexte": "tape-la-syllabe — invitation à taper le rythme",
+      "ecran": "tape-la-syllabe",
+      "indication": "encourageant, on lance l'action",
+      "variables": [],
+      "priorite": 1,
+      "statut": "actif"
+    },
+    {
+      "id": "consigne-jeton-par-bout",
+      "texte": "Mets un jeton pour chaque bout du mot !",
+      "type": "consigne",
+      "contexte": "boite-a-sons — invitation à déposer un jeton par syllabe",
+      "ecran": "boite-a-sons",
+      "indication": "encourageant, on lance l'action",
+      "variables": [],
+      "priorite": 1,
+      "statut": "actif"
+    },
+    {
+      "id": "consigne-saisie-jeton-court",
+      "texte": "Un jeton pour chaque bout du mot !",
+      "type": "consigne",
+      "contexte": "boite-a-sons — libellé de la phase de saisie (affiché)",
+      "ecran": "boite-a-sons",
+      "indication": "rappel court pendant la saisie",
+      "variables": [],
+      "priorite": 3,
+      "statut": "actif"
+    },
+    {
+      "id": "consigne-montre",
+      "texte": "Regarde, je te montre.",
+      "type": "consigne",
+      "contexte": "tape-la-syllabe / boite-a-sons — entrée en modelling (jamais de négatif)",
+      "ecran": "tape-la-syllabe",
+      "indication": "bienveillant, rassurant, on aide sans juger",
+      "variables": [],
+      "priorite": 1,
+      "statut": "actif"
+    },
+    {
+      "id": "consigne-a-toi-tape",
+      "texte": "À toi ! Tape les syllabes !",
+      "type": "consigne",
+      "contexte": "tape-la-syllabe — fin du modelling, l'enfant refait avec aide",
+      "ecran": "tape-la-syllabe",
+      "indication": "on repasse la main, ton complice",
+      "variables": [],
+      "priorite": 1,
+      "statut": "actif"
+    },
+    {
+      "id": "consigne-a-toi-jeton",
+      "texte": "À toi ! Un jeton pour chaque bout.",
+      "type": "consigne",
+      "contexte": "boite-a-sons — fin du modelling, l'enfant refait avec aide",
+      "ecran": "boite-a-sons",
+      "indication": "on repasse la main, ton complice",
+      "variables": [],
+      "priorite": 1,
+      "statut": "actif"
+    },
+    {
+      "id": "feedback-bravo-ecoute-mot",
+      "texte": "Bravo, tu as bien écouté le mot !",
+      "type": "feedback",
+      "contexte": "tape-la-syllabe — réussite : éloge du PROCESSUS, jamais de la personne (doc 03 §2.4)",
+      "ecran": "tape-la-syllabe",
+      "indication": "chaleureux, félicite l'effort d'écoute",
+      "variables": [],
+      "priorite": 1,
+      "statut": "actif"
+    },
+    {
+      "id": "feedback-bravo-compte-syllabes",
+      "texte": "Bravo, tu as bien compté les syllabes !",
+      "type": "feedback",
+      "contexte": "boite-a-sons — réussite : éloge du PROCESSUS (doc 03 §2.4)",
+      "ecran": "boite-a-sons",
+      "indication": "chaleureux, félicite l'effort de comptage",
+      "variables": [],
+      "priorite": 1,
+      "statut": "actif"
+    },
+    {
+      "id": "feedback-cadeau",
+      "texte": "Oh, un cadeau !",
+      "type": "feedback",
+      "contexte": "ecran-cadeau — surprise positive de 3 s (doc 04 §7)",
+      "ecran": "ecran-cadeau",
+      "indication": "joyeux, émerveillé, jamais annoncé à l'avance",
+      "variables": [],
+      "priorite": 2,
+      "statut": "actif"
+    },
+    {
+      "id": "consigne-dev-combien-syllabes",
+      "texte": "Combien de syllabes dans : {mot} ?",
+      "type": "consigne",
+      "contexte": "fallback-dev [DEV] — question de comptage (placeholder, pas une vraie mécanique produit)",
+      "ecran": "fallback-dev",
+      "indication": "DEV uniquement — ne part jamais en release",
+      "variables": ["mot"],
+      "priorite": 3,
+      "statut": "actif"
+    },
+    {
+      "id": "feedback-dev-oui-bien-ecoute",
+      "texte": "Oui, bien écouté !",
+      "type": "feedback",
+      "contexte": "fallback-dev [DEV] — bonne réponse",
+      "ecran": "fallback-dev",
+      "indication": "DEV uniquement — ne part jamais en release",
+      "variables": [],
+      "priorite": 3,
+      "statut": "actif"
+    },
+    {
+      "id": "consigne-dev-ecoute-encore",
+      "texte": "Écoute encore : {syllabes}.",
+      "type": "consigne",
+      "contexte": "fallback-dev [DEV] — reprise syllabe par syllabe après erreur",
+      "ecran": "fallback-dev",
+      "indication": "DEV uniquement — ne part jamais en release ; {syllabes} = les syllabes séparées par des virgules",
+      "variables": ["syllabes"],
+      "priorite": 3,
+      "statut": "actif"
+    },
+    {
+      "id": "rituel-accueil-reveil",
+      "texte": "Coucou ! Tu es là ! On y va ensemble ?",
+      "type": "consigne",
+      "contexte": "accueil de session — Plouma fait la fête à l'enfant, petit rituel de réveil (doc 04 §6.2)",
+      "ecran": "carte",
+      "indication": "chaleureux, joyeux, l'attachement (levier de rétention n°1) ; à venir",
+      "variables": [],
+      "priorite": 2,
+      "statut": "prevu"
+    },
+    {
+      "id": "rituel-cloture-dodo",
+      "texte": "Je baille… Je vais faire un petit dodo. À demain !",
+      "type": "consigne",
+      "contexte": "clôture de session — c'est Plouma qui se fatigue et se couche, jamais l'enfant qui est coupé (doc 04 §6.2, règle inviolable n°5)",
+      "ecran": "carte",
+      "indication": "doux, jamais suppliant ni culpabilisant ; fin naturelle et joyeuse ; à venir",
+      "variables": [],
+      "priorite": 2,
+      "statut": "prevu"
+    }
+  ]
+}

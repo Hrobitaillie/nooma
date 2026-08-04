@@ -145,6 +145,22 @@ async function sectionContenu() {
   return out;
 }
 
+/** Section « lignes » : registre voix (doc 18 §4) — total, par type, actif vs prévu. */
+async function sectionLignes() {
+  const data = await lireJson('contenu/voix/lignes.json');
+  const liste = data && Array.isArray(data.lignes) ? data.lignes : [];
+  const parType = {};
+  let actifs = 0, prevus = 0;
+  for (const l of liste) {
+    if (!l || typeof l !== 'object') continue;
+    const t = l.type || 'inconnu';
+    parType[t] = (parType[t] || 0) + 1;
+    if ((l.statut || 'actif') === 'prevu') prevus++;
+    else actifs++;
+  }
+  return { present: !!data, total: liste.length, parType, actifs, prevus };
+}
+
 /** Section « commentaires » : total / résolus / non résolus. */
 async function sectionCommentaires() {
   const data = await lireJson('cadrage/viewer/comments.json');
@@ -264,15 +280,16 @@ async function tableauDeBord() {
   const enrober = async (fn, fallback) => {
     try { return await fn(); } catch { return fallback; }
   };
-  const [contenu, commentaires, simulateur, suivi, activite, serveur] = await Promise.all([
+  const [contenu, lignes, commentaires, simulateur, suivi, activite, serveur] = await Promise.all([
     enrober(sectionContenu, { banques: [] }),
+    enrober(sectionLignes, { present: false, total: 0, parType: {}, actifs: 0, prevus: 0 }),
     enrober(sectionCommentaires, { total: 0, resolus: 0, nonResolus: 0 }),
     enrober(sectionSimulateur, { present: false, verdicts: [], meta: null }),
     enrober(sectionSuivi, { statuts: {}, total: 0, note: 'erreur' }),
     enrober(sectionActivite, { entrees: [] }),
     enrober(sectionServeur, { uptimeSecondes: Math.round(process.uptime()), node: process.version }),
   ]);
-  return { genereLe: new Date().toISOString(), contenu, commentaires, simulateur, suivi, activite, serveur };
+  return { genereLe: new Date().toISOString(), contenu, lignes, commentaires, simulateur, suivi, activite, serveur };
 }
 
 // ───────────────────────────── Aides ─────────────────────────────────────────

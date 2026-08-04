@@ -40,11 +40,62 @@ class ItemSyllabes {
   });
 }
 
+/// Une ligne de texte prononcée par l'app (registre `contenu/voix/lignes.json`, doc 18 §4).
+///
+/// Le contenu est DONNÉE (règle inviolable n°8) : les textes ne vivent plus en dur dans le
+/// code des mécaniques mais dans le registre, référencés par [id] stable. Le texte peut
+/// contenir des variables `{x}` interpolées à l'usage (ex. `{mot}`).
+class LigneVoix {
+  final String id;
+  final String texte;
+  final String type;
+  final List<String> variables;
+
+  const LigneVoix({
+    required this.id,
+    required this.texte,
+    required this.type,
+    required this.variables,
+  });
+}
+
+/// Registre des lignes de texte, indexé par id, avec repli DUR si l'id manque.
+///
+/// L'app ne doit JAMAIS planter sur un JSON incomplet (doc 18 §4) : chaque appel [resoudre]
+/// prend un texte de repli (l'ancien texte en dur) utilisé si l'id est absent du registre.
+class RegistreVoix {
+  final Map<String, LigneVoix> _parId;
+
+  const RegistreVoix(this._parId);
+
+  /// Registre vide : tout [resoudre] retombe sur son repli (utilisé par défaut / en test).
+  const RegistreVoix.vide() : _parId = const {};
+
+  /// Résout le texte de la ligne [id], en interpolant les [variables] `{clé}` fournies.
+  ///
+  /// Si l'id est absent du registre, on retourne [repli] (interpolé lui aussi) — l'ancien
+  /// texte en dur reste le filet de sécurité, l'app ne casse jamais.
+  String resoudre(String id, {required String repli, Map<String, String> variables = const {}}) {
+    final ligne = _parId[id];
+    return _interpoler(ligne?.texte ?? repli, variables);
+  }
+
+  static String _interpoler(String modele, Map<String, String> variables) {
+    if (variables.isEmpty) return modele;
+    var out = modele;
+    variables.forEach((cle, valeur) {
+      out = out.replaceAll('{$cle}', valeur);
+    });
+    return out;
+  }
+}
+
 /// Emplacement des assets de contenu (copiés par tool/sync_contenu.sh).
 abstract final class CheminsContenu {
   static const String graphe = 'assets/contenu/graphe-competences.json';
   static const String mecaniques = 'assets/contenu/mecaniques.json';
   static const String syllabes = 'assets/contenu/banques/syllabes.csv';
+  static const String lignes = 'assets/contenu/voix/lignes.json';
 }
 
 /// Chargeur du contenu pédagogique depuis les assets Flutter.
@@ -70,6 +121,45 @@ class ServiceContenu {
     final Map<String, dynamic> grapheJson =
         jsonDecode(grapheStr) as Map<String, dynamic>;
     return '${grapheJson['version'] ?? 0}';
+  }
+
+  /// Charge le registre des lignes de texte depuis les assets (`voix/lignes.json`).
+  ///
+  /// Tolérant : un fichier absent ou illisible donne un registre VIDE (l'app retombe alors
+  /// sur les replis durs des mécaniques). Le parsing est isolé dans [parserLignes] (pur).
+  Future<RegistreVoix> chargerLignes() async {
+    try {
+      final String brut = await rootBundle.loadString(CheminsContenu.lignes);
+      return parserLignes(brut);
+    } catch (_) {
+      // Assets absents (tests) ou JSON illisible : registre vide → replis durs.
+      return const RegistreVoix.vide();
+    }
+  }
+
+  /// Parse le JSON du registre des lignes. Fonction PURE et testable.
+  ///
+  /// Ignore silencieusement les entrées malformées (id vide, texte absent) : le lint
+  /// (`contenu/lint.mjs`) est l'autorité de validation, l'app reste indulgente.
+  static RegistreVoix parserLignes(String json) {
+    final Map<String, dynamic> data = jsonDecode(json) as Map<String, dynamic>;
+    final List<dynamic> liste = (data['lignes'] as List<dynamic>?) ?? const [];
+    final Map<String, LigneVoix> parId = {};
+    for (final e in liste) {
+      if (e is! Map) continue;
+      final id = '${e['id'] ?? ''}'.trim();
+      final texte = '${e['texte'] ?? ''}';
+      if (id.isEmpty || texte.isEmpty) continue;
+      parId[id] = LigneVoix(
+        id: id,
+        texte: texte,
+        type: '${e['type'] ?? ''}',
+        variables: [
+          for (final v in (e['variables'] as List<dynamic>? ?? const [])) '$v',
+        ],
+      );
+    }
+    return RegistreVoix(parId);
   }
 
   /// Charge la banque de syllabes depuis le CSV (séparateur « ; »).
