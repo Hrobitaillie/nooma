@@ -28,6 +28,7 @@
 | 12 | [roadmap.md](12-roadmap.md) | Phases de production, jalons, risques |
 | 13 | [decisions.md](13-decisions.md) | Journal des décisions + questions ouvertes à trancher |
 | 14 | [production-3d-blender.md](14-production-3d-blender.md) | Pipeline 3D complet : Clay Doh/Cycles, studio, modelage, rendu, automatisation → app |
+| 15 | [production-cartes.md](15-production-cartes.md) | Cartes de biome de zéro à jouable : kit d'assets (dalles, décals, props, eau, chemin), atlas, JSON biome/motifs, cartographe Flame |
 | — | [ressources-youtube.md](ressources-youtube.md) | Mots-clés YouTube pour apprendre la pipeline Blender → app |
 
 ## Rappel des fondamentaux actés ✅
