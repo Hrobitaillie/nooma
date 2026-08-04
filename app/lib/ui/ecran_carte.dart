@@ -1,19 +1,29 @@
-// Carte Prairie — le chemin vertical du biome, parcouru de bas en haut (doc 04 §6).
+// Carte Prairie — le chemin de pâte à modeler qui serpente dans la prairie, parcouru de bas
+// en haut (doc 04 §6.1). Refonte visuelle « pâte à modeler » (doc 05, placeholder assumé mais
+// désirable) : tout est dessiné en Flutter pur (CustomPaint/dégradés/ombres), AUCUNE image.
 //
-// Style « pâte à modeler » dessiné en Flutter (placeholder assumé, doc 05) : fond crème,
-// verts tendres, ombres douces. Nœuds déjà joués (pastilles pleines, inactifs pour l'instant),
-// nœud suivant actif (plus gros, pulsation), 2-3 nœuds à venir estompés dont le TYPE est
-// lisible (normal ● / cadeau 🎁 / rêve 🌙). Quand une session se termine, le chemin pousse
-// (nouveaux nœuds en fondu+scale, scroll doux vers le haut).
+// Couches (du fond vers l'avant), avec léger parallax au scroll :
+//   1. le sol de la prairie (blobs de verts tendres) ;
+//   2. la végétation posée (buissons, fleurs, champignons clay) + papillons animés ;
+//   3. le chemin-boudin serpentant, ses nœuds posés dessus, l'en-tête flottant.
 //
-// En-tête discret : nom du biome + étoile Plouma placeholder (doré à 5 pointes).
+// Nœuds : joués = pastilles enfoncées ; actif = gros champignon bombé qui pulse et SORT du sol
+// (rebond) après une session ; à venir = estompés sous la brume, type lisible.
+//
+// En-tête flottant (verre dépoli/clay) : nom du biome, étoile Plouma, bouton « vue biomes ».
+
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../directeur/directeur.dart';
 import '../etat/session.dart';
+import 'chemin_clay.dart';
+import 'decor_prairie.dart';
+import 'ecran_lobby.dart';
 import 'ecran_session.dart';
+import 'noeuds_carte.dart';
 import 'theme_clay.dart';
 
 /// Écran principal : la carte du biome courant.
@@ -27,10 +37,31 @@ class EcranCarte extends ConsumerStatefulWidget {
 class _EcranCarteState extends ConsumerState<EcranCarte> {
   final _scroll = ScrollController();
 
+  /// Décalage de scroll (0 en bas), pour le parallax du décor.
+  double _offset = 0;
+
+  /// Index du nœud actif qui vient de sortir du sol (pour animer sa pousse une seule fois).
+  int? _noeudQuiPousse;
+
+  @override
+  void initState() {
+    super.initState();
+    _scroll.addListener(() {
+      if (mounted) setState(() => _offset = _scroll.offset);
+    });
+  }
+
   @override
   void dispose() {
     _scroll.dispose();
     super.dispose();
+  }
+
+  /// Palette du biome courant (indexée sur l'ordre du graphe via le Directeur, EN LECTURE).
+  BiomePalette _paletteCourante() {
+    final directeur = ref.read(directeurProvider).valueOrNull;
+    final int idx = directeur?.moduleIndex ?? 0;
+    return ClayTheme.paletteBiome(idx);
   }
 
   /// Tap sur le nœud actif : génère la session, la joue, ingère les résultats.
@@ -47,7 +78,6 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
 
     notifier.demarrerSession();
 
-    // Ouvre l'écran de session (plein écran) et attend les résultats.
     final resultats = await Navigator.of(context).push<List<ResultatNiveau>>(
       MaterialPageRoute(
         builder: (_) => EcranSession(
@@ -60,19 +90,29 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
     );
 
     if (!mounted) return;
-    // Ingestion + croissance du chemin.
+    final avantJoues = etat.noeuds.where((n) => n.statut == StatutNoeud.joue).length;
     final evenements = notifier.terminerSession(resultats ?? const []);
     _remonterEvenements(evenements);
+
+    // Le nœud qui devient actif (au-dessus de l'ancien) doit sortir du sol.
+    setState(() => _noeudQuiPousse = avantJoues + 1);
 
     // Scroll doux vers le haut : le chemin a poussé, on suit la pousse.
     await Future<void>.delayed(const Duration(milliseconds: 120));
     if (_scroll.hasClients) {
       _scroll.animateTo(
         _scroll.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 700),
+        duration: const Duration(milliseconds: 750),
         curve: Curves.easeInOut,
       );
     }
+  }
+
+  /// Ouvre la vue biomes (lobby).
+  void _ouvrirLobby() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const EcranLobby()),
+    );
   }
 
   /// Remonte les événements du Directeur (biome franchi, signal parent…) — SnackBar/log.
@@ -92,188 +132,293 @@ class _EcranCarteState extends ConsumerState<EcranCarte> {
   @override
   Widget build(BuildContext context) {
     final etat = ref.watch(carteProvider);
+    final palette = _paletteCourante();
 
     return Scaffold(
       backgroundColor: ClayTheme.creme,
-      body: SafeArea(
-        child: etat == null
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  _EnTeteBiome(biome: etat.biome),
-                  Expanded(child: _chemin(etat)),
-                ],
-              ),
-      ),
+      body: etat == null
+          ? const Center(child: CircularProgressIndicator())
+          : Stack(
+              children: [
+                // Couches de décor fixes derrière le scroll (parallax appliqué à l'intérieur).
+                Positioned.fill(
+                  child: _DecorFond(palette: palette, offset: _offset),
+                ),
+                // Le chemin scrollable au premier plan.
+                Positioned.fill(child: _chemin(etat, palette)),
+                // En-tête flottant au-dessus de tout.
+                SafeArea(
+                  child: _EnTeteBiome(
+                    biome: etat.biome,
+                    palette: palette,
+                    onLobby: _ouvrirLobby,
+                  ),
+                ),
+              ],
+            ),
     );
   }
 
-  /// Le chemin vertical, parcouru de bas en haut : on inverse la liste pour que le nœud
-  /// actif et les nœuds à venir soient EN HAUT, les joués EN BAS.
-  Widget _chemin(EtatCarte etat) {
-    final noeuds = etat.noeuds.reversed.toList();
-    return SingleChildScrollView(
-      controller: _scroll,
-      reverse: true, // ancre le scroll en bas (là où se trouve le nœud actif au départ)
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 40),
-        child: Column(
-          children: [
-            for (final n in noeuds)
-              _NoeudChemin(
-                noeud: n,
-                onTap: n.statut == StatutNoeud.actif ? _jouerSession : null,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// En-tête : nom du biome + étoile Plouma dorée.
-class _EnTeteBiome extends StatelessWidget {
-  final String biome;
-  const _EnTeteBiome({required this.biome});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
-      child: Row(
-        children: [
-          Text(
-            biome,
-            style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: ClayTheme.vertFonce),
+  /// Le chemin serpentant + les nœuds posés dessus, dans un scroll ancré en bas.
+  Widget _chemin(EtatCarte etat, BiomePalette palette) {
+    return LayoutBuilder(
+      builder: (context, contraintes) {
+        final double largeur = contraintes.maxWidth;
+        final geo = GeometrieChemin.construire(
+          nbNoeuds: etat.noeuds.length,
+          largeur: largeur,
+        );
+        return SingleChildScrollView(
+          controller: _scroll,
+          reverse: true, // ancre en bas : le nœud actif est visible au démarrage
+          child: SizedBox(
+            width: largeur,
+            height: geo.taille.height,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // Le tracé du chemin (une seule couche repeinte).
+                RepaintBoundary(
+                  child: CustomPaint(
+                    size: geo.taille,
+                    painter: CheminPainter(trace: geo.trace, palette: palette),
+                  ),
+                ),
+                // Les nœuds, posés SUR les ancres de la courbe.
+                for (int i = 0; i < etat.noeuds.length; i++)
+                  _positionnerNoeud(etat.noeuds[i], geo.ancres[i], palette),
+              ],
+            ),
           ),
-          const Spacer(),
-          const EtoilePlouma(taille: 34),
-        ],
-      ),
+        );
+      },
     );
   }
-}
 
-/// Un nœud du chemin + le segment de sentier qui le relie au suivant.
-class _NoeudChemin extends StatelessWidget {
-  final NoeudCarte noeud;
-  final VoidCallback? onTap;
-
-  const _NoeudChemin({required this.noeud, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Segment de sentier clay au-dessus du nœud (sauf tout en haut).
-        Container(
-          key: ValueKey('sentier-${noeud.index}'),
-          width: 14,
-          height: 44,
-          decoration: BoxDecoration(
-            color: ClayTheme.vertClair,
-            borderRadius: BorderRadius.circular(7),
-            boxShadow: ClayTheme.ombreDouce,
-          ),
+  /// Place un nœud centré sur son ancre (échantillonnée sur la Bézier).
+  Widget _positionnerNoeud(NoeudCarte n, Offset ancre, BiomePalette palette) {
+    final bool actif = n.statut == StatutNoeud.actif;
+    final double d = actif ? kDiamNoeudActif : kDiamNoeud;
+    final Widget noeud = switch (n.statut) {
+      StatutNoeud.actif => NoeudActif(
+          type: n.type,
+          palette: palette,
+          onTap: _jouerSession,
+          sortDuSol: _noeudQuiPousse == n.index,
         ),
-        switch (noeud.statut) {
-          StatutNoeud.actif => _NoeudActif(noeud: noeud, onTap: onTap),
-          StatutNoeud.joue => _NoeudSimple(noeud: noeud, opacite: 1),
-          StatutNoeud.aVenir => _NoeudSimple(noeud: noeud, opacite: 0.4),
-        },
-      ],
-    );
-  }
-}
-
-/// Icône / glyphe selon le type du nœud (normal ● / cadeau 🎁 / rêve 🌙).
-String _glyphePour(TypeNiveau type) => switch (type) {
-      TypeNiveau.cadeau => '🎁',
-      TypeNiveau.reve => '🌙',
-      _ => '●',
+      StatutNoeud.joue => NoeudJoue(type: n.type, palette: palette),
+      StatutNoeud.aVenir => NoeudAVenir(type: n.type, palette: palette),
     };
-
-/// Nœud joué (plein) ou à venir (estompé) — non interactif dans cette tranche.
-class _NoeudSimple extends StatelessWidget {
-  final NoeudCarte noeud;
-  final double opacite;
-  const _NoeudSimple({required this.noeud, required this.opacite});
-
-  @override
-  Widget build(BuildContext context) {
-    final bool joue = noeud.statut == StatutNoeud.joue;
-    return Opacity(
-      opacity: opacite,
-      child: Container(
-        key: ValueKey('noeud-${noeud.index}'),
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          color: joue ? ClayTheme.vert : ClayTheme.vertClair,
-          shape: BoxShape.circle,
-          boxShadow: ClayTheme.ombreDouce,
-        ),
-        alignment: Alignment.center,
-        child: Text(_glyphePour(noeud.type),
-            style: const TextStyle(fontSize: 20, color: Colors.white)),
+    return Positioned(
+      left: ancre.dx - d / 2,
+      top: ancre.dy - d / 2,
+      width: d,
+      height: d,
+      child: KeyedSubtree(
+        key: ValueKey(actif ? 'noeud-actif' : 'noeud-${n.index}'),
+        child: noeud,
       ),
     );
   }
 }
 
-/// Le nœud actif : plus gros, pulsation douce, tapable.
-class _NoeudActif extends StatefulWidget {
-  final NoeudCarte noeud;
-  final VoidCallback? onTap;
-  const _NoeudActif({required this.noeud, this.onTap});
+/// Couches de fond (sol + végétation + papillons) avec un léger parallax au scroll.
+class _DecorFond extends StatefulWidget {
+  final BiomePalette palette;
+  final double offset;
+  const _DecorFond({required this.palette, required this.offset});
 
   @override
-  State<_NoeudActif> createState() => _NoeudActifState();
+  State<_DecorFond> createState() => _DecorFondState();
 }
 
-class _NoeudActifState extends State<_NoeudActif>
+class _DecorFondState extends State<_DecorFond>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _ctrl;
+  late final AnimationController _flotte;
+  late final List<BrinDecor> _brins;
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1100))
-      ..repeat(reverse: true);
+    _flotte = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 9),
+    )..repeat();
+    _brins = semerDecor(widget.palette);
+  }
+
+  @override
+  void didUpdateWidget(_DecorFond old) {
+    super.didUpdateWidget(old);
+    if (old.palette != widget.palette) _brins = semerDecor(widget.palette);
   }
 
   @override
   void dispose() {
-    _ctrl.dispose();
+    _flotte.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: ScaleTransition(
-        scale: Tween<double>(begin: 1.0, end: 1.08).animate(
-          CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
-        ),
-        child: Container(
-          key: const Key('noeud-actif'),
-          width: 84,
-          height: 84,
-          decoration: BoxDecoration(
-            color: ClayTheme.vertFonce,
-            shape: BoxShape.circle,
-            boxShadow: ClayTheme.ombreClay,
+    // Parallax : le sol bouge lentement, la végétation un peu plus (illusion de profondeur).
+    return Stack(
+      children: [
+        // Couche 1 : le sol (parallax lent).
+        Positioned.fill(
+          child: Transform.translate(
+            offset: Offset(0, widget.offset * 0.05),
+            child: RepaintBoundary(
+              child: CustomPaint(painter: SolPrairiePainter(widget.palette)),
+            ),
           ),
-          alignment: Alignment.center,
-          child: const Icon(Icons.play_arrow_rounded,
-              size: 44, color: Colors.white),
+        ),
+        // Couche 2 : la végétation (parallax un peu plus marqué).
+        Positioned.fill(
+          child: Transform.translate(
+            offset: Offset(0, widget.offset * 0.12),
+            child: RepaintBoundary(
+              child: CustomPaint(painter: VegetationPainter(_brins)),
+            ),
+          ),
+        ),
+        // Couche 3 : papillons animés (au-dessus du décor, sous le chemin).
+        Positioned.fill(
+          child: RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: _flotte,
+              builder: (context, _) => CustomPaint(
+                painter: PapillonsPainter(
+                  _flotte.value,
+                  couleurA: ClayTheme.dore,
+                  couleurB: ClayTheme.joue,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// En-tête flottant (verre dépoli/clay) : nom du biome, étoile Plouma, bouton vue biomes.
+class _EnTeteBiome extends StatelessWidget {
+  final String biome;
+  final BiomePalette palette;
+  final VoidCallback onLobby;
+  const _EnTeteBiome({
+    required this.biome,
+    required this.palette,
+    required this.onLobby,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(ClayTheme.rayonGrand),
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.55),
+              borderRadius: BorderRadius.circular(ClayTheme.rayonGrand),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.6), width: 1.2),
+              boxShadow: ClayTheme.ombreFlottante,
+            ),
+            child: Row(
+              children: [
+                const EtoilePlouma(taille: 38),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        biome,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          color: palette.foncee,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      const Text(
+                        'On avance ensemble',
+                        style: TextStyle(fontSize: 12, color: ClayTheme.encreDouce),
+                      ),
+                    ],
+                  ),
+                ),
+                _BoutonLobby(palette: palette, onTap: onLobby),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
+}
+
+/// Bouton « vue biomes » : petite grille/mappemonde clay dessinée en CustomPaint.
+class _BoutonLobby extends StatelessWidget {
+  final BiomePalette palette;
+  final VoidCallback onTap;
+  const _BoutonLobby({required this.palette, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: 'Voir tous les biomes',
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          key: const Key('bouton-lobby'),
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [palette.dominante, palette.foncee],
+            ),
+            borderRadius: BorderRadius.circular(ClayTheme.rayonMoyen),
+            boxShadow: ClayTheme.ombreDouce,
+          ),
+          child: const CustomPaint(painter: _IconeGrillePainter()),
+        ),
+      ),
+    );
+  }
+}
+
+/// Icône « grille de mondes » : 4 tuiles arrondies.
+class _IconeGrillePainter extends CustomPainter {
+  const _IconeGrillePainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint p = Paint()..color = Colors.white.withValues(alpha: 0.95);
+    final double d = size.width * 0.28;
+    final double g = size.width * 0.14;
+    final double x0 = size.width / 2 - d - g / 2;
+    final double y0 = size.height / 2 - d - g / 2;
+    for (int i = 0; i < 2; i++) {
+      for (int j = 0; j < 2; j++) {
+        final Rect r = Rect.fromLTWH(x0 + i * (d + g), y0 + j * (d + g), d, d);
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(r, Radius.circular(d * 0.28)),
+          p,
+        );
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_IconeGrillePainter oldDelegate) => false;
 }
