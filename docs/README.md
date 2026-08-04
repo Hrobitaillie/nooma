@@ -30,6 +30,7 @@
 | 14 | [production-3d-blender.md](14-production-3d-blender.md) | Pipeline 3D complet : Clay Doh/Cycles, studio, modelage, rendu, automatisation → app |
 | 15 | [production-cartes.md](15-production-cartes.md) | Cartes de biome de zéro à jouable : kit d'assets (dalles, décals, props, eau, chemin), atlas, JSON biome/motifs, cartographe Flame |
 | 16 | [habillage-props.md](16-habillage-props.md) | Habillage des props de gameplay/UI : architecture « skin » avec fallback placeholder, inventaire des props, rendus Blender (caméra, couleur variable), branchement Flutter au fil de l'eau |
+| 17 | [modes-et-mecaniques.md](17-modes-et-mecaniques.md) | **Document de relecture** : modes de jeu (décisions 30/07) + les 19 mécaniques en fiches (déroulé, difficulté, erreur, test du brocoli, ancrage programme CP) — à annoter par l'orthophoniste |
 | — | [ressources-youtube.md](ressources-youtube.md) | Mots-clés YouTube pour apprendre la pipeline Blender → app |
 
 ## Rappel des fondamentaux actés ✅
