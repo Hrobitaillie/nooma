@@ -1,5 +1,5 @@
 // Configuration des deux espaces documentaires (nav, PDF, libellés).
-import { DOCS_TREE, CATALOGUE_TREE } from './tree.js?v=1785320225';
+import { DOCS_TREE, CATALOGUE_TREE } from './tree.js?v=1785321001';
 
 export const DEFAULT_SPACE = 'catalogue';
 

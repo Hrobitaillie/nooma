@@ -31,6 +31,7 @@ export const DOCS_TREE = [
       { type: 'page', label: '03 · Game design', path: '03-game-design.md' },
       { type: 'page', label: '04 · Progression adaptative', path: '04-progression-adaptative.md' },
       { type: 'page', label: '05 · Direction artistique', path: '05-direction-artistique.md' },
+      { type: 'page', label: '17 · Modes & mécaniques (relecture)', path: '17-modes-et-mecaniques.md' },
     ]
   },
   {
@@ -39,6 +40,8 @@ export const DOCS_TREE = [
       { type: 'page', label: '07 · Sécurité & vie privée', path: '07-securite-vie-privee.md' },
       { type: 'page', label: '08 · Performances', path: '08-performances.md' },
       { type: 'page', label: '14 · Production 3D Blender', path: '14-production-3d-blender.md' },
+      { type: 'page', label: '15 · Production des cartes', path: '15-production-cartes.md' },
+      { type: 'page', label: '16 · Habillage des props', path: '16-habillage-props.md' },
     ]
   },
   {
