@@ -3,7 +3,7 @@
     "name": "Nooma",
     "formatVersion": 13,
     "createdAt": "2026-07-28",
-    "updatedAt": "2026-07-28",
+    "updatedAt": "2026-08-04",
     "pricing": {
       "riskCoeff": 1.25,
       "dailyRate": null
@@ -19,7 +19,7 @@
         "Anti dark patterns (doc 03 §5)",
         "Flutter + Flame + flutter_soloud + Drift"
       ],
-      "notes": "Lots : 1=Prototype (P2) · 2=V1 lancement · 3=V1.1 · 4=V2+. Graphe généré depuis le catalogue le 28/07/2026 — à faire vivre dans Flooow."
+      "notes": "Lots : 1=Prototype (P2) · 2=V1 lancement · 3=V1.1 · 4=V2+. Graphe généré depuis le catalogue le 28/07/2026 — à faire vivre dans Flooow. — SUIVI 04/08/2026 : 7 modules « SUIVI · … » en bas du canvas (✅ fait · 🚧 en cours · ⬜ à faire · 🧊 bloqué 3D/matériel · ⏸ reporté par Hugo)."
     }
   },
   "services": [],
@@ -4596,6 +4596,2511 @@
         "status": "cadree",
         "checklist": []
       }
+    },
+    {
+      "id": "s-fait",
+      "parentId": null,
+      "position": {
+        "x": 0,
+        "y": 5200
+      },
+      "lot": null,
+      "type": "frame",
+      "kind": "module",
+      "attrs": {
+        "name": "SUIVI · ✅ Fait (mémoire, condensé)",
+        "description": "État au 04/08/2026 — l'acquis, condensé pour mémoire. Le détail vit dans docs/ et le catalogue.",
+        "notes": ""
+      }
+    },
+    {
+      "id": "sf-cadrage",
+      "parentId": "s-fait",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "FAIT-01",
+        "name": "✅ Cadrage complet + docs 1-16",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Docs 01→16 rédigées et validées (30/07), viewer + catalogue chiffrable (76 postes) dans /cadrage, journal des décisions quasi intégralement tranché."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-data",
+          "binding": null
+        },
+        "estimate": "fait",
+        "status": "validee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sf-simulateur",
+      "parentId": "s-fait",
+      "position": {
+        "x": 270,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "FAIT-02",
+        "name": "✅ Simulateur du Directeur (TS)",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Enfants virtuels zéro-dépendance dans /cadrage/simulateur, dashboard dans le viewer ; sert d'oracle de non-régression au port Dart."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "fait",
+        "status": "validee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sf-contenu-v1",
+      "parentId": "s-fait",
+      "position": {
+        "x": 540,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "FAIT-03",
+        "name": "✅ Contenu v1 : graphe + banque Syllabes + admin",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Graphe de compétences 12 modules / 47 compétences, banque Syllabes 100 mots tagués (contenu/banques/syllabes.csv), lint contenu, admin de relecture pour Florence."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-data",
+          "binding": null
+        },
+        "estimate": "fait",
+        "status": "validee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sf-socle",
+      "parentId": "s-fait",
+      "position": {
+        "x": 0,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "FAIT-04",
+        "name": "✅ Socle Flutter (CI, CLAUDE.md, deps)",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "/app : Flutter 3.44.8, deps actées épinglées (riverpod 2.6.1 en attendant 3.x), CLAUDE.md règles inviolables, audit dépendances bloquant, CI analyze+test+lint contenu."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "fait",
+        "status": "validee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sf-directeur-dart",
+      "parentId": "s-fait",
+      "position": {
+        "x": 270,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "FAIT-05",
+        "name": "✅ Directeur porté en Dart",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "rng/params/maîtrise/sélection portés en Dart avec tests d'oracle croisé contre le simulateur TypeScript."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "fait",
+        "status": "validee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sf-jouable",
+      "parentId": "s-fait",
+      "position": {
+        "x": 540,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "FAIT-06",
+        "name": "✅ App jouable (carte, Drift, 2 mécaniques)",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Carte clay + lobby navigables, persistance Drift natif+web, mécaniques « Tape la syllabe » et « La boîte à sons » jouables, TTS d'itération dev."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "fait",
+        "status": "validee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "s-gameplay",
+      "parentId": null,
+      "position": {
+        "x": 1150,
+        "y": 5200
+      },
+      "lot": null,
+      "type": "frame",
+      "kind": "module",
+      "attrs": {
+        "name": "SUIVI · ⬜ App — gameplay",
+        "description": "Les 17 mécaniques restantes (contenu/mecaniques.json), les rituels de session, les moments forts et la difficulté en dents de scie. État au 04/08/2026.",
+        "notes": ""
+      }
+    },
+    {
+      "id": "sg-attrape-le-son",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-01",
+        "name": "⬜ Attrape le son",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Attrape le son » (id contenu : attrape-le-son, modalité : écouter) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-jumeaux-presque-pareils",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 270,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-02",
+        "name": "⬜ Les jumeaux presque pareils",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Les jumeaux presque pareils » (id contenu : jumeaux-presque-pareils, modalité : écouter) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-intrus-phonologique",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 540,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-03",
+        "name": "⬜ L'intrus",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « L'intrus » (id contenu : intrus-phonologique, modalité : écouter) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-fabrique-de-syllabes",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 0,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-04",
+        "name": "⬜ La fabrique de syllabes",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « La fabrique de syllabes » (id contenu : fabrique-de-syllabes, modalité : glisser) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-chasse-au-grapheme",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 270,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-05",
+        "name": "⬜ La chasse au graphème",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « La chasse au graphème » (id contenu : chasse-au-grapheme, modalité : toucher) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-tri-par-son",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 540,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-06",
+        "name": "⬜ Le tri par son",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Le tri par son » (id contenu : tri-par-son, modalité : glisser) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-trace-la-lettre",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 0,
+        "y": 300
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-07",
+        "name": "⬜ Trace la lettre",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Trace la lettre » (id contenu : trace-la-lettre, modalité : tracer) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-gammes-de-syllabes",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 270,
+        "y": 300
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-08",
+        "name": "⬜ Les gammes de syllabes",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Les gammes de syllabes » (id contenu : gammes-de-syllabes, modalité : lire) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-mots-rigolos",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 540,
+        "y": 300
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-09",
+        "name": "⬜ Les mots rigolos des étoiles",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Les mots rigolos des étoiles » (id contenu : mots-rigolos, modalité : lire) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-lecture-flash",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 0,
+        "y": 450
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-10",
+        "name": "⬜ Lecture flash",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Lecture flash » (id contenu : lecture-flash, modalité : lire) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-karaoke",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 270,
+        "y": 450
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-11",
+        "name": "⬜ Le karaoké",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Le karaoké » (id contenu : karaoke, modalité : lire) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-chaines-de-mots",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 540,
+        "y": 450
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-12",
+        "name": "⬜ Les chaînes de mots",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Les chaînes de mots » (id contenu : chaines-de-mots, modalité : lire) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-mot-image",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 0,
+        "y": 600
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-13",
+        "name": "⬜ Mot-image",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Mot-image » (id contenu : mot-image, modalité : toucher) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-consignes-a-executer",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 270,
+        "y": 600
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-14",
+        "name": "⬜ Les consignes à exécuter",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Les consignes à exécuter » (id contenu : consignes-a-executer, modalité : toucher) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-phrase-image",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 540,
+        "y": 600
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-15",
+        "name": "⬜ Phrase-image",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « Phrase-image » (id contenu : phrase-image, modalité : toucher) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-dictee-muette",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 0,
+        "y": 750
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-16",
+        "name": "⬜ La dictée muette",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « La dictée muette » (id contenu : dictee-muette, modalité : composer) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-machine-a-mots",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-17",
+        "name": "⬜ La machine à mots",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Mécanique « La machine à mots » (id contenu : machine-a-mots, modalité : composer) — à développer sur le moteur générique. Tests brocoli + anti-devinette obligatoires."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réf : contenu/mecaniques.json, doc 02 §4."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-rituels",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 540,
+        "y": 750
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-18",
+        "name": "⬜ Rituels de session (accueil / clôture)",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Réveil festif de Plouma à l'ouverture, coucher joyeux à la clôture — jamais triste ou suppliante au départ de l'enfant (doc 03 §5)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-ceremonie",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 0,
+        "y": 900
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-19",
+        "name": "⬜ Cérémonie de changement de biome",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Validation du module → cérémonie (transformation, autocollant rare) → cinématique de voyage → palier de langage (doc 04 §5)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-aventure",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 270,
+        "y": 900
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-20",
+        "name": "⬜ Grande aventure de fin de biome",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Parcours scénarisé 5-6 min enchaînant 3-4 mécaniques connues ; une fête, jamais un examen (doc 04)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-habillage-echos",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 540,
+        "y": 900
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-21",
+        "name": "⬜ Habillage des niveaux échos / rêves",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Habillage narratif des rappels espacés (échos) et de l'interleaving multi-biomes (rêves) — la mécanique Leitner existe côté Directeur, l'habillage reste à faire."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-defi",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 0,
+        "y": 1050
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-22",
+        "name": "⬜ Défi refusable",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Niveau surprise « défi » proposé et toujours refusable sans conséquence (typologie des 5 niveaux surprises, décision 30/07)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sg-dents-de-scie",
+      "parentId": "s-gameplay",
+      "position": {
+        "x": 270,
+        "y": 1050
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "GAME-23",
+        "name": "⬜ Difficulté en dents de scie",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Courbe de session échauffement → cœur → dessert, cible 80-85 % de réussite ; brancher le sélecteur Dart sur la vraie boucle de jeu."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "s-systemes",
+      "parentId": null,
+      "position": {
+        "x": 2300,
+        "y": 5200
+      },
+      "lot": null,
+      "type": "frame",
+      "kind": "module",
+      "attrs": {
+        "name": "SUIVI · ⬜ App — systèmes",
+        "description": "Systèmes transverses restant à développer. État au 04/08/2026.",
+        "notes": ""
+      }
+    },
+    {
+      "id": "ss-dictionnaire",
+      "parentId": "s-systemes",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "SYS-01",
+        "name": "⬜ Dictionnaire de Plouma",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Récompense par défaut v1 : fragments de langue débloqués au fil des exercices ; UI typographique à designer (décision 30/07, docs 03 §2.2, 04 §5.3)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "ss-parent",
+      "parentId": "s-systemes",
+      "position": {
+        "x": 270,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "SYS-02",
+        "name": "⬜ Espace parent",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Gate + PIN (revue humaine obligatoire), progression par module en langage clair, mix audio 3 canaux, limite douce « Plouma va dormir »."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "ss-sauvegarde",
+      "parentId": "s-systemes",
+      "position": {
+        "x": 540,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "SYS-03",
+        "name": "⬜ Export/import de sauvegarde",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Fichier JSON versionné via partage système, import validé strictement — zone à revue humaine obligatoire."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "ss-onboarding",
+      "parentId": "s-systemes",
+      "position": {
+        "x": 0,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "SYS-04",
+        "name": "⬜ Onboarding enfant",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Création guidée 100 % audio, vrai prénom par défaut (surnom en option), première rencontre avec Plouma."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "ss-interruptions",
+      "parentId": "s-systemes",
+      "position": {
+        "x": 270,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "SYS-05",
+        "name": "⬜ Robustesse aux interruptions",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Sauvegarde d'état à chaque écran, reprise instantanée, pause hors focus, zéro dépendance réseau."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "ss-signaux",
+      "parentId": "s-systemes",
+      "position": {
+        "x": 540,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "SYS-06",
+        "name": "⬜ Signaux parent",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Signal discret de stagnation avec conseil concret hors écran ; l'enfant ne voit jamais de métrique."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "ss-cartographe",
+      "parentId": "s-systemes",
+      "position": {
+        "x": 0,
+        "y": 300
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "SYS-07",
+        "name": "⬜ Cartographe (doc 15)",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Spline du chemin, motifs, semis, streaming des dalles — implémentation avec assets placeholder acceptée en attendant la 3D."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "ss-props",
+      "parentId": "s-systemes",
+      "position": {
+        "x": 270,
+        "y": 300
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "SYS-08",
+        "name": "⬜ Architecture d'habillage des props (doc 16)",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Système d'habillage des props des cartes (doc 16) — architecture à implémenter côté app, rendus 3D bloqués par ailleurs."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "ss-audio",
+      "parentId": "s-systemes",
+      "position": {
+        "x": 540,
+        "y": 300
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "SYS-09",
+        "name": "⬜ Audio soloud + mix",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Moteur flutter_soloud 3 canaux (voix/effets/musique), pools SFX préchargés, priorités — avec sons placeholder en attendant les enregistrements."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "s-contenu",
+      "parentId": null,
+      "position": {
+        "x": 0,
+        "y": 6700
+      },
+      "lot": null,
+      "type": "frame",
+      "kind": "module",
+      "attrs": {
+        "name": "SUIVI · ⬜ Contenu (chemin critique)",
+        "description": "Le contenu pédagogique est LE chemin critique du projet. État au 04/08/2026.",
+        "notes": ""
+      }
+    },
+    {
+      "id": "sc-relecture",
+      "parentId": "s-contenu",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "CONT-01",
+        "name": "🚧 Relecture des 100 mots par Florence",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Banque Syllabes (100 mots tagués) envoyée en relecture via l'admin — en attente du retour de Florence."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-data",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "en-recette",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sc-banques",
+      "parentId": "s-contenu",
+      "position": {
+        "x": 270,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "CONT-02",
+        "name": "⬜ Banques des modules suivants",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Rimes, phonèmes, lettres-1, combinatoire, digraphes… — même format tagué que Syllabes, produites en lots relus d'un coup."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-data",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sc-charte",
+      "parentId": "s-contenu",
+      "position": {
+        "x": 540,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "CONT-03",
+        "name": "⬜ Charte des consignes / feedbacks",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Formulations de Plouma : éloge du processus, jamais de la personne (doc 03 §2.4) — préalable aux scripts d'enregistrement."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-data",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sc-andika",
+      "parentId": "s-contenu",
+      "position": {
+        "x": 0,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "CONT-04",
+        "name": "⬜ Police Andika intégrée",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Andika par défaut (Belle Allure si cursive) — intégration dans l'app et dans les rendus de lettres clay (décision 30/07, doc 05 §7)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-data",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sc-matrice",
+      "parentId": "s-contenu",
+      "position": {
+        "x": 270,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "CONT-05",
+        "name": "⬜ Matrice compétence ↔ mécaniques affinée",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Affiner quelle mécanique sert quelle compétence du graphe (47 compétences × 19 mécaniques) — nourrit le sélecteur du Directeur."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-data",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "s-qualite",
+      "parentId": null,
+      "position": {
+        "x": 1150,
+        "y": 6700
+      },
+      "lot": null,
+      "type": "frame",
+      "kind": "module",
+      "attrs": {
+        "name": "SUIVI · ⬜ Qualité",
+        "description": "Garde-fous et dettes techniques à traiter. État au 04/08/2026.",
+        "notes": ""
+      }
+    },
+    {
+      "id": "sq-test-d",
+      "parentId": "s-qualite",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "QUA-01",
+        "name": "⬜ Test D : simulation massive sur le port Dart",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "10 000 enfants virtuels sur le Directeur Dart : ~80 % de réussite, zéro niveau impossible, sortie de biome dans la cible — le simulateur TS sert d'oracle."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sq-golden",
+      "parentId": "s-qualite",
+      "position": {
+        "x": 270,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "QUA-02",
+        "name": "⬜ Golden tests",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Golden tests des écrans clés pour verrouiller le rendu (carte, mini-jeux, lobby)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sq-budget",
+      "parentId": "s-qualite",
+      "position": {
+        "x": 540,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "QUA-03",
+        "name": "⬜ Budget de poids en CI",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Budget de poids bloquant en CI (cible ≤ 200 Mo tout embarqué) — à caler au Test A sur la tablette de référence."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sq-riverpod",
+      "parentId": "s-qualite",
+      "position": {
+        "x": 0,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "QUA-04",
+        "name": "⬜ Montée riverpod 3.x",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Tâche dédiée : sortir du gel 2.6.1 (résolution 3.x), migration isolée avec la CI en juge."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sq-q7",
+      "parentId": "s-qualite",
+      "position": {
+        "x": 270,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "QUA-05",
+        "name": "⬜ Question n°7 : ~40 niveaux/biome vs 8-15",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Trancher la question ouverte du journal : assumer ~40 niveaux courts, ne compter que les niveaux cœur comme nœuds, ou assouplir la validation (doc 04 §2)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "s-bloque",
+      "parentId": null,
+      "position": {
+        "x": 2300,
+        "y": 6700
+      },
+      "lot": null,
+      "type": "frame",
+      "kind": "module",
+      "attrs": {
+        "name": "SUIVI · 🧊 Bloqué 3D / matériel",
+        "description": "Tout ce qui attend du matériel (tablette 2 Go) ou la production 3D Blender. État au 04/08/2026.",
+        "notes": ""
+      }
+    },
+    {
+      "id": "sb-tablette",
+      "parentId": "s-bloque",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "BLOQ-01",
+        "name": "🧊 Tablette de référence 2 Go (achat)",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Acheter la tablette d'entrée de gamme 2 Go (doc 08 §1) — préalable matériel au Test A."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-ext",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sb-kit",
+      "parentId": "s-bloque",
+      "position": {
+        "x": 270,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "BLOQ-02",
+        "name": "🧊 Kit Blender (doc 15 §6)",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Monter le kit Blender du cartographe (doc 15 §6) — préalable outillage au Test A et aux dalles."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-blender",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sb-studio",
+      "parentId": "s-bloque",
+      "position": {
+        "x": 540,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "BLOQ-03",
+        "name": "🧊 studio.blend + palette 5 couleurs",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Le fichier fondateur : plateau stop-motion, 5 matériaux Clay Doh, caméras préréglées — se fige au Test A."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-blender",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sb-test-a",
+      "parentId": "s-bloque",
+      "position": {
+        "x": 0,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "BLOQ-04",
+        "name": "🧊 Test A : look & pipeline sur tablette",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Plouma clay (neutre + idle + célébration) + carte Prairie 3 couches → Flutter/Flame mesuré sur la tablette (fps, RAM, latence tap→son, poids). Point de non-retour de la stack."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-blender",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sb-test-b",
+      "parentId": "s-bloque",
+      "position": {
+        "x": 270,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "BLOQ-05",
+        "name": "🧊 Test B : enregistrements Florence",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Session test (10 consignes + 10 babillages + 5 phonèmes, micro correct) → écoute parents/enfants. Préalable : lettre de mission (autorisation voix)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-audio",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sb-test-c",
+      "parentId": "s-bloque",
+      "position": {
+        "x": 540,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "BLOQ-06",
+        "name": "🧊 Test C : images-mots",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "15 images (template Blender + IA claymation), vérifier l'homogénéité — risque levé : le lot de 200-400 est-il produisible ?"
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-blender",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sb-props",
+      "parentId": "s-bloque",
+      "position": {
+        "x": 0,
+        "y": 300
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "BLOQ-07",
+        "name": "🧊 Rendus des props (doc 16)",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Production Blender des props d'habillage des cartes (doc 16) — l'architecture côté app avance en placeholder."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-blender",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sb-dalles",
+      "parentId": "s-bloque",
+      "position": {
+        "x": 270,
+        "y": 300
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "BLOQ-08",
+        "name": "🧊 Dalles / motifs des cartes (doc 15)",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Rendus des dalles et motifs du cartographe (doc 15) — le système côté app avance en placeholder."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-blender",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "a-developper",
+        "checklist": []
+      }
+    },
+    {
+      "id": "s-reporte",
+      "parentId": null,
+      "position": {
+        "x": 0,
+        "y": 7900
+      },
+      "lot": null,
+      "type": "frame",
+      "kind": "module",
+      "attrs": {
+        "name": "SUIVI · ⏸ Reporté (décisions Hugo)",
+        "description": "Reporté explicitement (journal des décisions, 30/07) — rien ici n'est abandonné. État au 04/08/2026.",
+        "notes": ""
+      }
+    },
+    {
+      "id": "sr-marque",
+      "parentId": "s-reporte",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "REP-01",
+        "name": "⏸ Actions marque « Plouma »",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Domaines plouma.fr/.app, test oral enfants, avis CPI, dépôt INPI — reportées, mais OBLIGATOIRES avant toute com publique (doc 09 §5.4)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-ext",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "reportee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sr-lettre",
+      "parentId": "s-reporte",
+      "position": {
+        "x": 270,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "REP-02",
+        "name": "⏸ Lettre de mission Florence",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "1 page : périmètre, confidentialité, IP des contenus relus, autorisation écrite voix — préalable aux enregistrements (doc 09 §5.2-5.3)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-ext",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "reportee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sr-financement",
+      "parentId": "s-reporte",
+      "position": {
+        "x": 540,
+        "y": 0
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "REP-03",
+        "name": "⏸ Financement",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Incubateur, Bourse French Tech, Édu-Up, CII — à revoir à la création de la SASU (doc 09 §4)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-ext",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "reportee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sr-telemetrie",
+      "parentId": "s-reporte",
+      "position": {
+        "x": 0,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "REP-04",
+        "name": "⏸ Télémétrie",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Option 1 (aucune en v1) + option 3 (rapport manuel parent) — reporté le 30/07 (doc 07 §7)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "reportee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sr-borel",
+      "parentId": "s-reporte",
+      "position": {
+        "x": 270,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "REP-05",
+        "name": "⏸ Gestes Borel-Maisonny",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Oui/non/comment dans les mini-jeux (doc 02 §4.2) — reporté le 30/07, à retrancher avec Florence."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-data",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "reportee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sr-maison",
+      "parentId": "s-reporte",
+      "position": {
+        "x": 540,
+        "y": 150
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "REP-06",
+        "name": "⏸ Maison de Plouma",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "En attente : pertinence à requestionner — ni actée ni rejetée (décision 30/07, doc 03 §4)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "reportee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sr-histoires",
+      "parentId": "s-reporte",
+      "position": {
+        "x": 0,
+        "y": 300
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "REP-07",
+        "name": "⏸ Histoires",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "À cadrer (contenu, coût de prod audio) — pas le cœur du besoin (doc 03 §4)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "reportee",
+        "checklist": []
+      }
+    },
+    {
+      "id": "sr-cojeu",
+      "parentId": "s-reporte",
+      "position": {
+        "x": 270,
+        "y": 300
+      },
+      "lot": null,
+      "type": "feature",
+      "attrs": {
+        "code": "REP-08",
+        "name": "⏸ Co-jeu parent-enfant (v2)",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Piste v2 : split-screen même écran vs lobby local — toute variante réseau incompatible avec zéro permission INTERNET (doc 03 §4)."
+                }
+              ]
+            }
+          ]
+        },
+        "fieldValues": {
+          "perimeter": "opt-per-app",
+          "binding": null
+        },
+        "estimate": "à estimer",
+        "status": "reportee",
+        "checklist": []
+      }
     }
   ],
   "edges": [
@@ -5626,6 +8131,125 @@
       "type": "dependsOn",
       "source": "75ed11e3-59d8-5c13-9a3d-ff7bffbf1dba",
       "target": "eaac7eb6-a4d2-59ff-99fd-097d36138086",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sb-test-a--sb-tablette",
+      "type": "dependsOn",
+      "source": "sb-test-a",
+      "target": "sb-tablette",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sb-test-a--sb-kit",
+      "type": "dependsOn",
+      "source": "sb-test-a",
+      "target": "sb-kit",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sb-test-a--sb-studio",
+      "type": "dependsOn",
+      "source": "sb-test-a",
+      "target": "sb-studio",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sb-test-c--sb-studio",
+      "type": "dependsOn",
+      "source": "sb-test-c",
+      "target": "sb-studio",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sb-test-b--sr-lettre",
+      "type": "dependsOn",
+      "source": "sb-test-b",
+      "target": "sr-lettre",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sb-dalles--sb-kit",
+      "type": "dependsOn",
+      "source": "sb-dalles",
+      "target": "sb-kit",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sq-budget--sb-test-a",
+      "type": "dependsOn",
+      "source": "sq-budget",
+      "target": "sb-test-a",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sq-test-d--sf-directeur-dart",
+      "type": "dependsOn",
+      "source": "sq-test-d",
+      "target": "sf-directeur-dart",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sc-banques--sc-relecture",
+      "type": "dependsOn",
+      "source": "sc-banques",
+      "target": "sc-relecture",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sg-chasse-au-grapheme--sc-banques",
+      "type": "dependsOn",
+      "source": "sg-chasse-au-grapheme",
+      "target": "sc-banques",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sg-trace-la-lettre--sc-banques",
+      "type": "dependsOn",
+      "source": "sg-trace-la-lettre",
+      "target": "sc-banques",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sg-attrape-le-son--sc-banques",
+      "type": "dependsOn",
+      "source": "sg-attrape-le-son",
+      "target": "sc-banques",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sg-dictee-muette--sc-banques",
+      "type": "dependsOn",
+      "source": "sg-dictee-muette",
+      "target": "sc-banques",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sg-machine-a-mots--sc-banques",
+      "type": "dependsOn",
+      "source": "sg-machine-a-mots",
+      "target": "sc-banques",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-ss-cartographe--sb-kit",
+      "type": "dependsOn",
+      "source": "ss-cartographe",
+      "target": "sb-kit",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-ss-audio--sb-test-b",
+      "type": "dependsOn",
+      "source": "ss-audio",
+      "target": "sb-test-b",
+      "attrs": {}
+    },
+    {
+      "id": "e-suivi-sg-dents-de-scie--sq-test-d",
+      "type": "dependsOn",
+      "source": "sg-dents-de-scie",
+      "target": "sq-test-d",
       "attrs": {}
     }
   ],
