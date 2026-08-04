@@ -463,14 +463,28 @@ const server = createServer(async (req, res) => {
 
   let fichier = path.slice(1); // sans le / initial
   if (fichier.endsWith('/')) fichier += 'index.html';
+
+  // Correspondance spéciale : /accueil/… → serveur/accueil/… (la SPA de l'atelier).
+  // On préfixe simplement par « serveur/ » AVANT normalisation, puis on applique
+  // exactement les mêmes protections (traversée / dotfiles / *.orig|bak).
+  if (fichier === 'accueil' || fichier === 'accueil/' || fichier.startsWith('accueil/')) {
+    fichier = 'serveur/' + fichier;
+  }
+
   const complet = normalize(join(RACINE, fichier));
   const relatif = relative(RACINE, complet).replaceAll('\\', '/');
+
+  // Racines servies : la liste blanche + la SPA de l'atelier (serveur/accueil/ uniquement).
+  const racineOk =
+    RACINES_SERVIES.some((r) => relatif.startsWith(r)) ||
+    relatif === 'serveur/accueil/index.html' ||
+    relatif.startsWith('serveur/accueil/');
 
   // Traversée hors dépôt, racine non listée, dotfiles, fichiers de travail : refus.
   const segments = relatif.split('/');
   const interdit =
     relatif.startsWith('..') ||
-    !RACINES_SERVIES.some((r) => relatif.startsWith(r)) ||
+    !racineOk ||
     segments.some((s) => s.startsWith('.')) ||
     /\.(orig|bak)$/.test(relatif);
   if (interdit) {
