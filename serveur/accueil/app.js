@@ -8,6 +8,7 @@ import * as relecture from '/accueil/vues/relecture.js';
 import * as banque from '/accueil/vues/banque.js';
 import * as simulateur from '/accueil/vues/simulateur.js';
 import * as lignes from '/accueil/vues/lignes.js';
+import * as studio from '/accueil/vues/studio.js';
 import * as docs from '/accueil/vues/docs.js';
 
 // ─────────────────────────── Utilitaires partagés ───────────────────────────
@@ -74,6 +75,7 @@ const ROUTES = {
   '#/relecture': relecture,
   '#/banque': banque,
   '#/lignes': lignes,
+  '#/studio': studio,
   '#/simulateur': simulateur,
 };
 

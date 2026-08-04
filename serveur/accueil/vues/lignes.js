@@ -42,7 +42,7 @@ const GABARIT = `
     <div class="kpi">
       <div class="k-tete"><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Avec audio</div>
       <div class="k-val sq" id="lg-audio">0</div>
-      <div class="k-sous" id="lg-audio-sous">studio à venir</div>
+      <div class="k-sous" id="lg-audio-sous">retenues pour le pack</div>
     </div>
     <div class="kpi">
       <div class="k-tete"><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Sans audio</div>
@@ -69,13 +69,14 @@ const GABARIT = `
         <select id="lg-audio-f" class="lg-select">
           <option value="">Audio : tous</option>
           <option value="aucun">Sans audio</option>
-          <option value="enregistre">Avec audio</option>
+          <option value="proposee">Prise(s) proposée(s)</option>
+          <option value="enregistre">Retenue ✓</option>
         </select>
       </div>
 
       <div class="lg-note-studio" id="lg-note">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-        <span>Le studio d'enregistrement (phase 3) n'existe pas encore : toutes les lignes sont « sans audio ». Cette vue affichera l'état réel des prises dès que <code>/api/studio/etat</code> sera disponible.</span>
+        <span>Le statut audio est joint depuis le studio (<code>/api/studio/etat</code>) : <b>aucun</b> = à enregistrer, <b>proposée</b> = prise(s) en attente d'arbitrage, <b>retenue ✓</b> = validée pour le pack. Enregistrez et arbitrez dans le <a href="#/studio">Studio</a>.</span>
       </div>
 
       <div class="lg-table-hote"><div class="vide">Chargement…</div></div>
@@ -89,9 +90,23 @@ let filtres = { q: '', type: '', audio: '' };
 /** Découpe une ligne CSV « ; » simple. */
 function champs(l) { return l.split(';'); }
 
-/** Charge le registre voix + les banques, et construit la liste unifiée. */
+/** Statut audio d'une ligne, dérivé de l'index du studio (/api/studio/etat). */
+function statutAudio(etat, id) {
+  const e = etat && etat.lignes && etat.lignes[id];
+  const prises = e && Array.isArray(e.prises) ? e.prises : [];
+  if (prises.length === 0) return 'aucun';
+  if (prises.some((p) => p.statut === 'retenue')) return 'retenue';
+  return 'proposee';
+}
+
+/** Charge le registre voix + les banques + l'état studio, et construit la liste unifiée. */
 async function agreger() {
   const out = [];
+
+  // 0. État du studio (source du statut audio réel) — tolérant à l'absence.
+  let etat = { lignes: {} };
+  try { etat = await fetchJson('/api/studio/etat'); } catch { etat = { lignes: {} }; }
+  if (!etat.lignes) etat.lignes = {};
 
   // 1. Registre versionné.
   let registre = null;
@@ -99,15 +114,16 @@ async function agreger() {
   const regList = registre && Array.isArray(registre.lignes) ? registre.lignes : [];
   for (const l of regList) {
     if (!l || !l.id) continue;
+    const id = String(l.id);
     out.push({
-      id: String(l.id),
+      id,
       texte: String(l.texte ?? ''),
       type: l.type || 'inconnu',
       source: 'registre',
       contexte: l.contexte || l.ecran || '',
       priorite: Number(l.priorite ?? 3),
       statut: l.statut || 'actif',
-      audio: 'aucun', // dérivé du studio à venir (jointure par id)
+      audio: statutAudio(etat, id),
     });
   }
 
@@ -123,15 +139,16 @@ async function agreger() {
     for (let k = 1; k < li.length; k++) {
       const mot = (champs(li[k])[iMot] || '').trim();
       if (!mot) continue;
+      const id = `mot-${mot}`;
       out.push({
-        id: `mot-${mot}`,
+        id,
         texte: mot,
         type: 'mot',
         source: `banque:${nom}`,
         contexte: `Banque « ${nom} » — mot prononcé`,
         priorite: 2,
         statut: 'actif',
-        audio: 'aucun',
+        audio: statutAudio(etat, id),
       });
     }
   }
@@ -142,9 +159,10 @@ async function agreger() {
 // ── Compteurs & filtres ─────────────────────────────────────
 function compteurs(liste) {
   const total = liste.length;
-  const avecAudio = liste.filter((l) => l.audio && l.audio !== 'aucun').length;
+  const avecAudio = liste.filter((l) => l.audio === 'retenue').length;
+  const proposee = liste.filter((l) => l.audio === 'proposee').length;
   const prevu = liste.filter((l) => l.statut === 'prevu').length;
-  return { total, avecAudio, sansAudio: total - avecAudio, prevu };
+  return { total, avecAudio, proposee, sansAudio: total - avecAudio - proposee, prevu };
 }
 
 function appliquerFiltres() {
@@ -152,7 +170,8 @@ function appliquerFiltres() {
   return lignes.filter((l) => {
     if (filtres.type && l.type !== filtres.type) return false;
     if (filtres.audio === 'aucun' && l.audio !== 'aucun') return false;
-    if (filtres.audio === 'enregistre' && l.audio === 'aucun') return false;
+    if (filtres.audio === 'proposee' && l.audio !== 'proposee') return false;
+    if (filtres.audio === 'enregistre' && l.audio !== 'retenue') return false;
     if (q && !(l.id.toLowerCase().includes(q) || l.texte.toLowerCase().includes(q))) return false;
     return true;
   }).sort((a, b) => a.priorite - b.priorite || a.id.localeCompare(b.id));
@@ -160,7 +179,8 @@ function appliquerFiltres() {
 
 const BADGE_AUDIO = {
   aucun: '<span class="lg-audio aucun">aucun</span>',
-  enregistre: '<span class="lg-audio ok">enregistré</span>',
+  proposee: '<span class="lg-audio prop">proposée</span>',
+  retenue: '<span class="lg-audio ok">retenue ✓</span>',
 };
 
 function rendreTable() {
@@ -189,11 +209,15 @@ function rendreKpis() {
   const c = compteurs(lignes);
   const registre = lignes.filter((l) => l.source === 'registre').length;
   const derivees = lignes.length - registre;
-  $('#lg-total').textContent = c.total;
+  // Renseigne une valeur KPI et retire le squelette (.sq force color:transparent).
+  const val = (sel, v) => { const el = $(sel); if (el) { el.textContent = v; el.classList.remove('sq'); } };
+  val('#lg-total', c.total);
   $('#lg-total-sous').textContent = `${registre} au registre · ${derivees} dérivées`;
-  $('#lg-audio').textContent = c.avecAudio;
-  $('#lg-sans').textContent = c.sansAudio;
-  $('#lg-prevu').textContent = c.prevu;
+  val('#lg-audio', c.avecAudio);
+  val('#lg-sans', c.sansAudio);
+  const sousSans = $('#lg-sans-sous');
+  if (sousSans) sousSans.textContent = c.proposee ? `à enregistrer · ${c.proposee} proposée(s)` : 'à enregistrer';
+  val('#lg-prevu', c.prevu);
 }
 
 function remplirTypes() {

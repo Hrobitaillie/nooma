@@ -20,6 +20,8 @@ import { dirname, extname, join, normalize, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
+import { gererStudio } from './api/studio.mjs';
+
 const execFileP = promisify(execFile);
 
 // ───────────────────────────── Configuration ─────────────────────────────────
@@ -161,6 +163,48 @@ async function sectionLignes() {
   return { present: !!data, total: liste.length, parType, actifs, prevus };
 }
 
+/** Section « studio » : compteurs des prises (doc 18 §5) — lignes avec audio retenu / total.
+ * Lit data/studio/etat.json (hors git). Le « total » = registre actif + mots des banques
+ * (mêmes sources dérivées que la vue lignes) pour un dénominateur cohérent. */
+async function sectionStudio() {
+  let etat = null;
+  try {
+    etat = JSON.parse(await readFile(join(DATA, 'studio', 'etat.json'), 'utf8'));
+  } catch { etat = null; }
+  const lignesEtat = etat && etat.lignes && typeof etat.lignes === 'object' ? etat.lignes : {};
+
+  let avecRetenue = 0, avecPrises = 0, prisesTotal = 0, aArbitrer = 0;
+  for (const entree of Object.values(lignesEtat)) {
+    const prises = Array.isArray(entree.prises) ? entree.prises : [];
+    if (prises.length === 0) continue;
+    avecPrises++;
+    prisesTotal += prises.length;
+    const retenue = prises.some((p) => p.statut === 'retenue');
+    if (retenue) avecRetenue++;
+    const proposees = prises.filter((p) => p.statut === 'proposee').length;
+    if (!retenue && proposees >= 2) aArbitrer++;
+  }
+
+  // Dénominateur : lignes du registre (actives) + mots des banques.
+  let total = 0;
+  const reg = await lireJson('contenu/voix/lignes.json');
+  if (reg && Array.isArray(reg.lignes)) {
+    total += reg.lignes.filter((l) => l && (l.statut || 'actif') !== 'prevu').length;
+  }
+  try {
+    const { readdir } = await import('node:fs/promises');
+    const fichiers = (await readdir(join(RACINE, 'contenu', 'banques'))).filter((f) => f.endsWith('.csv'));
+    for (const f of fichiers) {
+      const texte = await lireTexte(join('contenu', 'banques', f));
+      if (texte === null) continue;
+      const lignes = texte.split(/\r?\n/).filter((l) => l.trim() !== '');
+      if (lignes.length >= 2) total += lignes.length - 1;
+    }
+  } catch { /* pas de banques */ }
+
+  return { present: !!etat, total, avecRetenue, avecPrises, prisesTotal, aArbitrer };
+}
+
 /** Section « commentaires » : total / résolus / non résolus. */
 async function sectionCommentaires() {
   const data = await lireJson('cadrage/viewer/comments.json');
@@ -280,16 +324,17 @@ async function tableauDeBord() {
   const enrober = async (fn, fallback) => {
     try { return await fn(); } catch { return fallback; }
   };
-  const [contenu, lignes, commentaires, simulateur, suivi, activite, serveur] = await Promise.all([
+  const [contenu, lignes, studio, commentaires, simulateur, suivi, activite, serveur] = await Promise.all([
     enrober(sectionContenu, { banques: [] }),
     enrober(sectionLignes, { present: false, total: 0, parType: {}, actifs: 0, prevus: 0 }),
+    enrober(sectionStudio, { present: false, total: 0, avecRetenue: 0, avecPrises: 0, prisesTotal: 0, aArbitrer: 0 }),
     enrober(sectionCommentaires, { total: 0, resolus: 0, nonResolus: 0 }),
     enrober(sectionSimulateur, { present: false, verdicts: [], meta: null }),
     enrober(sectionSuivi, { statuts: {}, total: 0, note: 'erreur' }),
     enrober(sectionActivite, { entrees: [] }),
     enrober(sectionServeur, { uptimeSecondes: Math.round(process.uptime()), node: process.version }),
   ]);
-  return { genereLe: new Date().toISOString(), contenu, lignes, commentaires, simulateur, suivi, activite, serveur };
+  return { genereLe: new Date().toISOString(), contenu, lignes, studio, commentaires, simulateur, suivi, activite, serveur };
 }
 
 // ───────────────────────────── Aides ─────────────────────────────────────────
@@ -451,6 +496,15 @@ const server = createServer(async (req, res) => {
     }
     return;
   }
+  // --- API : studio d'enregistrement (doc 18 §5) — module dédié ---------------
+  if (path.startsWith('/api/studio/')) {
+    const traite = await gererStudio(req, res, {
+      RACINE, DATA, LIMITE_CORPS, send,
+      utilisateur, journaliser, committerContenu,
+    });
+    if (traite) return;
+  }
+
   // Aucun autre chemin /api/ n'existe : jamais d'écriture ici.
   if (path.startsWith('/api/')) {
     send(res, 404, '{"ok":false,"error":"not found"}');

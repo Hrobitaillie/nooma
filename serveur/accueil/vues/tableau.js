@@ -163,11 +163,13 @@ function rendreBanques(d) {
   }
   if (c.modules != null || c.mecaniques != null) {
     const lg = d.lignes || {};
+    const st = d.studio || {};
     el.innerHTML += `<div class="lb-meta" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--trait)">
       <span><b>${c.modules ?? '—'}</b> modules</span>
       <span><b>${c.competences ?? '—'}</b> compétences</span>
       <span><b>${c.mecaniques ?? '—'}</b> mécaniques</span>
       <span><a class="lien" href="#/lignes"><b>${lg.total ?? 0}</b> lignes de texte</a></span>
+      <span><a class="lien" href="#/studio"><b>${st.avecRetenue ?? 0}</b> / ${st.total ?? 0} audio retenu</a></span>
     </div>`;
   }
 }
