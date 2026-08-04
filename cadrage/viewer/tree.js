@@ -42,6 +42,7 @@ export const DOCS_TREE = [
       { type: 'page', label: '14 · Production 3D Blender', path: '14-production-3d-blender.md' },
       { type: 'page', label: '15 · Production des cartes', path: '15-production-cartes.md' },
       { type: 'page', label: '16 · Habillage des props', path: '16-habillage-props.md' },
+      { type: 'page', label: '18 · Mise en ligne & studio', path: '18-mise-en-ligne-et-studio.md' },
     ]
   },
   {

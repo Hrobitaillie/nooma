@@ -31,6 +31,7 @@
 | 15 | [production-cartes.md](15-production-cartes.md) | Cartes de biome de zéro à jouable : kit d'assets (dalles, décals, props, eau, chemin), atlas, JSON biome/motifs, cartographe Flame |
 | 16 | [habillage-props.md](16-habillage-props.md) | Habillage des props de gameplay/UI : architecture « skin » avec fallback placeholder, inventaire des props, rendus Blender (caméra, couleur variable), branchement Flutter au fil de l'eau |
 | 17 | [modes-et-mecaniques.md](17-modes-et-mecaniques.md) | **Document de relecture** : modes de jeu (décisions 30/07) + les 19 mécaniques en fiches (déroulé, difficulté, erreur, test du brocoli, ancrage programme CP) — à annoter par l'orthophoniste |
+| 18 | [mise-en-ligne-et-studio.md](18-mise-en-ligne-et-studio.md) | **Plan de mise en ligne de l'outillage** (viewer, admin contenu) + **studio d'enregistrement** pour l'orthophoniste : phases, registre des lignes de texte, modèle lots → items → prises, pipeline audio → app, sécurité/RGPD (voix) |
 | — | [ressources-youtube.md](ressources-youtube.md) | Mots-clés YouTube pour apprendre la pipeline Blender → app |
 
 ## Rappel des fondamentaux actés ✅
