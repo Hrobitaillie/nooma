@@ -4,68 +4,552 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Atelier — tableau de bord</title>
+<title>Atelier Plouma — tableau de bord</title>
 <style>
-  :root { --bg:#faf7f2; --carte:#fff; --encre:#2b2620; --doux:#8a8177; --accent:#e8b23a; --trait:#e8e2d8; --vert:#2f9e63; --violet:#7b6bd0; }
-  * { box-sizing: border-box; }
-  body { margin:0; font:16px/1.55 system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--encre); min-height:100vh; }
-  main { max-width:880px; margin:0 auto; padding:48px 24px 64px; }
-  header h1 { margin:0; font-size:30px; display:flex; align-items:center; gap:12px; }
-  header p { color:var(--doux); margin:6px 0 0; }
-  .etoile { width:40px; height:40px; }
-  .grille { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; margin-top:32px; }
-  a.tuile { display:block; background:var(--carte); border:1px solid var(--trait); border-radius:16px; padding:20px 22px; text-decoration:none; color:var(--encre); box-shadow:0 2px 8px #0000000a; transition:transform .12s, box-shadow .12s; }
-  a.tuile:hover { transform:translateY(-2px); box-shadow:0 8px 20px #00000014; }
-  .tuile .ico { font-size:26px; }
-  .tuile h2 { margin:8px 0 4px; font-size:17px; }
-  .tuile p { margin:0; color:var(--doux); font-size:13.5px; }
-  .tuile.avenir { opacity:.55; pointer-events:none; }
-  .badge { display:inline-block; font-size:11px; font-weight:700; color:var(--violet); border:1px solid var(--violet); border-radius:99px; padding:1px 8px; margin-left:6px; vertical-align:2px; }
-  footer { margin-top:40px; color:var(--doux); font-size:12.5px; }
+  :root {
+    /* Palette « back-office SaaS » : blanc + bleu nuit sombre (Hugo, 08/2026). */
+    --bg:#f7f8fa; --carte:#fff; --encre:#141a24; --doux:#5c6675; --tres-doux:#9aa3b0;
+    --nuit:#131f3a; --nuit-2:#1c2b4d; --nuit-clair:#3a4a6d;
+    --accent:#2f4d8a; --accent-fond:#eaeff8; --accent-fort:#233c6e;
+    --trait:#e7eaef; --trait-fort:#d6dbe3;
+    --vert:#2e8b62; --vert-fond:#e7f3ec; --bleu:#2f4d8a;
+    --rouge:#c04a44; --rouge-fond:#fbeceb; --orange:#c07a2a;
+    --sb-texte:#c3ccdb; --sb-actif-fond:#22335a; --sb-survol:#1b2947;
+    --ombre:0 1px 2px #1420300a, 0 3px 12px #14203010;
+    --ombre-forte:0 2px 6px #14203012, 0 12px 32px #14203016;
+    --r:12px; --r-s:9px;
+  }
+  * { box-sizing:border-box; }
+  html,body { margin:0; }
+  body {
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    background:var(--bg); color:var(--encre); min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  a { color:inherit; }
+
+  /* ── Mise en page ─────────────────────────────────────────── */
+  .app { display:grid; grid-template-columns:248px 1fr; min-height:100vh; }
+  .sidebar {
+    background:var(--nuit); border-right:1px solid #0c1428; color:var(--sb-texte);
+    padding:20px 14px; display:flex; flex-direction:column; gap:3px;
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+  }
+  .marque { display:flex; align-items:center; gap:11px; padding:6px 8px 20px; }
+  .marque .etoile { width:30px; height:30px; flex:none; }
+  .marque .titre { font-weight:700; font-size:15.5px; letter-spacing:-.2px; color:#fff; }
+  .marque .sous { font-size:11.5px; color:#7d8aa3; font-weight:500; }
+  .nav-groupe { font-size:10.5px; font-weight:700; letter-spacing:.7px; text-transform:uppercase;
+    color:#6b7794; padding:16px 8px 6px; }
+  .nav-item {
+    display:flex; align-items:center; gap:11px; padding:9px 10px; border-radius:var(--r-s);
+    text-decoration:none; color:var(--sb-texte); font-weight:500; font-size:13.5px;
+    transition:background .12s, color .12s;
+  }
+  .nav-item .ico { width:17px; height:17px; flex:none; color:#8592ad; }
+  .nav-item:hover { background:var(--sb-survol); color:#eef2f8; }
+  .nav-item:hover .ico { color:#c3ccdb; }
+  .nav-item.actif { background:var(--sb-actif-fond); color:#fff; font-weight:600; }
+  .nav-item.actif .ico { color:#fff; }
+  .nav-item.off { color:#5c6885; cursor:default; }
+  .nav-item.off:hover { background:transparent; color:#5c6885; }
+  .nav-item.off .ico { color:#48536f; }
+  .nav-item .badge {
+    margin-left:auto; font-size:10px; font-weight:700; padding:1px 7px; border-radius:99px;
+    background:#22314f; color:#93a2c4; border:1px solid #2c3d61;
+  }
+
+  .contenu { padding:26px 30px 60px; max-width:1180px; }
+  .topbar { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:22px; }
+  .topbar h1 { margin:0; font-size:22px; letter-spacing:-.4px; }
+  .topbar .fil { color:var(--doux); font-size:13px; margin-top:3px; }
+  .actions { display:flex; align-items:center; gap:10px; }
+  .maj { font-size:11.5px; color:var(--tres-doux); white-space:nowrap; }
+  .btn {
+    display:inline-flex; align-items:center; gap:7px; font:inherit; font-weight:600; font-size:13px;
+    padding:8px 13px; border-radius:var(--r-s); border:1px solid var(--trait-fort);
+    background:var(--carte); color:var(--encre); cursor:pointer; text-decoration:none;
+    transition:background .12s, box-shadow .12s, transform .06s;
+  }
+  .btn:hover { background:#fbf7f0; }
+  .btn:active { transform:translateY(1px); }
+  .btn .ico { width:15px; height:15px; }
+  .btn.primaire { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn.primaire:hover { background:var(--accent-fort); }
+  .btn.tourne .ico { animation:tourne .7s linear infinite; }
+  @keyframes tourne { to { transform:rotate(360deg); } }
+
+  /* ── KPIs ─────────────────────────────────────────────────── */
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:20px; }
+  .kpi { background:var(--carte); border:1px solid var(--trait); border-radius:var(--r);
+    padding:16px 17px; box-shadow:var(--ombre); }
+  .kpi .k-tete { display:flex; align-items:center; gap:8px; color:var(--doux); font-size:12.5px; font-weight:600; }
+  .kpi .k-tete .pic { width:15px; height:15px; }
+  .kpi .k-val { font-size:27px; font-weight:700; letter-spacing:-.7px; margin:9px 0 3px; }
+  .kpi .k-val small { font-size:15px; font-weight:600; color:var(--tres-doux); }
+  .kpi .k-sous { font-size:12px; color:var(--doux); }
+  .kpi.alerte { border-color:#efc9c6; background:linear-gradient(#fff,#fdf3f2); }
+  .kpi.alerte .k-alerte { display:flex; align-items:center; gap:6px; color:var(--rouge); font-weight:600; font-size:12px; margin-top:4px; }
+  .barre { height:7px; border-radius:99px; background:var(--trait); overflow:hidden; margin-top:11px; }
+  .barre > span { display:block; height:100%; border-radius:99px; background:var(--vert); transition:width .5s ease; }
+
+  /* ── Grille de cartes ─────────────────────────────────────── */
+  .grille { display:grid; grid-template-columns:repeat(12,1fr); gap:16px; }
+  .carte { background:var(--carte); border:1px solid var(--trait); border-radius:var(--r);
+    box-shadow:var(--ombre); padding:18px 19px; }
+  .carte.large { grid-column:span 7; }
+  .carte.moyenne { grid-column:span 5; }
+  .carte.pleine { grid-column:span 12; }
+  .c-tete { display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; gap:10px; }
+  .c-tete h2 { margin:0; font-size:15px; letter-spacing:-.2px; display:flex; align-items:center; gap:9px; }
+  .c-tete .pic { width:18px; height:18px; color:var(--doux); }
+  .c-tete .lien { font-size:12.5px; font-weight:600; color:var(--bleu); text-decoration:none; }
+  .c-tete .lien:hover { text-decoration:underline; }
+
+  /* progression banques */
+  .ligne-banque { margin-bottom:15px; }
+  .ligne-banque:last-child { margin-bottom:0; }
+  .lb-tete { display:flex; justify-content:space-between; align-items:baseline; font-size:13px; margin-bottom:6px; }
+  .lb-tete b { font-weight:600; }
+  .lb-tete .chiffres { color:var(--doux); font-size:12px; }
+  .lb-tete .chiffres em { font-style:normal; color:var(--encre); font-weight:600; }
+  .lb-meta { display:flex; gap:14px; margin-top:6px; font-size:11.5px; color:var(--doux); }
+  .pastille { display:inline-flex; align-items:center; gap:5px; }
+  .pt { width:8px; height:8px; border-radius:99px; display:inline-block; }
+  .pt.v { background:var(--vert); } .pt.r { background:var(--accent); } .pt.a { background:var(--orange); }
+
+  .action-carte { margin-top:16px; }
+
+  /* suivi : barres empilées + légende */
+  .stack { display:flex; height:24px; border-radius:7px; overflow:hidden; background:var(--trait); }
+  .stack > span { display:block; transition:width .5s ease; }
+  .seg-fait { background:var(--vert); }
+  .seg-recette { background:var(--accent); }
+  .seg-todo { background:var(--nuit-clair); }
+  .seg-reporte { background:#c4cbd6; }
+  .legende { display:grid; grid-template-columns:1fr 1fr; gap:10px 18px; margin-top:16px; }
+  .leg { display:flex; align-items:center; gap:9px; font-size:13px; }
+  .leg .car { width:11px; height:11px; border-radius:3px; flex:none; }
+  .leg .n { font-weight:600; margin-left:auto; }
+  .note-suivi { font-size:11px; color:var(--tres-doux); margin-top:14px; }
+
+  /* verdicts simulateur */
+  .verdict { display:flex; align-items:center; gap:11px; padding:9px 0; border-top:1px solid var(--trait); }
+  .verdict:first-of-type { border-top:none; }
+  .verdict .marque-ok { width:22px; height:22px; border-radius:7px; display:grid; place-items:center; flex:none; }
+  .verdict .marque-ok.ok { background:var(--vert-fond); color:var(--vert); }
+  .verdict .marque-ok.ko { background:var(--rouge-fond); color:var(--rouge); }
+  .verdict .v-nom { font-size:12.8px; line-height:1.35; }
+  .verdict .v-val { margin-left:auto; font-size:12.5px; font-weight:600; color:var(--doux); white-space:nowrap; padding-left:12px; }
+  .sim-meta { margin-top:14px; font-size:12px; color:var(--doux); display:flex; gap:16px; flex-wrap:wrap; }
+  .sim-meta b { color:var(--encre); }
+
+  /* activité */
+  .flux { list-style:none; margin:0; padding:0; }
+  .flux li { display:flex; gap:12px; padding:10px 0; border-top:1px solid var(--trait); }
+  .flux li:first-child { border-top:none; }
+  .flux .av { width:30px; height:30px; border-radius:8px; background:var(--accent-fond); color:var(--accent-fort);
+    display:grid; place-items:center; font-weight:700; font-size:12.5px; flex:none; text-transform:uppercase; }
+  .flux .corps { min-width:0; flex:1; }
+  .flux .corps .t { font-size:13px; }
+  .flux .corps .t b { font-weight:600; }
+  .flux .corps .f { font-size:11.5px; color:var(--doux); font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .flux .quand { font-size:11.5px; color:var(--tres-doux); white-space:nowrap; margin-left:auto; padding-left:8px; }
+
+  /* pied serveur */
+  .serveur-grille { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; }
+  .sv { }
+  .sv .lab { font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--tres-doux); }
+  .sv .val { font-size:13.5px; margin-top:4px; }
+  .sv .val.mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; }
+  .puce { display:inline-flex; align-items:center; gap:6px; padding:2px 9px; border-radius:99px; font-size:12px; font-weight:600; }
+  .puce.ok { background:var(--vert-fond); color:var(--vert); }
+  .puce.ko { background:var(--rouge-fond); color:var(--rouge); }
+  .puce .p { width:7px; height:7px; border-radius:99px; background:currentColor; }
+
+  /* états vides / erreurs / squelette */
+  .vide { text-align:center; color:var(--tres-doux); font-size:13px; padding:26px 10px; }
+  .vide .pic { width:26px; height:26px; margin:0 auto 8px; display:block; opacity:.6; }
+  .banniere-err { grid-column:span 12; background:var(--rouge-fond); border:1px solid #efc9c6;
+    color:#9a332d; border-radius:var(--r); padding:13px 16px; font-size:13px; display:flex; align-items:center; gap:10px; }
+  .sq { background:linear-gradient(90deg,#eef0f4 25%,#f6f7f9 50%,#eef0f4 75%);
+    background-size:200% 100%; animation:sq 1.3s ease-in-out infinite; border-radius:6px; color:transparent; }
+  @keyframes sq { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  body.chargement .sq-cache { visibility:hidden; }
+
+  @media (max-width:960px) {
+    .app { grid-template-columns:1fr; }
+    .sidebar { position:static; height:auto; flex-direction:row; flex-wrap:wrap; align-items:center; }
+    .nav-groupe { display:none; }
+    .kpis { grid-template-columns:repeat(2,1fr); }
+    .carte.large,.carte.moyenne { grid-column:span 12; }
+  }
 </style>
 </head>
-<body>
-<main>
-  <header>
-    <h1><svg class="etoile" viewBox="0 0 40 40"><defs><radialGradient id="g" cx="40%" cy="35%"><stop offset="0%" stop-color="#f6d67a"/><stop offset="100%" stop-color="#e8b23a"/></radialGradient></defs><path d="M20 3 Q22.5 12 29 13.5 Q36 15 31.5 21 Q27.5 26 30 33 Q31.5 39 24.5 35.5 Q20 33.5 15.5 35.5 Q8.5 39 10 33 Q12.5 26 8.5 21 Q4 15 11 13.5 Q17.5 12 20 3 Z" fill="url(#g)"/><circle cx="16.5" cy="19" r="1.8" fill="#2b2620"/><circle cx="23.5" cy="19" r="1.8" fill="#2b2620"/><circle cx="14" cy="23" r="1.6" fill="#f2a9a9" opacity=".8"/><circle cx="26" cy="23" r="1.6" fill="#f2a9a9" opacity=".8"/></svg>
-      L'atelier</h1>
-    <p>Le tableau de bord du projet — documentation, contenu pédagogique et outils.</p>
-  </header>
+<body class="chargement">
+<div class="app">
+  <!-- ── Barre latérale ─────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="marque">
+      <svg class="etoile" viewBox="0 0 40 40" aria-hidden="true" fill="none"><path d="M20 3 Q22.5 12 29 13.5 Q36 15 31.5 21 Q27.5 26 30 33 Q31.5 39 24.5 35.5 Q20 33.5 15.5 35.5 Q8.5 39 10 33 Q12.5 26 8.5 21 Q4 15 11 13.5 Q17.5 12 20 3 Z" fill="#22335a" stroke="#eef2f8" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <div>
+        <div class="titre">Plouma</div>
+        <div class="sous">Atelier interne</div>
+      </div>
+    </div>
 
-  <div class="grille">
-    <a class="tuile" href="/cadrage/viewer/">
-      <div class="ico">📚</div>
-      <h2>Documentation projet</h2>
-      <p>Les docs 1-18 et le catalogue de fonctionnalités — avec commentaires en marge.</p>
+    <div class="nav-groupe">Pilotage</div>
+    <a class="nav-item actif" href="/">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+      Tableau de bord
     </a>
-    <a class="tuile" href="/contenu/banques/admin.html">
-      <div class="ico">✅</div>
-      <h2>Relecture des mots</h2>
-      <p>Le mode correction : un mot à la fois, valider ou corriger. C'est ici que ça se passe !</p>
+    <a class="nav-item" href="/cadrage/viewer/">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Documentation
     </a>
-    <a class="tuile" href="/contenu/banques/">
-      <div class="ico">🍎</div>
-      <h2>Banque de mots</h2>
-      <p>Les 100 mots du module Syllabes en visualisation (filtres, syllabes colorées).</p>
-    </a>
-    <a class="tuile" href="/cadrage/simulateur/dashboard/">
-      <div class="ico">📊</div>
-      <h2>Simulateur du Directeur</h2>
-      <p>Les enfants virtuels contre le moteur adaptatif — verdicts et courbes.</p>
-    </a>
-    <a class="tuile avenir" href="#">
-      <div class="ico">🎙️</div>
-      <h2>Studio d'enregistrement <span class="badge">bientôt</span></h2>
-      <p>Enregistrer les voix de l'app, ligne par ligne, avec file d'attente et prises multiples.</p>
-    </a>
-    <a class="tuile avenir" href="#">
-      <div class="ico">🗂️</div>
-      <h2>Lignes de texte <span class="badge">bientôt</span></h2>
-      <p>L'inventaire de tout ce que l'app prononce, avec l'état audio de chaque ligne.</p>
-    </a>
-  </div>
 
-  <footer>Espace privé · les modifications sont enregistrées et versionnées automatiquement.</footer>
-</main>
+    <div class="nav-groupe">Contenu</div>
+    <a class="nav-item" href="/contenu/banques/admin.html">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Relecture des mots
+    </a>
+    <a class="nav-item" href="/contenu/banques/">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
+      Banque de mots
+    </a>
+    <a class="nav-item" href="/cadrage/simulateur/dashboard/">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg>
+      Simulateur
+    </a>
+
+    <div class="nav-groupe">À venir</div>
+    <span class="nav-item off">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+      Studio <span class="badge">Phase 3</span>
+    </span>
+    <span class="nav-item off">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Lignes de texte <span class="badge">Phase 2</span>
+    </span>
+  </aside>
+
+  <!-- ── Contenu ────────────────────────────────────────── -->
+  <main class="contenu">
+    <div class="topbar">
+      <div>
+        <h1>Tableau de bord</h1>
+        <div class="fil">Vue d'ensemble du projet Plouma — contenu, suivi, moteur et activité.</div>
+      </div>
+      <div class="actions">
+        <span class="maj" id="maj">—</span>
+        <button class="btn" id="recharger" type="button">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Recharger
+        </button>
+      </div>
+    </div>
+
+    <div id="err-zone"></div>
+
+    <!-- KPIs -->
+    <section class="kpis" id="kpis">
+      <div class="kpi">
+        <div class="k-tete"><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Mots validés</div>
+        <div class="k-val sq" id="kpi-mots-v">00 <small>/ 00</small></div>
+        <div class="k-sous sq-cache" id="kpi-mots-p">—</div>
+        <div class="barre"><span id="kpi-mots-barre" style="width:0"></span></div>
+      </div>
+      <div class="kpi">
+        <div class="k-tete"><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Commentaires ouverts</div>
+        <div class="k-val sq" id="kpi-comm">0</div>
+        <div class="k-sous sq-cache" id="kpi-comm-sous">—</div>
+      </div>
+      <div class="kpi">
+        <div class="k-tete"><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg> Verdicts simulateur</div>
+        <div class="k-val sq" id="kpi-sim">0 <small>/ 0</small></div>
+        <div class="k-sous sq-cache" id="kpi-sim-sous">—</div>
+      </div>
+      <div class="kpi" id="kpi-git-carte">
+        <div class="k-tete"><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg> Commits à pousser</div>
+        <div class="k-val sq" id="kpi-git">0</div>
+        <div class="k-sous sq-cache" id="kpi-git-sous">—</div>
+      </div>
+    </section>
+
+    <!-- Cartes -->
+    <section class="grille">
+      <!-- Relecture -->
+      <article class="carte large">
+        <div class="c-tete">
+          <h2><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Relecture du contenu</h2>
+          <a class="lien" href="/contenu/banques/">Voir la banque →</a>
+        </div>
+        <div id="banques"><div class="vide sq-cache">Chargement…</div></div>
+        <div class="action-carte">
+          <a class="btn primaire" href="/contenu/banques/admin.html">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Continuer la relecture
+          </a>
+        </div>
+      </article>
+
+      <!-- Suivi projet -->
+      <article class="carte moyenne">
+        <div class="c-tete">
+          <h2><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Suivi projet</h2>
+          <span class="lien" id="suivi-total" style="color:var(--doux)">—</span>
+        </div>
+        <div class="stack sq-cache" id="suivi-stack" title="Répartition des tâches">
+          <span class="seg-fait" style="width:0"></span>
+          <span class="seg-recette" style="width:0"></span>
+          <span class="seg-todo" style="width:0"></span>
+          <span class="seg-reporte" style="width:0"></span>
+        </div>
+        <div class="legende sq-cache" id="suivi-legende"></div>
+        <div class="note-suivi" id="suivi-note"></div>
+      </article>
+
+      <!-- Simulateur -->
+      <article class="carte moyenne">
+        <div class="c-tete">
+          <h2><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg> Simulateur du Directeur</h2>
+          <a class="lien" href="/cadrage/simulateur/dashboard/">Détails →</a>
+        </div>
+        <div id="verdicts"><div class="vide sq-cache">Chargement…</div></div>
+        <div class="sim-meta sq-cache" id="sim-meta"></div>
+      </article>
+
+      <!-- Activité -->
+      <article class="carte large">
+        <div class="c-tete">
+          <h2><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Activité récente</h2>
+        </div>
+        <div id="activite"><div class="vide sq-cache">Chargement…</div></div>
+      </article>
+
+      <!-- Serveur -->
+      <article class="carte pleine">
+        <div class="c-tete">
+          <h2><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg> État du serveur</h2>
+        </div>
+        <div class="serveur-grille" id="serveur"><div class="vide sq-cache">Chargement…</div></div>
+      </article>
+    </section>
+  </main>
+</div>
+
+<script type="module">
+'use strict';
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* Dates relatives « il y a 2 h ». */
+function relatif(iso) {
+  if (!iso) return '';
+  const t = Date.parse(iso);
+  if (Number.isNaN(t)) return '';
+  const s = Math.round((Date.now() - t) / 1000);
+  if (s < 45) return 'à l’instant';
+  const m = Math.round(s / 60);
+  if (m < 60) return `il y a ${m} min`;
+  const h = Math.round(m / 60);
+  if (h < 24) return `il y a ${h} h`;
+  const j = Math.round(h / 24);
+  if (j < 7) return `il y a ${j} j`;
+  return new Date(t).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+}
+function dureeHumaine(sec) {
+  if (sec == null) return '—';
+  const j = Math.floor(sec / 86400), h = Math.floor((sec % 86400) / 3600), m = Math.floor((sec % 3600) / 60);
+  if (j > 0) return `${j} j ${h} h`;
+  if (h > 0) return `${h} h ${m} min`;
+  if (m > 0) return `${m} min`;
+  return `${sec} s`;
+}
+const nomFichier = (f) => (f ? String(f).split('/').pop() : '');
+
+/* ── Rendus par section ─────────────────────────────────── */
+function rendreKpis(d) {
+  const c = d.contenu || {};
+  const mots = c.mots || 0, val = c.valides || 0;
+  const pct = mots ? Math.round((val / mots) * 100) : 0;
+  $('kpi-mots-v').innerHTML = `${val} <small>/ ${mots}</small>`;
+  $('kpi-mots-p').textContent = `${pct} % validés · ${c.aRelire || 0} à relire`;
+  $('kpi-mots-barre').style.width = pct + '%';
+
+  const cm = d.commentaires || {};
+  $('kpi-comm').textContent = cm.nonResolus ?? 0;
+  $('kpi-comm-sous').textContent = `${cm.resolus ?? 0} résolus · ${cm.total ?? 0} au total`;
+
+  const sim = d.simulateur || {};
+  if (sim.present) {
+    $('kpi-sim').innerHTML = `${sim.okTotal ?? 0} <small>/ ${sim.total ?? 0}</small>`;
+    $('kpi-sim-sous').textContent = (sim.okTotal === sim.total) ? 'tous les verdicts au vert' : `${(sim.total - sim.okTotal)} verdict(s) hors cible`;
+  } else {
+    $('kpi-sim').innerHTML = `— <small>/ —</small>`;
+    $('kpi-sim-sous').textContent = 'aucune exécution';
+  }
+
+  const sv = d.serveur || {};
+  const carte = $('kpi-git-carte');
+  if (sv.pushOk === false) {
+    carte.classList.add('alerte');
+    $('kpi-git').textContent = (sv.commitsEnAvance != null ? sv.commitsEnAvance : '⚠');
+    $('kpi-git-sous').innerHTML = `<span class="k-alerte"><svg style="width:13px;height:13px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> deploy key GitHub manquante</span>`;
+  } else {
+    carte.classList.remove('alerte');
+    const n = sv.commitsEnAvance ?? 0;
+    $('kpi-git').textContent = n;
+    $('kpi-git-sous').textContent = n === 0 ? 'clone à jour avec origin' : `en attente de push`;
+  }
+}
+
+function rendreBanques(d) {
+  const c = d.contenu || {};
+  const banques = c.banques || [];
+  const el = $('banques');
+  if (banques.length === 0) {
+    el.innerHTML = `<div class="vide">Aucune banque de mots trouvée.</div>`;
+  } else {
+    el.innerHTML = banques.map((b) => {
+      const pct = b.mots ? Math.round((b.valides / b.mots) * 100) : 0;
+      return `<div class="ligne-banque">
+        <div class="lb-tete">
+          <b>${esc(b.fichier.replace('.csv', ''))}</b>
+          <span class="chiffres"><em>${b.valides}</em> / ${b.mots} validés · ${pct} %</span>
+        </div>
+        <div class="barre"><span style="width:${pct}%"></span></div>
+        <div class="lb-meta">
+          <span class="pastille"><i class="pt v"></i>${b.valides} validés</span>
+          <span class="pastille"><i class="pt r"></i>${b.aRelire} à relire</span>
+          <span class="pastille"><i class="pt a"></i>${b.aVerifier} à vérifier</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  // Ligne de synthèse contenu (modules / compétences / mécaniques)
+  if (c.modules != null || c.mecaniques != null) {
+    el.innerHTML += `<div class="lb-meta" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--trait)">
+      <span><b>${c.modules ?? '—'}</b> modules</span>
+      <span><b>${c.competences ?? '—'}</b> compétences</span>
+      <span><b>${c.mecaniques ?? '—'}</b> mécaniques</span>
+    </div>`;
+  }
+}
+
+function rendreSuivi(d) {
+  const s = (d.suivi && d.suivi.statuts) || {};
+  const total = (d.suivi && d.suivi.total) || 0;
+  const fait = s['validee'] || 0, recette = s['en-recette'] || 0, todo = s['a-developper'] || 0, reporte = s['reportee'] || 0;
+  const w = (n) => total ? (n / total * 100).toFixed(1) + '%' : '0';
+  const st = $('suivi-stack').children;
+  st[0].style.width = w(fait); st[1].style.width = w(recette); st[2].style.width = w(todo); st[3].style.width = w(reporte);
+  $('suivi-total').textContent = `${total} tâches`;
+  const lignes = [
+    ['seg-fait', 'Fait', fait], ['seg-recette', 'En recette', recette],
+    ['seg-todo', 'À développer', todo], ['seg-reporte', 'Reporté', reporte],
+  ];
+  $('suivi-legende').innerHTML = lignes.map(([cl, nom, n]) =>
+    `<div class="leg"><span class="car ${cl}"></span>${nom}<span class="n">${n}</span></div>`).join('');
+  $('suivi-note').textContent = (d.suivi && d.suivi.note) || '';
+}
+
+function rendreSimulateur(d) {
+  const sim = d.simulateur || {};
+  const el = $('verdicts');
+  if (!sim.present || !sim.verdicts || sim.verdicts.length === 0) {
+    el.innerHTML = `<div class="vide">Aucun résultat de simulation committé.<br>Lancez le simulateur pour peupler cette carte.</div>`;
+    $('sim-meta').innerHTML = '';
+    return;
+  }
+  el.innerHTML = sim.verdicts.map((v) => `
+    <div class="verdict">
+      <span class="marque-ok ${v.ok ? 'ok' : 'ko'}">${v.ok
+        ? '<svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+        : '<svg style="width:13px;height:13px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'}</span>
+      <span class="v-nom">${esc(v.nom)}</span>
+      <span class="v-val">${esc(v.valeur)}</span>
+    </div>`).join('');
+  const m = sim.meta || {};
+  $('sim-meta').innerHTML =
+    `<span><b>${m.enfants ?? '—'}</b> enfants × <b>${m.semaines ?? '—'}</b> semaines</span>` +
+    (m.seed ? `<span>seed <b>${esc(m.seed)}</b></span>` : '');
+}
+
+function rendreActivite(d) {
+  const ent = (d.activite && d.activite.entrees) || [];
+  const el = $('activite');
+  if (ent.length === 0) {
+    el.innerHTML = `<div class="vide"><svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Aucune écriture enregistrée pour l’instant.</div>`;
+    return;
+  }
+  el.innerHTML = `<ul class="flux">${ent.map((e) => {
+    const u = e.utilisateur || '?';
+    const geste = e.endpoint && e.endpoint.includes('comments') ? 'a commenté'
+      : e.endpoint && e.endpoint.includes('estimations') ? 'a estimé'
+      : 'a modifié';
+    return `<li>
+      <span class="av">${esc(u.slice(0, 2))}</span>
+      <div class="corps">
+        <div class="t"><b>${esc(u)}</b> ${geste} <b>${esc(nomFichier(e.fichier)) || 'un fichier'}</b></div>
+        <div class="f">${esc(e.fichier || '')}</div>
+      </div>
+      <span class="quand" title="${esc(e.date || '')}">${esc(relatif(e.date))}</span>
+    </li>`;
+  }).join('')}</ul>`;
+}
+
+function rendreServeur(d) {
+  const sv = d.serveur || {};
+  const commit = sv.dernierCommit || {};
+  const dateCommit = commit.date ? new Date(commit.date).toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+  const puce = sv.pushOk === false
+    ? `<span class="puce ko"><span class="p"></span> push en attente</span>`
+    : `<span class="puce ok"><span class="p"></span> synchronisé</span>`;
+  $('serveur').innerHTML = `
+    <div class="sv"><div class="lab">Branche</div><div class="val mono">${esc(sv.branche || '—')}</div></div>
+    <div class="sv"><div class="lab">Dernier commit</div><div class="val">${esc(commit.sujet || '—')}<br><span style="color:var(--tres-doux);font-size:12px">${esc(dateCommit)}</span></div></div>
+    <div class="sv"><div class="lab">Synchro Git</div><div class="val">${puce}${sv.commitsEnAvance != null ? ` <span style="color:var(--doux)">· ${sv.commitsEnAvance} en avance</span>` : ''}</div></div>
+    <div class="sv"><div class="lab">Uptime</div><div class="val">${esc(dureeHumaine(sv.uptimeSecondes))}</div></div>
+    <div class="sv"><div class="lab">Node</div><div class="val mono">${esc(sv.node || '—')}</div></div>`;
+}
+
+/* ── Chargement / rafraîchissement ──────────────────────── */
+let enCours = false;
+async function charger() {
+  if (enCours) return;
+  enCours = true;
+  const bouton = $('recharger');
+  bouton.classList.add('tourne');
+  try {
+    const r = await fetch('/api/tableau-de-bord', { headers: { Accept: 'application/json' }, cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    $('err-zone').innerHTML = '';
+    document.body.classList.remove('chargement');
+    document.querySelectorAll('.sq').forEach((n) => n.classList.remove('sq'));
+    rendreKpis(d);
+    rendreBanques(d);
+    rendreSuivi(d);
+    rendreSimulateur(d);
+    rendreActivite(d);
+    rendreServeur(d);
+    $('maj').textContent = 'Actualisé ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  } catch (e) {
+    $('err-zone').innerHTML = `<div class="grille"><div class="banniere-err">
+      <svg style="width:18px;height:18px;flex:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Impossible de charger le tableau de bord (${esc(e.message)}). Nouvel essai automatique dans une minute.
+    </div></div>`;
+  } finally {
+    bouton.classList.remove('tourne');
+    enCours = false;
+  }
+}
+
+$('recharger').addEventListener('click', charger);
+charger();
+setInterval(charger, 60_000);
+</script>
 </body>
 </html>
