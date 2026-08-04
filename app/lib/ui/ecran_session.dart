@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../directeur/directeur.dart';
 import '../mecaniques/ecran_cadeau.dart';
-import '../mecaniques/fallback_dev.dart';
-import '../mecaniques/tape_la_syllabe.dart';
+import '../mecaniques/mecanique_ecran.dart';
 import '../services/contenu.dart';
 import '../services/voix.dart';
 
@@ -61,24 +60,13 @@ class _EcranSessionState extends State<EcranSession> {
     return _ecranPour(spec, key);
   }
 
-  /// Sélectionne l'écran de mécanique pour un NiveauSpec (doc mission §4-5-6).
+  /// Sélectionne l'écran pour un NiveauSpec : cadeau à part, sinon la factory
+  /// de dispatch des mécaniques (tape-la-syllabe, boite-a-sons, repli [DEV]).
   Widget _ecranPour(NiveauSpec spec, Key key) {
-    // 1. Niveau cadeau : petit écran surprise, aucun exercice.
     if (spec.type == TypeNiveau.cadeau) {
       return EcranCadeau(key: key, voix: widget.voix, onTermine: _niveauTermine);
     }
-    // 2. Mécanique « Tape la syllabe » : la vraie mécanique de cette tranche.
-    if (spec.mecanique == 'tape-la-syllabe') {
-      return EcranTapeLaSyllabe(
-        key: key,
-        spec: spec,
-        banque: widget.banque,
-        voix: widget.voix,
-        onTermine: _niveauTermine,
-      );
-    }
-    // 3. Toute autre mécanique demandée par le Directeur : repli [DEV].
-    return EcranFallbackDev(
+    return ecranPourMecanique(
       key: key,
       spec: spec,
       banque: widget.banque,
