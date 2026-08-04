@@ -505,6 +505,6 @@ server.headersTimeout = 15_000;
 
 server.listen(PORT, HOTE, () => {
   console.log(`Atelier Plouma → http://${HOTE}:${PORT}/cadrage/viewer/`);
-  console.log(`  admin banque → http://${HOTE}:${PORT}/contenu/banques/admin.html`);
+  console.log(`  relecture    → http://${HOTE}:${PORT}/#/relecture`);
   console.log(`  git auto: ${GIT_AUTO ? 'ON (branche courante)' : 'off'} · journal: ${join(DATA, 'journal.log')}`);
 });
