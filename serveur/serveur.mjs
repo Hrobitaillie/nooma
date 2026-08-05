@@ -493,6 +493,76 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // --- API : CRUD du registre des lignes de voix (phrases) -------------------
+  // POST { action: ajouter|modifier|supprimer, ligne: {...} } (supprimer : { action, id }).
+  // Les variables sont RECALCULÉES du texte ({mot}, {prenom}…) — jamais reçues du client.
+  if (path === '/api/registre/lignes') {
+    if (req.method !== 'POST') {
+      send(res, 405, '{"ok":false,"error":"method not allowed"}');
+      return;
+    }
+    const brut = await lireCorps(req, res);
+    if (brut === null) return;
+    try {
+      const corps = JSON.parse(brut);
+      const action = String(corps.action || '');
+      const chemin = join(RACINE, 'contenu', 'voix', 'lignes.json');
+      const data = JSON.parse(await readFile(chemin, 'utf8'));
+      if (!Array.isArray(data.lignes)) throw new Error('registre illisible');
+      const types = Array.isArray(data.types) ? data.types : [];
+      const statuts = Array.isArray(data.statuts) ? data.statuts : ['actif', 'prevu'];
+
+      const erreur = (msg) => { send(res, 400, JSON.stringify({ ok: false, error: msg })); };
+
+      if (action === 'supprimer') {
+        const id = String(corps.id || '');
+        const idx = data.lignes.findIndex((l) => l && l.id === id);
+        if (idx < 0) { erreur('id introuvable au registre'); return; }
+        data.lignes.splice(idx, 1);
+      } else if (action === 'ajouter' || action === 'modifier') {
+        const l = corps.ligne || {};
+        const id = String(l.id || '').trim();
+        const texte = String(l.texte || '').trim();
+        const type = String(l.type || '').trim();
+        if (!/^[a-z0-9-]{2,80}$/.test(id)) { erreur('id invalide (minuscules a-z, chiffres, tirets, 2-80)'); return; }
+        if (id.startsWith('mot-') || id.startsWith('phoneme-') || id.startsWith('syllabe-')) {
+          erreur('préfixes mot-/phoneme-/syllabe- réservés aux lignes dérivées'); return;
+        }
+        if (!texte || texte.length > 300) { erreur('texte requis (300 caractères max)'); return; }
+        if (!types.includes(type)) { erreur(`type inconnu (${types.join(', ')})`); return; }
+        const statut = String(l.statut || 'actif');
+        if (!statuts.includes(statut)) { erreur(`statut inconnu (${statuts.join(', ')})`); return; }
+        const priorite = Number(l.priorite);
+        if (![1, 2, 3].includes(priorite)) { erreur('priorite : 1, 2 ou 3'); return; }
+        const existant = data.lignes.findIndex((x) => x && x.id === id);
+        if (action === 'ajouter' && existant >= 0) { erreur('id déjà au registre'); return; }
+        if (action === 'modifier' && existant < 0) { erreur('id introuvable au registre'); return; }
+        const variables = [...new Set([...texte.matchAll(/\{([a-z]+)\}/g)].map((m) => m[1]))];
+        const propre = {
+          id, texte, type,
+          contexte: String(l.contexte || '').slice(0, 300),
+          ...(l.ecran ? { ecran: String(l.ecran).slice(0, 80) } : {}),
+          indication: String(l.indication || '').slice(0, 300),
+          ...(variables.length ? { variables } : {}),
+          priorite, statut,
+        };
+        if (action === 'ajouter') data.lignes.push(propre);
+        else data.lignes[existant] = propre;
+      } else {
+        erreur('action inconnue (ajouter, modifier, supprimer)'); return;
+      }
+
+      const cible = join('contenu', 'voix', 'lignes.json');
+      await writeFile(chemin, JSON.stringify(data, null, 2) + '\n');
+      await journaliser({ type: 'ecriture', utilisateur: user, endpoint: path, fichier: cible, octets: brut.length });
+      committerContenu(cible, user, 'registre-voix');
+      send(res, 200, '{"ok":true}');
+    } catch {
+      send(res, 400, '{"ok":false,"error":"invalid json"}');
+    }
+    return;
+  }
+
   // --- API : tableau de bord (agrégation LECTURE SEULE) ----------------------
   if (path === '/api/tableau-de-bord') {
     if (req.method !== 'GET' && req.method !== 'HEAD') {

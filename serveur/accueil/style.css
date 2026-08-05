@@ -374,6 +374,34 @@ select.puce { color:var(--encre); }
 .st-contexte { color:var(--tres-doux); font-size:12.5px; margin-top:8px; }
 .st-idligne { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; color:var(--tres-doux); margin-top:12px; }
 
+/* chips de catégories (studio) */
+.st-cats { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.st-cat b { margin-left:3px; font-variant-numeric:tabular-nums; }
+
+/* formulaires CRUD (phrases du registre, mots de la banque) */
+.lg-form { background:var(--carte); border:1px solid var(--trait-fort); border-radius:var(--r);
+  box-shadow:var(--ombre); padding:16px 18px; margin:4px 0 16px; }
+.lg-form h3 { margin:0 0 12px; font-size:14.5px; }
+.lg-form-grille { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px 14px; }
+.lg-form-grille label { display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--doux); font-weight:600; }
+.lg-form-grille input:not([type=checkbox]), .lg-form-grille select, .lg-form-grille textarea {
+  font:inherit; font-size:13.5px; color:var(--encre); background:#fff;
+  border:1px solid var(--trait-fort); border-radius:8px; padding:7px 10px; }
+.lg-form-grille input:disabled { background:var(--bg); color:var(--doux); }
+.lg-form-grille textarea { resize:vertical; }
+.lg-form-large { grid-column:1 / -1; }
+.lg-form-case { flex-direction:row !important; align-items:center; gap:8px !important; align-self:end; padding-bottom:8px; }
+.lg-form-note { font-size:12.5px; color:var(--doux); margin:10px 0 12px; line-height:1.5; }
+.lg-form-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.lg-form-erreur { color:var(--rouge); font-size:12.5px; font-weight:600; }
+
+/* mini-boutons d'action (lignes du tableau, cartes de mots) */
+.btn.mini { padding:3px 8px; font-size:12px; line-height:1.4; }
+.lg-cell-actions { white-space:nowrap; }
+.mot-actions { position:absolute; bottom:8px; right:8px; display:flex; gap:5px; opacity:0; transition:opacity .12s; }
+.mot-actions .btn { background:var(--carte); }
+.mot-carte:hover .mot-actions { opacity:1; }
+
 /* onde (frise live + éditeur de coupes) */
 .st-onde { width:100%; height:110px; display:block; background:#fff; border:1px solid var(--trait);
   border-radius:var(--r-s); margin-bottom:10px; cursor:crosshair; touch-action:none; }
