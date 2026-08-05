@@ -382,6 +382,27 @@ select.puce { color:var(--encre); }
 .st-b { min-width:130px; }
 .st-prises-existantes { text-align:center; color:var(--doux); font-size:12.5px; margin-top:16px; }
 
+/* test micro (étalon) */
+.st-banner-etalon { background:var(--orange-fond); border:1px solid #e6cfa6; color:#8a5a1a; border-radius:var(--r-s);
+  padding:11px 15px; font-size:13px; line-height:1.5; margin-bottom:16px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.st-banner-etalon .btn { margin-left:auto; }
+.st-etalon-rappel { background:var(--accent-fond); border:1px solid var(--trait-fort); color:var(--encre);
+  border-radius:var(--r-s); padding:11px 15px; font-size:13px; line-height:1.5; margin-bottom:16px; }
+.st-etalon-ok { color:var(--vert); font-weight:700; margin-left:8px; white-space:nowrap; }
+.st-periph-ligne { display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:14px;
+  font-size:13px; color:var(--doux); flex-wrap:wrap; }
+.st-periph-ligne select { max-width:340px; padding:7px 10px; border:1px solid var(--trait-fort); border-radius:8px;
+  font:inherit; font-size:13px; background:#fff; color:var(--encre); }
+.st-verdict { margin-top:16px; display:flex; flex-direction:column; gap:7px; }
+.st-verdict > div { border-radius:var(--r-s); padding:9px 13px; font-size:13px; line-height:1.45; }
+.st-verdict .v-ok { background:var(--vert-fond); color:var(--vert); }
+.st-verdict .v-warn { background:var(--orange-fond); color:#8a5a1a; }
+.st-verdict .v-err { background:var(--rouge-fond); color:var(--rouge); font-weight:600; }
+.st-etalon-histo { margin-top:26px; }
+.st-etalon-histo h3 { font-size:14px; margin:0 0 10px; }
+.st-etalon-histo audio { height:32px; max-width:220px; }
+.st-periph-cell { max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
+
 /* arbitrage */
 .st-arb-tete { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:16px; }
 .st-arb-stats { display:flex; gap:18px; font-size:13px; color:var(--doux); flex-wrap:wrap; }

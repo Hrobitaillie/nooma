@@ -3,6 +3,8 @@
 // Zéro dépendance. Le modèle de données vit HORS git dans DATA_DIR (data/studio/) :
 //   data/studio/etat.json                          index global, écrit atomiquement (tmp+rename)
 //   data/studio/prises/<ligne-id>/<prise-id>.<ext>  fichiers audio bruts (webm/mp4/ogg)
+//   data/studio/etalon.json                        contrôle qualité d'entrée de session (§5)
+//   data/studio/etalon/<etalon-id>.<ext>           prises étalon (comparaison entre sessions)
 //
 // Le PACK exporté (prises retenues converties par ffmpeg) va, lui, DANS git :
 //   contenu/voix/pack/<ligne-id>.ogg + contenu/voix/pack/manifest.json
@@ -95,11 +97,11 @@ async function lireEtat(DATA) {
   }
 }
 
-// Écriture sérialisée + atomique (tmp dans le même dossier + rename).
+// Écriture sérialisée + atomique (tmp dans le même dossier + rename) — partagée
+// entre etat.json et etalon.json (une seule file, jamais deux écritures croisées).
 let fileEcriture = Promise.resolve();
-function ecrireEtat(DATA, data) {
+function ecrireJsonSerialise(cible, data) {
   const op = fileEcriture.then(async () => {
-    const cible = cheminEtat(DATA);
     await mkdir(dirname(cible), { recursive: true });
     const tmp = cible + '.' + process.pid + '.' + Date.now() + '.tmp';
     await writeFile(tmp, JSON.stringify(data, null, 2) + '\n');
@@ -108,6 +110,23 @@ function ecrireEtat(DATA, data) {
   // La file ne doit jamais rester rejetée (sinon les écritures suivantes échouent).
   fileEcriture = op.catch(() => {});
   return op;
+}
+function ecrireEtat(DATA, data) {
+  return ecrireJsonSerialise(cheminEtat(DATA), data);
+}
+
+// ─────────────────────────── Étalon (contrôle qualité de session) ─────────────
+function cheminEtalon(DATA) {
+  return join(DATA, 'studio', 'etalon.json');
+}
+async function lireEtalon(DATA) {
+  try {
+    const data = JSON.parse(await readFile(cheminEtalon(DATA), 'utf8'));
+    if (!data || !Array.isArray(data.sessions)) return { version: 1, sessions: [] };
+    return data;
+  } catch {
+    return { version: 1, sessions: [] };
+  }
 }
 
 /** Prochain numéro de prise pour une ligne (croissant, jamais réutilisé). */
@@ -362,6 +381,103 @@ export async function gererStudio(req, res, ctx) {
     await ecrireEtat(DATA, etat);
     await ctx.journaliser({ type: 'studio-suppr', utilisateur: user, endpoint: path, fichier: cible.prise.fichier });
     send(res, 200, '{"ok":true}');
+    return true;
+  }
+
+  // GET/POST /api/studio/etalon — contrôle qualité d'entrée de session (doc 18 §5).
+  // POST : corps binaire audio + query dureeMs/picDb/rmsDb/peripherique.
+  if (path === '/api/studio/etalon') {
+    if (req.method === 'GET' || req.method === 'HEAD') {
+      const etalon = await lireEtalon(DATA);
+      send(res, 200, JSON.stringify({ ok: true, sessions: etalon.sessions }));
+      return true;
+    }
+    if (req.method !== 'POST') {
+      send(res, 405, '{"ok":false,"error":"method not allowed"}');
+      return true;
+    }
+    const ct = typeBase(req.headers['content-type']);
+    const ext = MIME_ENTREE[ct];
+    if (!ext) {
+      send(res, 415, '{"ok":false,"error":"Content-Type audio non supporté (webm/mp4/ogg)"}');
+      return true;
+    }
+    const corps = await lireCorpsBinaire(req, res, LIMITE_CORPS_STUDIO, send);
+    if (corps === null) return true;
+    if (corps.length === 0) {
+      send(res, 400, '{"ok":false,"error":"corps audio vide"}');
+      return true;
+    }
+
+    const etalon = await lireEtalon(DATA);
+    let max = 0;
+    for (const s of etalon.sessions) if (s.n > max) max = s.n;
+    const n = max + 1;
+    const id = `etalon-${String(n).padStart(3, '0')}`;
+    try {
+      const dossier = join(DATA, 'studio', 'etalon');
+      await mkdir(dossier, { recursive: true });
+      await writeFile(join(dossier, id + ext), corps);
+    } catch {
+      send(res, 500, '{"ok":false,"error":"écriture du fichier impossible"}');
+      return true;
+    }
+    const session = {
+      id,
+      n,
+      date: new Date().toISOString(),
+      utilisateur: user,
+      peripherique: String(url.searchParams.get('peripherique') || '').slice(0, 200),
+      dureeMs: Number(url.searchParams.get('dureeMs')) || null,
+      picDb: url.searchParams.has('picDb') ? Number(url.searchParams.get('picDb')) : null,
+      rmsDb: url.searchParams.has('rmsDb') ? Number(url.searchParams.get('rmsDb')) : null,
+      mime: ct,
+      fichier: `etalon/${id}${ext}`,
+      taille: corps.length,
+    };
+    etalon.sessions.push(session);
+    await ecrireJsonSerialise(cheminEtalon(DATA), etalon);
+    await ctx.journaliser({ type: 'studio-etalon', utilisateur: user, endpoint: path, fichier: session.fichier, octets: corps.length });
+    send(res, 200, JSON.stringify({ ok: true, session }));
+    return true;
+  }
+
+  // GET /api/studio/etalon/audio/<etalonId> — réécoute d'un étalon passé.
+  if (path.startsWith('/api/studio/etalon/audio/')) {
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      send(res, 405, '{"ok":false,"error":"method not allowed"}');
+      return true;
+    }
+    const id = path.slice('/api/studio/etalon/audio/'.length);
+    if (!/^etalon-[0-9]{1,6}$/.test(id)) {
+      send(res, 400, '{"ok":false,"error":"identifiant invalide"}');
+      return true;
+    }
+    const etalon = await lireEtalon(DATA);
+    const session = etalon.sessions.find((s) => s.id === id);
+    if (!session) {
+      send(res, 404, '{"ok":false,"error":"étalon introuvable"}');
+      return true;
+    }
+    const abs = join(DATA, 'studio', session.fichier);
+    if (!(abs + '').startsWith(join(DATA, 'studio', 'etalon') + '/')) {
+      send(res, 403, 'forbidden', 'text/plain');
+      return true;
+    }
+    try {
+      const st = await stat(abs);
+      const ext2 = session.fichier.slice(session.fichier.lastIndexOf('.'));
+      res.writeHead(200, {
+        'Content-Type': MIME_SORTIE[ext2] || 'application/octet-stream',
+        'Content-Length': st.size,
+        'Cache-Control': 'no-store',
+        'Accept-Ranges': 'none',
+      });
+      if (req.method === 'HEAD') { res.end(); return true; }
+      createReadStream(abs).pipe(res);
+    } catch {
+      send(res, 404, '{"ok":false,"error":"fichier absent"}');
+    }
     return true;
   }
 
