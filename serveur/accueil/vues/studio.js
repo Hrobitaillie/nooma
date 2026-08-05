@@ -71,22 +71,47 @@ async function agreger() {
       priorite: Number(l.priorite ?? 3), statut: l.statut || 'actif', source: 'registre',
     });
   }
-  // Mots dérivés des banques.
+  // Mots dérivés des banques + syllabes UNIQUES de leurs découpages (colonne
+  // « decoupage », séparateur « - ») : chaque mot ajouté à une banque fait
+  // apparaître automatiquement ses nouvelles syllabes dans la file.
+  const syllabes = new Map(); // syllabe → { exemple, aVerifier }
   for (const nom of BANQUES) {
     let csv = null;
     try { csv = await fetchTexte(`/contenu/banques/${nom}.csv`); } catch { continue; }
     const li = csv.split(/\r?\n/).filter((x) => x.trim() !== '');
     if (li.length < 2) continue;
-    const iMot = champs(li[0]).indexOf('mot');
+    const entete = champs(li[0]);
+    const iMot = entete.indexOf('mot');
+    const iDec = entete.indexOf('decoupage');
+    const iVerif = entete.indexOf('aVerifier');
     if (iMot < 0) continue;
     for (let k = 1; k < li.length; k++) {
-      const mot = (champs(li[k])[iMot] || '').trim();
+      const c = champs(li[k]);
+      const mot = (c[iMot] || '').trim().normalize('NFC');
       if (!mot) continue;
       out.push({
         id: `mot-${mot}`, texte: mot, type: 'mot', contexte: `Banque « ${nom} » — mot prononcé`,
         indication: 'articulé, naturel', variables: [], priorite: 2, statut: 'actif', source: `banque:${nom}`,
       });
+      if (iDec < 0) continue;
+      const verif = iVerif >= 0 && (c[iVerif] || '').trim() === 'oui';
+      for (const brut of (c[iDec] || '').split('-')) {
+        const s = brut.trim().normalize('NFC');
+        if (!s) continue;
+        const connu = syllabes.get(s);
+        if (!connu) syllabes.set(s, { exemple: mot, aVerifier: verif });
+        else if (verif) connu.aVerifier = true;
+      }
     }
+  }
+  for (const [s, info] of syllabes) {
+    out.push({
+      id: `syllabe-${s}`, texte: s, type: 'syllabe',
+      contexte: `Syllabe orale « ${s} » (ex. « ${info.exemple} ») — prononcée détachée, comme en découpant le mot`
+        + (info.aVerifier ? ' · ⚠️ découpage marqué « à vérifier » (e caduc)' : ''),
+      indication: 'syllabe détachée, nette, sans allonger la voyelle', variables: [],
+      priorite: 2, statut: 'actif', source: 'banques:decoupage',
+    });
   }
   // Phonèmes dérivés du graphe (id « phoneme-<graphème> », priorité 1 — lot critique).
   try {
@@ -121,8 +146,8 @@ function statutAudio(id) {
   return 'proposee';
 }
 
-// Ordre de type pour la file : phonèmes/consignes d'abord, mots ensuite.
-const RANG_TYPE = { phoneme: 0, consigne: 1, feedback: 2, interpellation: 3, babillage: 4, histoire: 5, mot: 6 };
+// Ordre de type pour la file : phonèmes/consignes d'abord, puis syllabes, mots ensuite.
+const RANG_TYPE = { phoneme: 0, consigne: 1, feedback: 2, interpellation: 3, babillage: 4, histoire: 5, syllabe: 6, mot: 7 };
 function fileAttente() {
   return lignes
     .filter((l) => l.statut !== 'prevu' && statutAudio(l.id) !== 'retenue')

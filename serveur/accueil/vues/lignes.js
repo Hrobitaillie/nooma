@@ -127,7 +127,9 @@ async function agreger() {
     });
   }
 
-  // 2. Lignes dérivées : un « mot-<mot> » par mot de chaque banque.
+  // 2. Lignes dérivées : un « mot-<mot> » par mot de chaque banque, plus les
+  // syllabes UNIQUES de leurs découpages (« syllabe-<s> », colonne decoupage).
+  const syllabes = new Map(); // syllabe → mot d'exemple
   for (const nom of BANQUES) {
     let csv = null;
     try { csv = await fetchTexte(`/contenu/banques/${nom}.csv`); } catch { continue; }
@@ -135,9 +137,11 @@ async function agreger() {
     if (li.length < 2) continue;
     const entete = champs(li[0]);
     const iMot = entete.indexOf('mot');
+    const iDec = entete.indexOf('decoupage');
     if (iMot < 0) continue;
     for (let k = 1; k < li.length; k++) {
-      const mot = (champs(li[k])[iMot] || '').trim();
+      const c = champs(li[k]);
+      const mot = (c[iMot] || '').trim().normalize('NFC');
       if (!mot) continue;
       const id = `mot-${mot}`;
       out.push({
@@ -150,7 +154,25 @@ async function agreger() {
         statut: 'actif',
         audio: statutAudio(etat, id),
       });
+      if (iDec < 0) continue;
+      for (const brut of (c[iDec] || '').split('-')) {
+        const s = brut.trim().normalize('NFC');
+        if (s && !syllabes.has(s)) syllabes.set(s, mot);
+      }
     }
+  }
+  for (const [s, exemple] of syllabes) {
+    const id = `syllabe-${s}`;
+    out.push({
+      id,
+      texte: s,
+      type: 'syllabe',
+      source: 'banques:decoupage',
+      contexte: `Syllabe orale « ${s} » (ex. « ${exemple} »)`,
+      priorite: 2,
+      statut: 'actif',
+      audio: statutAudio(etat, id),
+    });
   }
 
   return out;
