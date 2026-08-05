@@ -26,10 +26,13 @@ const execFileP = promisify(execFile);
 export const LIMITE_CORPS_STUDIO = 25 * 1024 * 1024; // 25 Mo
 
 // Formats audio bruts acceptés en entrée (source conservée telle quelle, doc 18 §5.3).
+// Le WAV vient du montage côté studio (coupes) : PCM reconstruit depuis la prise décodée.
 const MIME_ENTREE = {
   'audio/webm': '.webm',
   'audio/mp4': '.m4a',
   'audio/ogg': '.ogg',
+  'audio/wav': '.wav',
+  'audio/x-wav': '.wav',
 };
 // Normalise « audio/webm;codecs=opus » → « audio/webm ».
 function typeBase(ct) {
@@ -40,6 +43,7 @@ const MIME_SORTIE = {
   '.m4a': 'audio/mp4',
   '.mp4': 'audio/mp4',
   '.ogg': 'audio/ogg',
+  '.wav': 'audio/wav',
 };
 
 const STATUTS = new Set(['proposee', 'retenue', 'ecartee']);

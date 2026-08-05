@@ -8,7 +8,9 @@
 //     historique réécoutable. Rappel : même pièce, même micro, même distance.
 //   • Enregistrement : une ligne plein cadre, texte en TRÈS gros (variables interpolées par un
 //     exemple), getUserMedia micro NU + MediaRecorder + vu-mètre AnalyserNode temps réel,
-//     boutons ● Enregistrer / ■ Stop / ▶ Réécouter / ↻ Refaire / ✓ Envoyer / Passer, espace = rec/stop.
+//     frise d'onde live puis ÉDITEUR après le stop (tête de lecture cliquable, sélection à la
+//     souris, coupes avec annulation — prise montée envoyée en WAV PCM, sinon source intacte),
+//     boutons ● Enregistrer / ■ Stop / ↻ Refaire / ✓ Envoyer / Passer, espace = rec/stop/lecture.
 //   • Arbitrage (Hugo) : par ligne, toutes les prises avec lecteur, Retenir / Écarter / note,
 //     badge de la retenue, bouton « Exporter le pack » (POST /api/studio/export + rapport).
 //
@@ -43,6 +45,15 @@ try { periph = JSON.parse(localStorage.getItem('plouma-studio-micro') || 'null')
 let flux = null, recorder = null, morceaux = [], blobPrise = null, mimePrise = '';
 let audioCtx = null, analyser = null, rafVu = 0, dateDebut = 0, picMax = 0;
 let sommeCarres = 0, nMesures = 0; // accumulateur RMS (moyennes de carrés par frame du vu-mètre)
+let ondesLive = [];               // pics par frame → frise d'onde pendant l'enregistrement
+
+// Éditeur de prise (onde décodée, tête de lecture, sélection, coupes).
+let bufferPrise = null;           // AudioBuffer décodé de blobPrise
+let montageFait = false;          // ≥1 coupe → on enverra un WAV reconstruit
+let picsCache = null;             // pics par colonne (recalculés après coupe/resize)
+let selDebut = null, selFin = null, tetePos = 0;   // secondes
+let lectureSrc = null, lectureDepart = 0, lectureOffset = 0, rafLecture = 0;
+let pileAnnulation = [];          // AudioBuffers précédents (annuler la coupe)
 
 // ────────────────────────── Agrégation des lignes ──────────────────────────
 function champs(l) { return l.split(';'); }
@@ -223,6 +234,8 @@ function ouvrirEnreg(id) {
   mode = 'enreg';
   arretMicro();
   blobPrise = null;
+  bufferPrise = null; montageFait = false; picsCache = null;
+  selDebut = selFin = null; tetePos = 0; pileAnnulation = [];
   rendreEnreg(id);
 }
 
@@ -254,6 +267,14 @@ function rendreEnreg(id) {
       </div>
 
       <div class="st-vu" id="st-vu"><div class="st-vu-barre" id="st-vu-barre"></div></div>
+      <canvas id="st-onde" class="st-onde" height="110"></canvas>
+      <div class="st-onde-outils" id="st-onde-outils" hidden>
+        <button class="btn" id="st-ed-lire" type="button">▶ Lire</button>
+        <button class="btn" id="st-ed-couper" type="button" disabled>✂ Couper la sélection</button>
+        <button class="btn" id="st-ed-annuler" type="button" disabled>↩ Annuler</button>
+        <span class="st-ed-duree" id="st-ed-duree"></span>
+      </div>
+      <div class="st-hint st-onde-aide" id="st-onde-aide" hidden>Cliquez sur l'onde pour placer la tête de lecture, glissez pour sélectionner un passage à couper (espace = lire/pause).</div>
       <div class="st-etat-micro" id="st-etat">Prêt. Appuyez sur <b>Enregistrer</b> (ou la barre d'espace).</div>
 
       <div class="st-boutons" id="st-boutons"></div>
@@ -273,13 +294,12 @@ function rendreBoutonsEnreg(phase, l) {
   if (phase === 'pret' || phase === 'rejoue') {
     // Aucune prise capturée : Enregistrer + Passer.
     b.innerHTML = gros('st-rec', 'btn-ok', '● Enregistrer')
-      + (blobPrise ? gros('st-reecouter', 'btn-neutre', '▶ Réécouter') + gros('st-refaire', 'btn-neutre', '↻ Refaire') + gros('st-envoyer', 'btn-principal', '✓ Envoyer') : '')
       + gros('st-passer', 'btn-neutre', 'Passer →');
   } else if (phase === 'enregistre') {
     b.innerHTML = gros('st-stop', 'btn-ko', '■ Stop');
   } else if (phase === 'capture') {
-    b.innerHTML = gros('st-reecouter', 'btn-neutre', '▶ Réécouter')
-      + gros('st-refaire', 'btn-neutre', '↻ Refaire')
+    // L'écoute et les coupes vivent dans la barre d'outils de l'onde.
+    b.innerHTML = gros('st-refaire', 'btn-neutre', '↻ Refaire')
       + gros('st-envoyer', 'btn-principal', '✓ Envoyer & suivant')
       + gros('st-passer', 'btn-neutre', 'Passer →');
   }
@@ -289,8 +309,13 @@ function rendreBoutonsEnreg(phase, l) {
 function cablerBoutons(l) {
   const rec = $('#st-rec'); if (rec) rec.onclick = () => demarrerCapture(l);
   const stop = $('#st-stop'); if (stop) stop.onclick = () => arreterCapture(l);
-  const re = $('#st-reecouter'); if (re) re.onclick = () => { const a = $('#st-audio'); if (a && !a.hidden) a.play(); };
-  const rf = $('#st-refaire'); if (rf) rf.onclick = () => { blobPrise = null; const a = $('#st-audio'); if (a) { a.hidden = true; a.removeAttribute('src'); } setEtat('Reprise. Appuyez sur Enregistrer.'); rendreBoutonsEnreg('pret', l); };
+  const rf = $('#st-refaire'); if (rf) rf.onclick = () => {
+    blobPrise = null;
+    reinitialiserEditeur();
+    const a = $('#st-audio'); if (a) { a.hidden = true; a.removeAttribute('src'); }
+    setEtat('Reprise. Appuyez sur Enregistrer.');
+    rendreBoutonsEnreg('pret', l);
+  };
   const env = $('#st-envoyer'); if (env) env.onclick = () => envoyer(l);
   const pa = $('#st-passer'); if (pa) pa.onclick = () => suivant(l.id);
 }
@@ -333,7 +358,7 @@ function demarrerRecorder(onFin) {
     recorder = new MediaRecorder(flux);
   }
   morceaux = [];
-  picMax = 0; sommeCarres = 0; nMesures = 0;
+  picMax = 0; sommeCarres = 0; nMesures = 0; ondesLive = [];
   recorder.ondataavailable = (ev) => { if (ev.data && ev.data.size) morceaux.push(ev.data); };
   recorder.onstop = () => {
     blobPrise = new Blob(morceaux, { type: (recorder && recorder.mimeType) || mimePrise || 'audio/webm' });
@@ -353,9 +378,11 @@ function rmsDbCapture() { return nMesures > 0 && sommeCarres > 0 ? +(10 * Math.l
 
 async function demarrerCapture(l) {
   if (!(await obtenirFlux())) return;
+  reinitialiserEditeur();
   demarrerRecorder(() => {
-    setEtat(`✓ Prise capturée (${(blobPrise.size / 1024).toFixed(0)} Ko). Réécoutez, puis Envoyez ou Refaites.`);
+    setEtat(`✓ Prise capturée (${(blobPrise.size / 1024).toFixed(0)} Ko). Écoutez, coupez si besoin, puis Envoyez ou Refaites.`);
     rendreBoutonsEnreg('capture', l);
+    initialiserEditeur();
   });
   setEtat('🔴 Enregistrement… parlez, puis <b>Stop</b> (ou espace).');
   rendreBoutonsEnreg('enregistre', l);
@@ -366,10 +393,14 @@ function arreterCapture() {
   arretVuMetre();
 }
 
+function ctxAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
 function demarrerVuMetre() {
   try {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const src = audioCtx.createMediaStreamSource(flux);
+    const src = ctxAudio().createMediaStreamSource(flux);
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 1024;
     src.connect(analyser);
@@ -385,6 +416,8 @@ function demarrerVuMetre() {
       }
       if (max > picMax) picMax = max;
       sommeCarres += carres / buf.length; nMesures++;
+      ondesLive.push(max);
+      dessinerLive();
       if (barre) {
         barre.style.width = Math.min(100, max * 130).toFixed(0) + '%';
         barre.style.background = max > 0.92 ? 'var(--rouge)' : max > 0.5 ? 'var(--vert)' : 'var(--accent)';
@@ -402,6 +435,7 @@ function arretVuMetre() {
 // Coupe micro + audio context (démontage, refaire complet).
 function arretMicro() {
   arretVuMetre();
+  arreterLecture();
   try { if (recorder && recorder.state !== 'inactive') recorder.stop(); } catch { /* rien */ }
   recorder = null;
   if (flux) { for (const t of flux.getTracks()) t.stop(); flux = null; }
@@ -411,8 +445,17 @@ function arretMicro() {
 
 async function envoyer(l) {
   if (!blobPrise) return;
+  arreterLecture();
   const env = $('#st-envoyer'); if (env) { env.disabled = true; env.textContent = 'Envoi…'; }
-  const dureeMs = Math.max(0, Date.now() - dateDebut);
+  // Sans coupe : la prise SOURCE part telle quelle (on ne transcode jamais deux fois).
+  // Avec coupes : WAV PCM reconstruit depuis l'audio décodé et monté.
+  let corps = blobPrise, type = mimePrise || 'audio/webm';
+  let dureeMs = Math.max(0, Date.now() - dateDebut);
+  if (montageFait && bufferPrise) {
+    corps = bufferVersWav(bufferPrise);
+    type = 'audio/wav';
+    dureeMs = Math.round(bufferPrise.duration * 1000);
+  }
   const picDb = picDbCapture();
   const rmsDb = rmsDbCapture();
   const qs = new URLSearchParams({ ligne: l.id, dureeMs: String(dureeMs) });
@@ -421,8 +464,8 @@ async function envoyer(l) {
   try {
     const r = await fetch(`/api/studio/prise?${qs}`, {
       method: 'POST',
-      headers: { 'Content-Type': mimePrise || 'audio/webm' },
-      body: blobPrise,
+      headers: { 'Content-Type': type },
+      body: corps,
     });
     const data = await r.json();
     if (!r.ok || !data.ok) throw new Error(data.error || ('HTTP ' + r.status));
@@ -442,6 +485,7 @@ async function envoyer(l) {
 function suivant(idCourant) {
   arretVuMetre();
   blobPrise = null;
+  reinitialiserEditeur();
   const file = fileAttente();
   // La ligne courante peut avoir quitté la file (si elle vient d'être retenue) ; on prend
   // la suivante par position d'origine.
@@ -452,6 +496,250 @@ function suivant(idCourant) {
   else if (idx >= 0) prochaine = file[idx]; // reste sur place (dernière) → recharge la même
   if (!prochaine) { mode = 'file'; rendreFile(); return; }
   ouvrirEnreg(prochaine.id);
+}
+
+// ────────────── Éditeur de prise : onde, tête de lecture, coupes ───────────
+// Zéro dépendance : AnalyserNode pour la frise live, decodeAudioData pour
+// l'onde complète, AudioBufferSourceNode pour la lecture (les blobs de
+// MediaRecorder ont une durée « Infinity » dans <audio>, on n'y touche pas).
+
+let coulOnde = null;
+function couleursOnde() {
+  if (!coulOnde) {
+    const cs = getComputedStyle(document.documentElement);
+    const v = (nom, defaut) => (cs.getPropertyValue(nom) || defaut).trim();
+    coulOnde = {
+      barre: v('--accent', '#3b6fe0'),
+      tete: v('--rouge', '#c0392b'),
+      selection: 'rgba(59,111,224,.18)',
+      bord: v('--trait', '#e6eaf2'),
+    };
+  }
+  return coulOnde;
+}
+
+function preparerCanvas() {
+  const c = $('#st-onde');
+  if (!c) return null;
+  if (c.clientWidth && c.width !== c.clientWidth) { c.width = c.clientWidth; picsCache = null; }
+  return c;
+}
+
+// Frise live pendant l'enregistrement : un pic par frame, défile vers la gauche.
+function dessinerLive() {
+  const c = preparerCanvas();
+  if (!c) return;
+  const g = c.getContext('2d');
+  const W = c.width, H = c.height;
+  g.clearRect(0, 0, W, H);
+  const n = Math.min(ondesLive.length, W);
+  const dep = ondesLive.length - n;
+  g.fillStyle = couleursOnde().barre;
+  for (let i = 0; i < n; i++) {
+    const h = Math.max(2, ondesLive[dep + i] * H);
+    g.fillRect(i, (H - h) / 2, 1, h);
+  }
+}
+
+// Pics min/max par colonne de pixels pour l'onde décodée.
+function picsParColonne(buf, W) {
+  const ch = buf.getChannelData(0);
+  const parCol = Math.max(1, Math.floor(ch.length / W));
+  const pics = new Float32Array(W);
+  for (let x = 0; x < W; x++) {
+    let m = 0;
+    const d = x * parCol, f = Math.min(ch.length, d + parCol);
+    for (let i = d; i < f; i++) { const v = Math.abs(ch[i]); if (v > m) m = v; }
+    pics[x] = m;
+  }
+  return pics;
+}
+
+function dessinerEditeur() {
+  const c = preparerCanvas();
+  if (!c || !bufferPrise) return;
+  if (!picsCache) picsCache = picsParColonne(bufferPrise, c.width);
+  const g = c.getContext('2d');
+  const W = c.width, H = c.height, duree = bufferPrise.duration;
+  const px = (s) => Math.round((s / duree) * W);
+  g.clearRect(0, 0, W, H);
+  if (selDebut != null && selFin != null) {
+    g.fillStyle = couleursOnde().selection;
+    g.fillRect(px(selDebut), 0, Math.max(1, px(selFin) - px(selDebut)), H);
+  }
+  g.fillStyle = couleursOnde().barre;
+  for (let x = 0; x < W; x++) {
+    const h = Math.max(2, picsCache[x] * H * 0.92);
+    g.fillRect(x, (H - h) / 2, 1, h);
+  }
+  g.fillStyle = couleursOnde().tete;
+  g.fillRect(Math.min(W - 2, px(tetePos)), 0, 2, H);
+}
+
+function majOutilsEditeur() {
+  const lire = $('#st-ed-lire');
+  if (lire) lire.textContent = lectureSrc ? '■ Pause' : '▶ Lire';
+  const coupe = $('#st-ed-couper');
+  if (coupe) coupe.disabled = !(bufferPrise && selDebut != null && selFin != null && selFin - selDebut > 0.02);
+  const ann = $('#st-ed-annuler');
+  if (ann) ann.disabled = pileAnnulation.length === 0;
+  const dur = $('#st-ed-duree');
+  if (dur && bufferPrise) dur.textContent = `${bufferPrise.duration.toFixed(1)} s${montageFait ? ' · monté → WAV' : ''}`;
+}
+
+function reinitialiserEditeur() {
+  arreterLecture();
+  bufferPrise = null; montageFait = false; picsCache = null;
+  selDebut = selFin = null; tetePos = 0; pileAnnulation = [];
+  const outils = $('#st-onde-outils'); if (outils) outils.hidden = true;
+  const aide = $('#st-onde-aide'); if (aide) aide.hidden = true;
+  const c = $('#st-onde'); if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height);
+}
+
+async function initialiserEditeur() {
+  try {
+    const ab = await blobPrise.arrayBuffer();
+    bufferPrise = await ctxAudio().decodeAudioData(ab);
+  } catch {
+    // Décodage impossible → repli : le lecteur <audio> natif suffit pour écouter.
+    const a = $('#st-audio'); if (a) a.hidden = false;
+    return;
+  }
+  const outils = $('#st-onde-outils'); if (outils) outils.hidden = false;
+  const aide = $('#st-onde-aide'); if (aide) aide.hidden = false;
+  cablerEditeur();
+  dessinerEditeur();
+  majOutilsEditeur();
+}
+
+function cablerEditeur() {
+  const c = $('#st-onde');
+  if (!c) return;
+  const posSec = (e) => {
+    const r = c.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+    return p * bufferPrise.duration;
+  };
+  let dragDepart = null;
+  c.onpointerdown = (e) => {
+    if (!bufferPrise) return;
+    c.setPointerCapture(e.pointerId);
+    arreterLecture(); majOutilsEditeur();
+    dragDepart = posSec(e);
+    selDebut = selFin = null;
+    dessinerEditeur();
+  };
+  c.onpointermove = (e) => {
+    if (dragDepart == null || !bufferPrise) return;
+    const s = posSec(e);
+    if (Math.abs(s - dragDepart) > 0.02) {
+      selDebut = Math.min(dragDepart, s);
+      selFin = Math.max(dragDepart, s);
+      dessinerEditeur(); majOutilsEditeur();
+    }
+  };
+  c.onpointerup = (e) => {
+    if (dragDepart == null || !bufferPrise) return;
+    if (selDebut == null) { tetePos = posSec(e); dessinerEditeur(); }
+    dragDepart = null;
+    majOutilsEditeur();
+  };
+  const lire = $('#st-ed-lire');
+  if (lire) lire.onclick = () => { if (lectureSrc) { arreterLecture(); majOutilsEditeur(); dessinerEditeur(); } else lireEditeur(); };
+  const coupe = $('#st-ed-couper'); if (coupe) coupe.onclick = couperSelection;
+  const ann = $('#st-ed-annuler'); if (ann) ann.onclick = annulerCoupe;
+}
+
+function lireEditeur() {
+  if (!bufferPrise) return;
+  arreterLecture();
+  const ctx = ctxAudio();
+  if (ctx.state === 'suspended') ctx.resume();
+  const src = ctx.createBufferSource();
+  src.buffer = bufferPrise;
+  src.connect(ctx.destination);
+  const aSel = selDebut != null && selFin != null && selFin - selDebut > 0.02;
+  const dep = aSel ? selDebut : (tetePos >= bufferPrise.duration - 0.05 ? 0 : tetePos);
+  lectureSrc = src; lectureOffset = dep; lectureDepart = ctx.currentTime;
+  src.onended = () => {
+    if (lectureSrc !== src) return;
+    lectureSrc = null;
+    cancelAnimationFrame(rafLecture); rafLecture = 0;
+    majOutilsEditeur(); dessinerEditeur();
+  };
+  if (aSel) src.start(0, dep, selFin - dep); else src.start(0, dep);
+  const tick = () => {
+    tetePos = Math.min(bufferPrise.duration, lectureOffset + (ctxAudio().currentTime - lectureDepart));
+    dessinerEditeur();
+    rafLecture = requestAnimationFrame(tick);
+  };
+  tick();
+  majOutilsEditeur();
+}
+
+function arreterLecture() {
+  if (lectureSrc) {
+    const src = lectureSrc;
+    lectureSrc = null;
+    try { src.onended = null; src.stop(); } catch { /* déjà arrêtée */ }
+  }
+  if (rafLecture) { cancelAnimationFrame(rafLecture); rafLecture = 0; }
+}
+
+function couperSelection() {
+  if (!bufferPrise || selDebut == null || selFin == null || selFin - selDebut < 0.02) return;
+  arreterLecture();
+  const sr = bufferPrise.sampleRate, nc = bufferPrise.numberOfChannels;
+  const d = Math.max(0, Math.floor(selDebut * sr));
+  const f = Math.min(bufferPrise.length, Math.ceil(selFin * sr));
+  const reste = bufferPrise.length - (f - d);
+  if (reste < sr * 0.05) { setEtat('⚠️ Coupe refusée : il ne resterait presque rien de la prise.', true); return; }
+  pileAnnulation.push(bufferPrise);
+  if (pileAnnulation.length > 10) pileAnnulation.shift();
+  const nb = ctxAudio().createBuffer(nc, reste, sr);
+  for (let ch = 0; ch < nc; ch++) {
+    const av = bufferPrise.getChannelData(ch), ap = nb.getChannelData(ch);
+    ap.set(av.subarray(0, d), 0);
+    ap.set(av.subarray(f), d);
+  }
+  bufferPrise = nb; montageFait = true; picsCache = null;
+  tetePos = Math.min(selDebut, nb.duration);
+  selDebut = selFin = null;
+  setEtat('✂️ Passage coupé. Réécoutez pour vérifier le raccord.');
+  dessinerEditeur(); majOutilsEditeur();
+}
+
+function annulerCoupe() {
+  if (!pileAnnulation.length) return;
+  arreterLecture();
+  bufferPrise = pileAnnulation.pop();
+  montageFait = pileAnnulation.length > 0;
+  picsCache = null; selDebut = selFin = null; tetePos = 0;
+  setEtat('↩ Coupe annulée.');
+  dessinerEditeur(); majOutilsEditeur();
+}
+
+// AudioBuffer → WAV PCM 16 bits (envoyé seulement quand la prise a été montée).
+function bufferVersWav(buf) {
+  const nc = Math.min(2, buf.numberOfChannels), sr = buf.sampleRate, n = buf.length;
+  const total = 44 + n * nc * 2;
+  const dv = new DataView(new ArrayBuffer(total));
+  const ecrire = (o, s) => { for (let i = 0; i < s.length; i++) dv.setUint8(o + i, s.charCodeAt(i)); };
+  ecrire(0, 'RIFF'); dv.setUint32(4, total - 8, true); ecrire(8, 'WAVE');
+  ecrire(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, nc, true);
+  dv.setUint32(24, sr, true); dv.setUint32(28, sr * nc * 2, true); dv.setUint16(32, nc * 2, true); dv.setUint16(34, 16, true);
+  ecrire(36, 'data'); dv.setUint32(40, n * nc * 2, true);
+  const canaux = [];
+  for (let ch = 0; ch < nc; ch++) canaux.push(buf.getChannelData(ch));
+  let o = 44;
+  for (let i = 0; i < n; i++) {
+    for (let ch = 0; ch < nc; ch++) {
+      const v = Math.max(-1, Math.min(1, canaux[ch][i]));
+      dv.setInt16(o, v < 0 ? v * 0x8000 : v * 0x7fff, true);
+      o += 2;
+    }
+  }
+  return new Blob([dv.buffer], { type: 'audio/wav' });
 }
 
 // ─────────────────────────── Mode : test micro (étalon) ────────────────────
@@ -532,6 +820,7 @@ function rendreEtalon() {
         <button class="btn" id="st-periph-activer" type="button" hidden>Autoriser le micro</button>
       </div>
       <div class="st-vu" id="st-vu"><div class="st-vu-barre" id="st-vu-barre"></div></div>
+      <canvas id="st-onde" class="st-onde" height="110"></canvas>
       <div class="st-etat-micro" id="st-etat">Prêt. Appuyez sur <b>Enregistrer</b> et lisez la phrase étalon.</div>
       <div class="st-boutons" id="st-boutons"></div>
       <audio id="st-audio" controls hidden style="width:100%;margin-top:14px"></audio>
@@ -828,13 +1117,17 @@ function rendreMode() {
   else rendreFile();
 }
 
-// Raccourci clavier : espace = enregistrer / stop (en mode enregistrement uniquement).
+// Raccourci clavier (mode enregistrement) : espace = enregistrer / stop, puis lire / pause.
 function onKey(e) {
   if (mode !== 'enreg') return;
   if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON') {
     e.preventDefault();
     if (recorder && recorder.state === 'recording') arreterCapture();
     else if (!blobPrise) { const rec = $('#st-rec'); if (rec) rec.click(); }
+    else if (bufferPrise) {
+      if (lectureSrc) { arreterLecture(); majOutilsEditeur(); dessinerEditeur(); }
+      else lireEditeur();
+    }
   }
 }
 
