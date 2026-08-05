@@ -4,12 +4,31 @@
   "sourcesDerivees": {
     "note": "Sources dont chaque entrée engendre une ligne implicite, agrégée par le serveur/studio (pas de saisie manuelle, pas de duplication dans ce fichier).",
     "regles": [
-      {"source": "contenu/banques/*.csv", "convention": "chaque mot → une ligne implicite id « mot-<mot> », type « mot »", "statut": "actif"},
-      {"source": "contenu/graphe-competences.json", "convention": "chaque graphème introduit → une ligne implicite id « phoneme-<graphème> », type « phoneme », priorité 1 (lot critique doc 05 §5)", "statut": "prevu"}
+      {
+        "source": "contenu/banques/*.csv",
+        "convention": "chaque mot → une ligne implicite id « mot-<mot> », type « mot »",
+        "statut": "actif"
+      },
+      {
+        "source": "contenu/graphe-competences.json",
+        "convention": "chaque graphème introduit → une ligne implicite id « phoneme-<graphème> », type « phoneme », priorité 1 (lot critique doc 05 §5)",
+        "statut": "prevu"
+      }
     ]
   },
-  "types": ["consigne", "feedback", "phoneme", "babillage", "mot", "interpellation", "histoire"],
-  "statuts": ["actif", "prevu"],
+  "types": [
+    "consigne",
+    "feedback",
+    "phoneme",
+    "babillage",
+    "mot",
+    "interpellation",
+    "histoire"
+  ],
+  "statuts": [
+    "actif",
+    "prevu"
+  ],
   "lignes": [
     {
       "id": "consigne-ecoute-mot",
@@ -18,7 +37,9 @@
       "contexte": "tape-la-syllabe / boite-a-sons — lancement de l'écoute du mot",
       "ecran": "tape-la-syllabe",
       "indication": "ton complice, débit lent, on met le mot en valeur",
-      "variables": ["mot"],
+      "variables": [
+        "mot"
+      ],
       "priorite": 1,
       "statut": "actif"
     },
@@ -29,7 +50,9 @@
       "contexte": "boite-a-sons — répétition du mot en difficulté 0-1",
       "ecran": "boite-a-sons",
       "indication": "simple répétition posée du mot",
-      "variables": ["mot"],
+      "variables": [
+        "mot"
+      ],
       "priorite": 2,
       "statut": "actif"
     },
@@ -150,7 +173,9 @@
       "contexte": "fallback-dev [DEV] — question de comptage (placeholder, pas une vraie mécanique produit)",
       "ecran": "fallback-dev",
       "indication": "DEV uniquement — ne part jamais en release",
-      "variables": ["mot"],
+      "variables": [
+        "mot"
+      ],
       "priorite": 3,
       "statut": "actif"
     },
@@ -172,7 +197,9 @@
       "contexte": "fallback-dev [DEV] — reprise syllabe par syllabe après erreur",
       "ecran": "fallback-dev",
       "indication": "DEV uniquement — ne part jamais en release ; {syllabes} = les syllabes séparées par des virgules",
-      "variables": ["syllabes"],
+      "variables": [
+        "syllabes"
+      ],
       "priorite": 3,
       "statut": "actif"
     },

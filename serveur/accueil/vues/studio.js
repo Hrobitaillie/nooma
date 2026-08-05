@@ -148,12 +148,40 @@ function statutAudio(id) {
 
 // Ordre de type pour la file : phonèmes/consignes d'abord, puis syllabes, mots ensuite.
 const RANG_TYPE = { phoneme: 0, consigne: 1, feedback: 2, interpellation: 3, babillage: 4, histoire: 5, syllabe: 6, mot: 7 };
+
+// Catégories d'enregistrement (onglets de la file et de l'arbitrage).
+const CATEGORIES = [
+  { cle: 'phoneme', libelle: 'Phonèmes' },
+  { cle: 'syllabe', libelle: 'Syllabes' },
+  { cle: 'mot', libelle: 'Mots' },
+  { cle: 'phrase', libelle: 'Phrases' },
+];
+function categorieDe(l) {
+  return (l.type === 'phoneme' || l.type === 'syllabe' || l.type === 'mot') ? l.type : 'phrase';
+}
+let categorie = ''; // '' = tout (mémoire module, partagée file/arbitrage)
+
 function fileAttente() {
   return lignes
     .filter((l) => l.statut !== 'prevu' && statutAudio(l.id) !== 'retenue')
+    .filter((l) => !categorie || categorieDe(l) === categorie)
     .sort((a, b) => a.priorite - b.priorite
       || (RANG_TYPE[a.type] ?? 9) - (RANG_TYPE[b.type] ?? 9)
       || a.id.localeCompare(b.id));
+}
+
+// Barre d'onglets de catégories avec compteurs. compteDe(l) → true si la ligne
+// compte pour le badge (restant à enregistrer, ou avec prises selon la vue).
+function chipsCategories(liste, surClic) {
+  const comptes = { '': 0 };
+  for (const c of CATEGORIES) comptes[c.cle] = 0;
+  for (const l of liste) { comptes['']++; comptes[categorieDe(l)]++; }
+  const chip = (cle, libelle) =>
+    `<button class="puce st-cat ${categorie === cle ? 'actif' : ''}" data-cat="${cle}" type="button">${libelle} <b>${comptes[cle] ?? 0}</b></button>`;
+  const html = `<div class="st-cats">${chip('', 'Tout')}${CATEGORIES.map((c) => chip(c.cle, c.libelle)).join('')}</div>`;
+  return { html, cabler: () => {
+    for (const b of $$('.st-cat')) b.onclick = () => { categorie = b.dataset.cat; surClic(); };
+  } };
 }
 
 // Interpole les variables par un exemple pour l'affichage (le texte réel garde {mot}).
@@ -196,16 +224,22 @@ function rendreFile() {
   const file = fileAttente();
   const total = lignes.filter((l) => l.statut !== 'prevu').length;
   const retenues = lignes.filter((l) => statutAudio(l.id) === 'retenue').length;
+  // Compteurs des chips = restant à enregistrer, toutes catégories confondues.
+  const restantes = lignes.filter((l) => l.statut !== 'prevu' && statutAudio(l.id) !== 'retenue');
+  const chips = chipsCategories(restantes, rendreFile);
 
   if (file.length === 0) {
-    zone.innerHTML = `<div class="st-fini"><span class="st-emoji">🎉</span>
-      <div>Tout est enregistré et retenu — ${retenues}/${total} lignes.</div>
+    const lib = categorie ? (CATEGORIES.find((c) => c.cle === categorie) || {}).libelle : '';
+    zone.innerHTML = `${chips.html}<div class="st-fini"><span class="st-emoji">🎉</span>
+      <div>${categorie ? `${lib} : tout est enregistré et retenu.` : `Tout est enregistré et retenu — ${retenues}/${total} lignes.`}</div>
       <small>Les nouvelles lignes ou celles dont l'audio est écarté reviendront ici.</small></div>`;
+    chips.cabler();
     return;
   }
 
   const apercu = file.slice(0, 40);
   zone.innerHTML = `
+    ${chips.html}
     ${etalonDuJour() ? '' : `<div class="st-banner-etalon">🎚 <b>Test micro pas encore fait aujourd'hui.</b>
       Même pièce, même micro, même distance — enregistrez la ligne étalon avant d'enchaîner les prises.
       <button class="btn" id="st-aller-etalon" type="button">Faire le test micro</button></div>`}
@@ -240,6 +274,7 @@ function rendreFile() {
     </table>
     ${file.length > apercu.length ? `<div class="st-hint" style="margin-top:10px">… et ${file.length - apercu.length} de plus.</div>` : ''}`;
 
+  chips.cabler();
   const versEtalon = $('#st-aller-etalon');
   if (versEtalon) versEtalon.onclick = () => { mode = 'etalon'; rendreMode(); };
   $('#st-demarrer').onclick = () => { indexEnreg = 0; ouvrirEnreg(file[0].id); };
@@ -978,6 +1013,7 @@ async function envoyerEtalon() {
 function lignesAvecPrises() {
   return lignes
     .filter((l) => prisesDe(l.id).length > 0)
+    .filter((l) => !categorie || categorieDe(l) === categorie)
     .sort((a, b) => {
       // « À arbitrer » (≥2 proposées, pas de retenue) d'abord.
       const sa = statutAudio(a.id), sb = statutAudio(b.id);
@@ -992,8 +1028,11 @@ function rendreArbitrage() {
   const avec = lignesAvecPrises();
   const aArbitrer = avec.filter((l) => statutAudio(l.id) !== 'retenue' && prisesDe(l.id).length >= 2).length;
   const retenues = avec.filter((l) => statutAudio(l.id) === 'retenue').length;
+  // Chips = lignes avec prises, toutes catégories confondues.
+  const chips = chipsCategories(lignes.filter((l) => prisesDe(l.id).length > 0), rendreArbitrage);
 
   zone.innerHTML = `
+    ${chips.html}
     <div class="st-arb-tete">
       <div class="st-arb-stats">
         <span><b>${avec.length}</b> ligne(s) avec prises</span>
@@ -1009,6 +1048,7 @@ function rendreArbitrage() {
     ${avec.length === 0 ? `<div class="vide">Aucune prise pour l'instant. Enregistrez depuis la file d'attente.</div>`
       : `<div class="st-arb-liste">${avec.map((l) => carteArbitrage(l)).join('')}</div>`}`;
 
+  chips.cabler();
   $('#st-export').onclick = exporterPack;
   cablerArbitrage();
 }

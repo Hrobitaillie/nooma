@@ -24,6 +24,8 @@ const GABARIT = `
     </div>
     <div class="actions">
       <span class="maj" id="lg-maj">—</span>
+      <button class="btn primaire" id="lg-ajouter" type="button">＋ Ajouter une phrase</button>
+      <a class="btn" href="#/banque" title="Les mots (et leurs syllabes) s'ajoutent dans la Banque de mots">＋ Mot → banque</a>
       <button class="btn" id="lg-recharger" type="button">
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         Recharger
@@ -74,6 +76,8 @@ const GABARIT = `
         </select>
       </div>
 
+      <div id="lg-form-hote"></div>
+
       <div class="lg-note-studio" id="lg-note">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
         <span>Le statut audio est joint depuis le studio (<code>/api/studio/etat</code>) : <b>aucun</b> = à enregistrer, <b>proposée</b> = prise(s) en attente d'arbitrage, <b>retenue ✓</b> = validée pour le pack. Enregistrez et arbitrez dans le <a href="#/studio">Studio</a>.</span>
@@ -86,6 +90,8 @@ const GABARIT = `
 // ── État de la vue (survit à un aller-retour dans la même page) ─────────────
 let lignes = [];        // toutes les lignes agrégées (registre + dérivées)
 let filtres = { q: '', type: '', audio: '' };
+let registreBrut = [];  // lignes du registre telles quelles (pour l'édition)
+let registreMeta = { types: ['consigne', 'feedback'], statuts: ['actif', 'prevu'] };
 
 /** Découpe une ligne CSV « ; » simple. */
 function champs(l) { return l.split(';'); }
@@ -112,6 +118,9 @@ async function agreger() {
   let registre = null;
   try { registre = await fetchJson('/contenu/voix/lignes.json'); } catch { registre = null; }
   const regList = registre && Array.isArray(registre.lignes) ? registre.lignes : [];
+  registreBrut = regList;
+  if (registre && Array.isArray(registre.types) && registre.types.length) registreMeta.types = registre.types;
+  if (registre && Array.isArray(registre.statuts) && registre.statuts.length) registreMeta.statuts = registre.statuts;
   for (const l of regList) {
     if (!l || !l.id) continue;
     const id = String(l.id);
@@ -214,7 +223,7 @@ function rendreTable() {
     return;
   }
   hote.innerHTML = `<table class="lg-table">
-    <thead><tr><th>ID</th><th>Texte</th><th>Type</th><th>Source</th><th class="c">Prio</th><th class="c">Audio</th></tr></thead>
+    <thead><tr><th>ID</th><th>Texte</th><th>Type</th><th>Source</th><th class="c">Prio</th><th class="c">Audio</th><th></th></tr></thead>
     <tbody>${visibles.map((l) => `
       <tr>
         <td class="lg-id">${esc(l.id)}${l.statut === 'prevu' ? ' <span class="lg-prevu-tag">prévu</span>' : ''}</td>
@@ -223,8 +232,132 @@ function rendreTable() {
         <td class="lg-source" title="${esc(l.contexte)}">${esc(l.source)}</td>
         <td class="c">${esc(l.priorite)}</td>
         <td class="c">${BADGE_AUDIO[l.audio] || BADGE_AUDIO.aucun}</td>
+        <td class="c lg-cell-actions">${l.source === 'registre'
+          ? `<button class="btn mini lg-edit" data-id="${esc(l.id)}" title="Modifier">✎</button>
+             <button class="btn mini danger lg-del" data-id="${esc(l.id)}" title="Supprimer">🗑</button>`
+          : ''}</td>
       </tr>`).join('')}</tbody>
   </table>`;
+  for (const b of $$('.lg-edit')) {
+    b.onclick = () => {
+      const l = registreBrut.find((x) => x && x.id === b.dataset.id);
+      if (l) ouvrirFormulaire(l);
+    };
+  }
+  for (const b of $$('.lg-del')) b.onclick = () => supprimerPhrase(b.dataset.id);
+}
+
+// ── CRUD des phrases du registre (les lignes dérivées s'éditent à la source) ──
+function slugifie(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/\{[a-z]+\}/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function fermerFormulaire() {
+  const h = $('#lg-form-hote');
+  if (h) h.innerHTML = '';
+}
+
+function ouvrirFormulaire(l) {
+  const h = $('#lg-form-hote');
+  if (!h) return;
+  const est = !!l;
+  const opt = (v, cour) => `<option ${v === cour ? 'selected' : ''}>${esc(String(v))}</option>`;
+  h.innerHTML = `<div class="lg-form">
+    <h3>${est ? `Modifier « ${esc(l.id)} »` : 'Nouvelle phrase'}</h3>
+    <div class="lg-form-grille">
+      <label class="lg-form-large">Texte prononcé par Plouma
+        <textarea id="lgf-texte" rows="2" maxlength="300" placeholder="Écoute bien : {mot} !">${est ? esc(l.texte) : ''}</textarea>
+      </label>
+      <label>Identifiant
+        <input id="lgf-id" value="${est ? esc(l.id) : ''}" ${est ? 'disabled' : ''} placeholder="consigne-…" autocomplete="off">
+      </label>
+      <label>Type
+        <select id="lgf-type">${registreMeta.types.map((t) => opt(t, est ? l.type : 'consigne')).join('')}</select>
+      </label>
+      <label>Priorité (1 = à enregistrer d'abord)
+        <select id="lgf-prio">${[1, 2, 3].map((p) => opt(p, est ? Number(l.priorite) : 2)).join('')}</select>
+      </label>
+      <label>Statut
+        <select id="lgf-statut">${registreMeta.statuts.map((s) => opt(s, est ? l.statut : 'actif')).join('')}</select>
+      </label>
+      <label class="lg-form-large">Contexte (où l'enfant l'entend)
+        <input id="lgf-contexte" maxlength="300" value="${est ? esc(l.contexte || '') : ''}" autocomplete="off">
+      </label>
+      <label class="lg-form-large">Indication de jeu (pour Florence)
+        <input id="lgf-indication" maxlength="300" value="${est ? esc(l.indication || '') : ''}" autocomplete="off">
+      </label>
+    </div>
+    <div class="lg-form-note" id="lgf-vars"></div>
+    <div class="lg-form-actions">
+      <button class="btn primaire" id="lgf-envoyer" type="button">${est ? 'Enregistrer les modifications' : 'Ajouter au registre'}</button>
+      <button class="btn" id="lgf-annuler" type="button">Annuler</button>
+      <span class="lg-form-erreur" id="lgf-erreur"></span>
+    </div>
+  </div>`;
+
+  let idLibre = !est; // l'id se propose tout seul tant qu'on n'y a pas touché
+  const majDerives = () => {
+    const texte = $('#lgf-texte').value;
+    const vars = [...new Set([...texte.matchAll(/\{([a-z]+)\}/g)].map((m) => m[1]))];
+    $('#lgf-vars').textContent = vars.length
+      ? `Variables détectées : ${vars.map((v) => `{${v}}`).join(', ')} — Florence enregistrera la phrase avec un mot d'exemple.`
+      : 'Astuce : écrivez {mot} ou {prenom} pour un passage que l’app remplacera à la volée.';
+    if (idLibre) {
+      const type = $('#lgf-type').value;
+      $('#lgf-id').value = `${type}-${slugifie(texte).split('-').slice(0, 4).join('-')}`.replace(/-+$/, '');
+    }
+  };
+  $('#lgf-texte').addEventListener('input', majDerives);
+  $('#lgf-type').addEventListener('change', majDerives);
+  if (!est) $('#lgf-id').addEventListener('input', () => { idLibre = false; });
+  majDerives();
+
+  $('#lgf-annuler').onclick = fermerFormulaire;
+  $('#lgf-envoyer').onclick = async () => {
+    const bouton = $('#lgf-envoyer');
+    bouton.disabled = true;
+    const erreurZone = $('#lgf-erreur');
+    erreurZone.textContent = '';
+    try {
+      const ligne = {
+        id: est ? l.id : $('#lgf-id').value.trim(),
+        texte: $('#lgf-texte').value.trim(),
+        type: $('#lgf-type').value,
+        priorite: Number($('#lgf-prio').value),
+        statut: $('#lgf-statut').value,
+        contexte: $('#lgf-contexte').value.trim(),
+        indication: $('#lgf-indication').value.trim(),
+        ...(est && l.ecran ? { ecran: l.ecran } : {}),
+      };
+      const r = await fetch('/api/registre/lignes', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: est ? 'modifier' : 'ajouter', ligne }),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok || !data.ok) throw new Error(data.error || ('HTTP ' + r.status));
+      fermerFormulaire();
+      charger();
+    } catch (e) {
+      erreurZone.textContent = '⚠️ ' + e.message;
+      bouton.disabled = false;
+    }
+  };
+}
+
+async function supprimerPhrase(id) {
+  if (!confirm(`Supprimer « ${id} » du registre ? Les prises audio déjà faites resteront dans le studio.`)) return;
+  try {
+    const r = await fetch('/api/registre/lignes', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'supprimer', id }),
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || !data.ok) throw new Error(data.error || ('HTTP ' + r.status));
+    charger();
+  } catch (e) {
+    alert('Suppression impossible : ' + e.message);
+  }
 }
 
 function rendreKpis() {
@@ -277,6 +410,7 @@ export function monter(hote) {
   hote.innerHTML = GABARIT;
   // Restaure les filtres dans les champs (survie d'un aller-retour).
   $('#lg-q').value = filtres.q;
+  $('#lg-ajouter').addEventListener('click', () => ouvrirFormulaire(null));
   $('#lg-recharger').addEventListener('click', charger);
   $('#lg-q').addEventListener('input', (e) => { filtres.q = e.target.value; rendreTable(); });
   $('#lg-type').addEventListener('change', (e) => { filtres.type = e.target.value; rendreTable(); });
