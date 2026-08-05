@@ -1,8 +1,11 @@
 // Vue « Studio d'enregistrement » (doc 18 §5) — l'UX de Florence + l'arbitrage de Hugo.
 //
-// Trois modes dans une même vue (onglets) :
+// Quatre modes dans une même vue (onglets) :
 //   • File d'attente : lignes SANS prise retenue, triées priorité puis type, compteur restant
 //     + progression de session (« N enregistrées aujourd'hui »).
+//   • Test micro (§5, contrôle qualité d'entrée de session) : choix du périphérique,
+//     LIGNE ÉTALON fixe, verdict pic/RMS, comparaison au dernier étalon (niveau + micro),
+//     historique réécoutable. Rappel : même pièce, même micro, même distance.
 //   • Enregistrement : une ligne plein cadre, texte en TRÈS gros (variables interpolées par un
 //     exemple), getUserMedia micro NU + MediaRecorder + vu-mètre AnalyserNode temps réel,
 //     boutons ● Enregistrer / ■ Stop / ▶ Réécouter / ↻ Refaire / ✓ Envoyer / Passer, espace = rec/stop.
@@ -20,17 +23,26 @@ const BANQUES = ['syllabes'];
 // Exemples d'interpolation des variables (Florence enregistre la phrase avec un mot d'exemple).
 const EXEMPLES = { mot: 'lapin', syllabes: 'la, pin', prenom: 'mon étoile' };
 
+// La PHRASE ÉTALON — NE JAMAIS LA CHANGER : elle sert à comparer les sessions entre elles.
+const PHRASE_ETALON = 'Bonjour, je suis Plouma ! Écoute bien : le lapin lit un livre, et la petite poule picore. On y va ?';
+
 // ── État module (survit aux allers-retours) ─────────────────
 let lignes = [];            // liste unifiée { id, texte, type, contexte, indication, priorite, variables, statut }
 let etatStudio = { lignes: {} };
-let mode = 'file';          // file | enreg | arbitrage
+let etalonSessions = [];    // historique /api/studio/etalon (croissant)
+let mode = 'file';          // file | etalon | enreg | arbitrage
 let indexEnreg = 0;         // position dans la file d'enregistrement
 let sessionCompte = 0;      // prises envoyées durant cette session (mémoire module)
 let arbitrageId = null;     // ligne ouverte en arbitrage
 
+// Périphérique d'entrée choisi ({ deviceId, label }), mémorisé par navigateur.
+let periph = null;
+try { periph = JSON.parse(localStorage.getItem('plouma-studio-micro') || 'null'); } catch { periph = null; }
+
 // État micro/enregistrement (vit hors DOM, nettoyé au démontage/refaire).
 let flux = null, recorder = null, morceaux = [], blobPrise = null, mimePrise = '';
 let audioCtx = null, analyser = null, rafVu = 0, dateDebut = 0, picMax = 0;
+let sommeCarres = 0, nMesures = 0; // accumulateur RMS (moyennes de carrés par frame du vu-mètre)
 
 // ────────────────────────── Agrégation des lignes ──────────────────────────
 function champs(l) { return l.split(';'); }
@@ -137,6 +149,7 @@ const GABARIT = `
   <div id="st-err"></div>
   <div class="onglets">
     <button id="st-ong-file" class="actif">🎙 File d'attente</button>
+    <button id="st-ong-etalon">🎚 Test micro</button>
     <button id="st-ong-arbitrage">⚖️ Arbitrage</button>
   </div>
   <section id="st-zone"><div class="vide">Chargement…</div></section>`;
@@ -157,6 +170,9 @@ function rendreFile() {
 
   const apercu = file.slice(0, 40);
   zone.innerHTML = `
+    ${etalonDuJour() ? '' : `<div class="st-banner-etalon">🎚 <b>Test micro pas encore fait aujourd'hui.</b>
+      Même pièce, même micro, même distance — enregistrez la ligne étalon avant d'enchaîner les prises.
+      <button class="btn" id="st-aller-etalon" type="button">Faire le test micro</button></div>`}
     <section class="kpis st-kpis">
       <div class="kpi"><div class="k-tete">File d'attente</div><div class="k-val">${file.length}</div><div class="k-sous">ligne(s) à enregistrer</div></div>
       <div class="kpi"><div class="k-tete">Retenues</div><div class="k-val">${retenues} <small>/ ${total}</small></div><div class="k-sous">audio validé</div></div>
@@ -188,6 +204,8 @@ function rendreFile() {
     </table>
     ${file.length > apercu.length ? `<div class="st-hint" style="margin-top:10px">… et ${file.length - apercu.length} de plus.</div>` : ''}`;
 
+  const versEtalon = $('#st-aller-etalon');
+  if (versEtalon) versEtalon.onclick = () => { mode = 'etalon'; rendreMode(); };
   $('#st-demarrer').onclick = () => { indexEnreg = 0; ouvrirEnreg(file[0].id); };
   for (const b of $$('.st-rec-ligne')) {
     b.onclick = () => {
@@ -224,7 +242,7 @@ function rendreEnreg(id) {
     <div class="st-enreg">
       <div class="st-enreg-tete">
         <button class="btn" id="st-retour">← File</button>
-        <span class="st-compteur">${pos + 1} / ${file.length} de la file · <b>${sessionCompte}</b> envoyée(s) cette session</span>
+        <span class="st-compteur">${pos + 1} / ${file.length} de la file · <b>${sessionCompte}</b> envoyée(s) cette session · 🎤 ${esc((periph && periph.label) || 'micro par défaut')}</span>
       </div>
       <div class="st-carte-ligne">
         <span class="lg-type t-${esc(l.type)}">${esc(l.type)}</span>
@@ -282,19 +300,31 @@ function setEtat(txt, err = false) {
   if (e) { e.innerHTML = txt; e.classList.toggle('err', err); }
 }
 
-// getUserMedia micro NU → MediaRecorder + vu-mètre AnalyserNode.
-async function demarrerCapture(l) {
+// getUserMedia micro NU (périphérique mémorisé si choisi) → true si le flux est prêt.
+async function obtenirFlux() {
+  if (flux) return true;
+  const nu = { echoCancellation: false, noiseSuppression: false, autoGainControl: false };
   try {
-    if (!flux) {
-      flux = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
-      });
-    }
+    flux = await navigator.mediaDevices.getUserMedia({
+      audio: (periph && periph.deviceId) ? { ...nu, deviceId: { exact: periph.deviceId } } : nu,
+    });
+    return true;
   } catch (e) {
+    // Le micro mémorisé a pu disparaître (débranché) → on retente en micro par défaut.
+    if (periph && periph.deviceId && (e.name === 'OverconstrainedError' || e.name === 'NotFoundError')) {
+      try {
+        flux = await navigator.mediaDevices.getUserMedia({ audio: nu });
+        setEtat('⚠️ Micro mémorisé introuvable — micro par défaut utilisé. Vérifiez le branchement.', true);
+        return true;
+      } catch { /* tombe dans le message générique */ }
+    }
     setEtat(`🎤 Micro indisponible : <b>${esc(e.name || 'refus')}</b>. Autorisez le micro dans la barre d'adresse (icône cadenas), vérifiez qu'aucune autre appli ne l'utilise, puis réessayez.`, true);
-    return;
+    return false;
   }
-  // Choix du mime supporté.
+}
+
+// MediaRecorder générique : capture + vu-mètre, onFin() appelée quand le blob est prêt.
+function demarrerRecorder(onFin) {
   mimePrise = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg']
     .find((m) => window.MediaRecorder && MediaRecorder.isTypeSupported(m)) || '';
   try {
@@ -303,19 +333,30 @@ async function demarrerCapture(l) {
     recorder = new MediaRecorder(flux);
   }
   morceaux = [];
-  picMax = 0;
+  picMax = 0; sommeCarres = 0; nMesures = 0;
   recorder.ondataavailable = (ev) => { if (ev.data && ev.data.size) morceaux.push(ev.data); };
   recorder.onstop = () => {
     blobPrise = new Blob(morceaux, { type: (recorder && recorder.mimeType) || mimePrise || 'audio/webm' });
     mimePrise = blobPrise.type;
     const a = $('#st-audio');
     if (a) { a.src = URL.createObjectURL(blobPrise); a.hidden = false; }
-    setEtat(`✓ Prise capturée (${(blobPrise.size / 1024).toFixed(0)} Ko). Réécoutez, puis Envoyez ou Refaites.`);
-    rendreBoutonsEnreg('capture', l);
+    onFin();
   };
   dateDebut = Date.now();
   recorder.start();
   demarrerVuMetre();
+}
+
+// Niveaux mesurés de la dernière capture (pic + RMS moyen), en dB pleine échelle.
+function picDbCapture() { return picMax > 0 ? +(20 * Math.log10(picMax)).toFixed(1) : null; }
+function rmsDbCapture() { return nMesures > 0 && sommeCarres > 0 ? +(10 * Math.log10(sommeCarres / nMesures)).toFixed(1) : null; }
+
+async function demarrerCapture(l) {
+  if (!(await obtenirFlux())) return;
+  demarrerRecorder(() => {
+    setEtat(`✓ Prise capturée (${(blobPrise.size / 1024).toFixed(0)} Ko). Réécoutez, puis Envoyez ou Refaites.`);
+    rendreBoutonsEnreg('capture', l);
+  });
   setEtat('🔴 Enregistrement… parlez, puis <b>Stop</b> (ou espace).');
   rendreBoutonsEnreg('enregistre', l);
 }
@@ -336,9 +377,14 @@ function demarrerVuMetre() {
     const barre = $('#st-vu-barre');
     const tick = () => {
       analyser.getByteTimeDomainData(buf);
-      let max = 0;
-      for (let i = 0; i < buf.length; i++) { const v = Math.abs(buf[i] - 128) / 128; if (v > max) max = v; }
+      let max = 0, carres = 0;
+      for (let i = 0; i < buf.length; i++) {
+        const v = Math.abs(buf[i] - 128) / 128;
+        if (v > max) max = v;
+        carres += v * v;
+      }
       if (max > picMax) picMax = max;
+      sommeCarres += carres / buf.length; nMesures++;
       if (barre) {
         barre.style.width = Math.min(100, max * 130).toFixed(0) + '%';
         barre.style.background = max > 0.92 ? 'var(--rouge)' : max > 0.5 ? 'var(--vert)' : 'var(--accent)';
@@ -367,9 +413,11 @@ async function envoyer(l) {
   if (!blobPrise) return;
   const env = $('#st-envoyer'); if (env) { env.disabled = true; env.textContent = 'Envoi…'; }
   const dureeMs = Math.max(0, Date.now() - dateDebut);
-  const picDb = picMax > 0 ? (20 * Math.log10(picMax)).toFixed(1) : '';
+  const picDb = picDbCapture();
+  const rmsDb = rmsDbCapture();
   const qs = new URLSearchParams({ ligne: l.id, dureeMs: String(dureeMs) });
-  if (picDb) qs.set('picDb', picDb);
+  if (picDb != null) qs.set('picDb', String(picDb));
+  if (rmsDb != null) qs.set('rmsDb', String(rmsDb));
   try {
     const r = await fetch(`/api/studio/prise?${qs}`, {
       method: 'POST',
@@ -404,6 +452,212 @@ function suivant(idCourant) {
   else if (idx >= 0) prochaine = file[idx]; // reste sur place (dernière) → recharge la même
   if (!prochaine) { mode = 'file'; rendreFile(); return; }
   ouvrirEnreg(prochaine.id);
+}
+
+// ─────────────────────────── Mode : test micro (étalon) ────────────────────
+// Contrôle qualité d'entrée de session (doc 18 §5) : ligne étalon fixe, verdict
+// pic/RMS, comparaison au dernier étalon (niveau + périphérique), historique.
+
+function dernierEtalon() {
+  return etalonSessions.length ? etalonSessions[etalonSessions.length - 1] : null;
+}
+function etalonDuJour() {
+  const auj = new Date().toDateString();
+  return etalonSessions.some((s) => new Date(s.date).toDateString() === auj);
+}
+function labelPeriphCourant() {
+  const sel = $('#st-periph');
+  if (sel && sel.selectedIndex >= 0 && sel.value) return sel.options[sel.selectedIndex].textContent;
+  return (periph && periph.label) || 'micro par défaut';
+}
+
+async function listerMicros() {
+  try {
+    const devs = await navigator.mediaDevices.enumerateDevices();
+    return devs.filter((d) => d.kind === 'audioinput');
+  } catch { return []; }
+}
+
+// Verdict : liste de points { niveau: ok|warn|err, texte }. Cibles doc 18 §5 :
+// pic entre −12 et −3 dBFS, RMS autour de −20, cohérence de session à ±4 dB.
+function verdictEtalon(picDb, rmsDb, label) {
+  const pts = [];
+  if (picDb == null) {
+    pts.push({ niveau: 'warn', texte: 'Pic non mesuré (Web Audio indisponible) — fiez-vous à la réécoute.' });
+  } else if (picDb > -1.5) {
+    pts.push({ niveau: 'err', texte: `Pic ${picDb} dB : SATURATION — reculez du micro ou baissez le gain, puis refaites.` });
+  } else if (picDb < -18) {
+    pts.push({ niveau: 'warn', texte: `Pic ${picDb} dB : trop faible — rapprochez-vous (~15 cm) ou montez le gain.` });
+  } else {
+    pts.push({ niveau: 'ok', texte: `Pic ${picDb} dB : bon niveau (cible −12 à −3).` });
+  }
+  if (rmsDb != null) {
+    if (rmsDb < -30) pts.push({ niveau: 'warn', texte: `Niveau moyen ${rmsDb} dB : trop faible.` });
+    else if (rmsDb > -10) pts.push({ niveau: 'warn', texte: `Niveau moyen ${rmsDb} dB : très fort — vérifiez qu'il n'y a pas de distorsion à la réécoute.` });
+    else pts.push({ niveau: 'ok', texte: `Niveau moyen ${rmsDb} dB : dans la cible.` });
+  }
+  const prec = dernierEtalon();
+  if (prec) {
+    if (prec.peripherique && label && prec.peripherique !== label) {
+      pts.push({ niveau: 'err', texte: `Micro DIFFÉRENT du dernier étalon (« ${prec.peripherique} ») — reprenez le même matériel, ou assumez le changement en connaissance de cause.` });
+    }
+    if (prec.rmsDb != null && rmsDb != null) {
+      const delta = +(rmsDb - prec.rmsDb).toFixed(1);
+      if (Math.abs(delta) > 4) pts.push({ niveau: 'warn', texte: `Niveau à ${delta > 0 ? '+' : ''}${delta} dB du dernier étalon — ajustez distance ou gain avant d'enchaîner.` });
+      else pts.push({ niveau: 'ok', texte: 'Cohérent avec la dernière session.' });
+    }
+  } else {
+    pts.push({ niveau: 'ok', texte: 'Premier étalon — il servira de référence aux sessions suivantes.' });
+  }
+  return pts;
+}
+
+function rendreEtalon() {
+  const zone = $('#st-zone');
+  const fait = etalonDuJour();
+  zone.innerHTML = `
+    <div class="st-enreg">
+      <div class="st-etalon-rappel">📋 <b>Rituel d'entrée de session</b> : même pièce, même micro,
+        même distance (~15 cm), porte fermée, téléphone en silencieux. Enregistrez la phrase étalon,
+        vérifiez le verdict, puis passez à la file d'attente.
+        ${fait ? '<span class="st-etalon-ok">✓ étalon du jour déjà fait</span>' : ''}</div>
+      <div class="st-carte-ligne">
+        <span class="lg-type t-consigne">étalon</span>
+        <div class="st-grand-texte">${esc(PHRASE_ETALON)}</div>
+        <div class="st-contexte">Toujours la même phrase — elle permet de comparer les sessions entre elles.</div>
+      </div>
+      <div class="st-periph-ligne">
+        <label for="st-periph">🎤 Micro :</label>
+        <select id="st-periph"><option value="">micro par défaut</option></select>
+        <button class="btn" id="st-periph-activer" type="button" hidden>Autoriser le micro</button>
+      </div>
+      <div class="st-vu" id="st-vu"><div class="st-vu-barre" id="st-vu-barre"></div></div>
+      <div class="st-etat-micro" id="st-etat">Prêt. Appuyez sur <b>Enregistrer</b> et lisez la phrase étalon.</div>
+      <div class="st-boutons" id="st-boutons"></div>
+      <audio id="st-audio" controls hidden style="width:100%;margin-top:14px"></audio>
+      <div id="st-verdict"></div>
+      ${gabaritHistoriqueEtalon()}
+    </div>`;
+  blobPrise = null;
+  etalonBoutons('pret');
+  remplirPeriph();
+}
+
+function gabaritHistoriqueEtalon() {
+  if (!etalonSessions.length) return '';
+  const derniers = etalonSessions.slice(-8).reverse();
+  return `<div class="st-etalon-histo">
+    <h3>Étalons précédents</h3>
+    <table class="lg-table">
+      <thead><tr><th>Date</th><th>Par</th><th>Micro</th><th class="c">Pic</th><th class="c">Moyen</th><th>Écoute</th></tr></thead>
+      <tbody>${derniers.map((s) => `<tr>
+        <td>${esc(new Date(s.date).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }))}</td>
+        <td>${esc(s.utilisateur || '—')}</td>
+        <td class="st-periph-cell">${esc(s.peripherique || '—')}</td>
+        <td class="c">${s.picDb != null ? esc(s.picDb) + ' dB' : '—'}</td>
+        <td class="c">${s.rmsDb != null ? esc(s.rmsDb) + ' dB' : '—'}</td>
+        <td><audio controls preload="none" src="/api/studio/etalon/audio/${esc(s.id)}"></audio></td>
+      </tr>`).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+// Remplit le sélecteur de micros. Les libellés ne sont visibles qu'après une
+// autorisation micro : sinon on propose un bouton « Autoriser » qui ouvre le flux.
+async function remplirPeriph() {
+  const sel = $('#st-periph');
+  const btn = $('#st-periph-activer');
+  if (!sel) return;
+  const micros = await listerMicros();
+  const avecLabels = micros.some((m) => m.label);
+  if (!avecLabels) {
+    if (btn) {
+      btn.hidden = false;
+      btn.onclick = async () => { if (await obtenirFlux()) { arretMicro(); remplirPeriph(); } };
+    }
+    return;
+  }
+  if (btn) btn.hidden = true;
+  sel.innerHTML = micros.map((m) =>
+    `<option value="${esc(m.deviceId)}">${esc(m.label || 'micro sans nom')}</option>`).join('');
+  if (periph && periph.deviceId && micros.some((m) => m.deviceId === periph.deviceId)) {
+    sel.value = periph.deviceId;
+  }
+  sel.onchange = () => {
+    periph = { deviceId: sel.value, label: sel.options[sel.selectedIndex].textContent };
+    try { localStorage.setItem('plouma-studio-micro', JSON.stringify(periph)); } catch { /* privé */ }
+    arretMicro(); // le prochain enregistrement rouvrira le flux sur le bon périphérique
+    setEtat(`Micro changé : <b>${esc(periph.label)}</b>. Prêt.`);
+  };
+}
+
+function etalonBoutons(phase) {
+  const b = $('#st-boutons');
+  if (!b) return;
+  const gros = (id, cls, txt) => `<button class="action ${cls} st-b" id="${id}">${txt}</button>`;
+  if (phase === 'pret') {
+    b.innerHTML = gros('st-et-rec', 'btn-ok', '● Enregistrer');
+  } else if (phase === 'enregistre') {
+    b.innerHTML = gros('st-et-stop', 'btn-ko', '■ Stop');
+  } else {
+    b.innerHTML = gros('st-et-reecouter', 'btn-neutre', '▶ Réécouter')
+      + gros('st-et-refaire', 'btn-neutre', '↻ Refaire')
+      + gros('st-et-envoyer', 'btn-principal', '✓ Enregistrer l’étalon');
+  }
+  const rec = $('#st-et-rec'); if (rec) rec.onclick = etalonDemarrer;
+  const stop = $('#st-et-stop'); if (stop) stop.onclick = () => arreterCapture();
+  const re = $('#st-et-reecouter'); if (re) re.onclick = () => { const a = $('#st-audio'); if (a && !a.hidden) a.play(); };
+  const rf = $('#st-et-refaire'); if (rf) rf.onclick = () => {
+    blobPrise = null;
+    const a = $('#st-audio'); if (a) { a.hidden = true; a.removeAttribute('src'); }
+    const v = $('#st-verdict'); if (v) v.innerHTML = '';
+    setEtat('Reprise. Appuyez sur Enregistrer.');
+    etalonBoutons('pret');
+  };
+  const env = $('#st-et-envoyer'); if (env) env.onclick = envoyerEtalon;
+}
+
+async function etalonDemarrer() {
+  if (!(await obtenirFlux())) return;
+  remplirPeriph(); // les libellés viennent d'apparaître si c'était la 1re autorisation
+  const v = $('#st-verdict'); if (v) v.innerHTML = '';
+  demarrerRecorder(() => {
+    const pts = verdictEtalon(picDbCapture(), rmsDbCapture(), labelPeriphCourant());
+    const pire = pts.some((p) => p.niveau === 'err') ? 'err' : pts.some((p) => p.niveau === 'warn') ? 'warn' : 'ok';
+    setEtat(pire === 'ok' ? '✓ Niveaux bons. Réécoutez, puis enregistrez l’étalon.'
+      : '⚠️ Vérifiez le verdict ci-dessous avant d’enregistrer l’étalon.', pire === 'err');
+    const zv = $('#st-verdict');
+    if (zv) zv.innerHTML = `<div class="st-verdict">${pts.map((p) =>
+      `<div class="v-${p.niveau}">${p.niveau === 'ok' ? '✓' : p.niveau === 'warn' ? '⚠️' : '✗'} ${esc(p.texte)}</div>`).join('')}</div>`;
+    etalonBoutons('capture');
+  });
+  setEtat('🔴 Enregistrement… lisez la phrase étalon, puis <b>Stop</b>.');
+  etalonBoutons('enregistre');
+}
+
+async function envoyerEtalon() {
+  if (!blobPrise) return;
+  const env = $('#st-et-envoyer'); if (env) { env.disabled = true; env.textContent = 'Envoi…'; }
+  const qs = new URLSearchParams({ dureeMs: String(Math.max(0, Date.now() - dateDebut)) });
+  const picDb = picDbCapture(); if (picDb != null) qs.set('picDb', String(picDb));
+  const rmsDb = rmsDbCapture(); if (rmsDb != null) qs.set('rmsDb', String(rmsDb));
+  qs.set('peripherique', labelPeriphCourant());
+  try {
+    const r = await fetch(`/api/studio/etalon?${qs}`, {
+      method: 'POST',
+      headers: { 'Content-Type': mimePrise || 'audio/webm' },
+      body: blobPrise,
+    });
+    const data = await r.json();
+    if (!r.ok || !data.ok) throw new Error(data.error || ('HTTP ' + r.status));
+    etalonSessions.push(data.session);
+    blobPrise = null;
+    rendreEtalon();
+    setEtat('✓ Étalon du jour enregistré. Passez à la file d’attente !');
+  } catch (e) {
+    setEtat(`⚠️ Envoi échoué : ${esc(e.message)}. La prise est conservée, réessayez.`, true);
+    if (env) { env.disabled = false; env.textContent = '✓ Enregistrer l’étalon'; }
+  }
 }
 
 // ─────────────────────────── Mode : arbitrage ──────────────────────────────
@@ -541,6 +795,10 @@ async function rechargerEtat() {
   try { etatStudio = await fetchJson('/api/studio/etat'); }
   catch { etatStudio = { lignes: {} }; }
   if (!etatStudio.lignes) etatStudio.lignes = {};
+  try {
+    const e = await fetchJson('/api/studio/etalon');
+    etalonSessions = Array.isArray(e.sessions) ? e.sessions : [];
+  } catch { etalonSessions = []; }
 }
 
 let enCours = false;
@@ -561,9 +819,11 @@ async function charger() {
 }
 
 function rendreMode() {
-  $('#st-ong-file').classList.toggle('actif', mode !== 'arbitrage');
+  $('#st-ong-file').classList.toggle('actif', mode === 'file' || mode === 'enreg');
+  $('#st-ong-etalon').classList.toggle('actif', mode === 'etalon');
   $('#st-ong-arbitrage').classList.toggle('actif', mode === 'arbitrage');
   if (mode === 'arbitrage') rendreArbitrage();
+  else if (mode === 'etalon') rendreEtalon();
   else if (mode === 'enreg') { const f = fileAttente(); if (f.length) rendreEnreg(f[Math.min(indexEnreg, f.length - 1)].id); else rendreFile(); }
   else rendreFile();
 }
@@ -581,7 +841,8 @@ function onKey(e) {
 export function monter(hote) {
   hote.innerHTML = GABARIT;
   $('#st-recharger').addEventListener('click', charger);
-  $('#st-ong-file').onclick = () => { if (mode === 'arbitrage') { mode = 'file'; } rendreMode(); };
+  $('#st-ong-file').onclick = () => { if (mode !== 'file' && mode !== 'enreg') { arretMicro(); mode = 'file'; } rendreMode(); };
+  $('#st-ong-etalon').onclick = () => { arretMicro(); mode = 'etalon'; rendreMode(); };
   $('#st-ong-arbitrage').onclick = () => { arretMicro(); mode = 'arbitrage'; rendreMode(); };
   document.addEventListener('keydown', onKey);
   charger();
