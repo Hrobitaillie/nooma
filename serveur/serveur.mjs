@@ -194,12 +194,23 @@ async function sectionStudio() {
   try {
     const { readdir } = await import('node:fs/promises');
     const fichiers = (await readdir(join(RACINE, 'contenu', 'banques'))).filter((f) => f.endsWith('.csv'));
+    const syllabes = new Set(); // syllabes uniques (colonne decoupage) — mêmes dérivées que la vue lignes
     for (const f of fichiers) {
       const texte = await lireTexte(join('contenu', 'banques', f));
       if (texte === null) continue;
       const lignes = texte.split(/\r?\n/).filter((l) => l.trim() !== '');
-      if (lignes.length >= 2) total += lignes.length - 1;
+      if (lignes.length < 2) continue;
+      total += lignes.length - 1;
+      const iDec = lignes[0].split(';').indexOf('decoupage');
+      if (iDec < 0) continue;
+      for (let k = 1; k < lignes.length; k++) {
+        for (const brut of (lignes[k].split(';')[iDec] || '').split('-')) {
+          const s = brut.trim().normalize('NFC');
+          if (s) syllabes.add(s);
+        }
+      }
     }
+    total += syllabes.size;
   } catch { /* pas de banques */ }
 
   return { present: !!etat, total, avecRetenue, avecPrises, prisesTotal, aArbitrer };

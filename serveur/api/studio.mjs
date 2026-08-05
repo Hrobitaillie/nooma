@@ -49,13 +49,22 @@ const MIME_SORTIE = {
 const STATUTS = new Set(['proposee', 'retenue', 'ecartee']);
 
 // ─────────────────────────── Validation d'identifiants ───────────────────────
-// Un ligneId valide : présent dans le registre, OU convention dérivée mot-* / phoneme-*.
-// Toujours [a-z0-9-]+ (pas de '.', pas de traversée). On charge le registre à la volée
-// (petit fichier, lecture rare) plus les banques et les graphèmes pour les dérivés.
+// Un ligneId valide : présent dans le registre, OU convention dérivée
+// mot-* / phoneme-* / syllabe-*. Minuscules françaises (accents NFC compris),
+// chiffres et tirets — jamais de '.', jamais de séparateur → traversée impossible.
+// On charge le registre à la volée (petit fichier, lecture rare).
 
 function idBienForme(id) {
-  return typeof id === 'string' && /^[a-z0-9-]+$/.test(id) && id.length <= 120;
+  return typeof id === 'string' && id.length <= 120
+    && /^[a-z0-9àâäçéèêëîïôöùûüÿœæ-]+$/.test(id);
 }
+
+/** Normalise un id reçu du client (accents NFC — macOS envoie parfois du NFD). */
+function normaliserId(id) {
+  return String(id || '').normalize('NFC');
+}
+
+const PREFIXES_DERIVES = ['mot-', 'phoneme-', 'syllabe-'];
 
 async function idsRegistre(RACINE) {
   try {
@@ -69,12 +78,12 @@ async function idsRegistre(RACINE) {
   }
 }
 
-/** ligneId autorisé : registre exact, ou mot-<...> / phoneme-<...> bien formés. */
+/** ligneId autorisé : registre exact, ou mot-/phoneme-/syllabe-<...> bien formés. */
 async function ligneAutorisee(RACINE, id) {
   if (!idBienForme(id)) return false;
-  if (id.startsWith('mot-') || id.startsWith('phoneme-')) {
+  for (const p of PREFIXES_DERIVES) {
     // Un préfixe seul (« mot- ») ne suffit pas : il faut un suffixe non vide.
-    return id.length > 4;
+    if (id.startsWith(p)) return id.length > p.length;
   }
   const registre = await idsRegistre(RACINE);
   return registre.has(id);
@@ -209,7 +218,7 @@ export async function gererStudio(req, res, ctx) {
       send(res, 405, '{"ok":false,"error":"method not allowed"}');
       return true;
     }
-    const ligneId = url.searchParams.get('ligne') || '';
+    const ligneId = normaliserId(url.searchParams.get('ligne'));
     if (!(await ligneAutorisee(RACINE, ligneId))) {
       send(res, 400, '{"ok":false,"error":"ligneId invalide ou inconnu"}');
       return true;
@@ -282,7 +291,8 @@ export async function gererStudio(req, res, ctx) {
       send(res, 400, '{"ok":false,"error":"chemin audio invalide"}');
       return true;
     }
-    const [ligneId, priseId] = parts;
+    const ligneId = normaliserId(parts[0]);
+    const priseId = parts[1];
     // Validation stricte : aucun '.', aucun séparateur → traversée impossible.
     if (!idBienForme(ligneId) || !/^prise-[0-9]{1,6}$/.test(priseId)) {
       send(res, 400, '{"ok":false,"error":"identifiant invalide"}');
@@ -506,6 +516,7 @@ export async function gererStudio(req, res, ctx) {
 async function texteLigne(RACINE, ligneId) {
   if (ligneId.startsWith('mot-')) return ligneId.slice(4);
   if (ligneId.startsWith('phoneme-')) return ligneId.slice(8);
+  if (ligneId.startsWith('syllabe-')) return ligneId.slice(8);
   try {
     const data = JSON.parse(await readFile(join(RACINE, 'contenu/voix/lignes.json'), 'utf8'));
     const l = (data.lignes || []).find((x) => x && x.id === ligneId);
@@ -517,8 +528,18 @@ async function texteLigne(RACINE, ligneId) {
 
 // ─────────────────────────── Export ffmpeg → pack committé ───────────────────
 // Pour chaque ligne avec prise retenue :
-//   ffmpeg -i <src> -ac 1 -af loudnorm=I=-16:TP=-1.5 -c:a libvorbis -q:a 4 <ligne-id>.ogg
+//   ffmpeg -i <src> -ac 1 -af loudnorm=I=-16:TP=-1.5 -c:a libvorbis -q:a 4 <slug>.ogg
 // séquentiel, timeout par fichier, rapport JSON. ffmpeg absent → rapport propre, pas de crash.
+// Les FICHIERS du pack sont en ASCII pur (les accents NFC/NFD divergent entre macOS et
+// Linux dans git, et fragilisent les assets) : le manifest fait foi pour id → fichier.
+
+function slugAscii(id) {
+  return id
+    .replace(/œ/g, 'oe').replace(/æ/g, 'ae')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9-]/g, '');
+}
+
 async function exporter(ctx, user) {
   const { RACINE, DATA } = ctx;
   const etat = await lireEtat(DATA);
@@ -527,6 +548,16 @@ async function exporter(ctx, user) {
   for (const [ligneId, entree] of Object.entries(etat.lignes)) {
     const retenue = (entree.prises || []).find((p) => p.statut === 'retenue');
     if (retenue) aExporter.push({ ligneId, prise: retenue });
+  }
+  // Ordre déterministe (noms de fichiers stables en cas de collision de slugs : pé/pe).
+  aExporter.sort((a, b) => a.ligneId.localeCompare(b.ligneId));
+  const slugsPris = new Map(); // slug → ligneId
+  for (const e of aExporter) {
+    let slug = slugAscii(e.ligneId) || 'ligne';
+    let n = 2;
+    while (slugsPris.has(slug)) slug = `${slugAscii(e.ligneId)}-${n++}`;
+    slugsPris.set(slug, e.ligneId);
+    e.slug = slug;
   }
 
   if (!(await ffmpegPresent())) {
@@ -547,9 +578,9 @@ async function exporter(ctx, user) {
   const echecs = [];
   const manifest = { version: 1, genereLe: new Date().toISOString(), par: user, format: 'ogg-vorbis-mono-r128', lignes: {} };
 
-  for (const { ligneId, prise } of aExporter) {
+  for (const { ligneId, prise, slug } of aExporter) {
     const src = join(DATA, 'studio', prise.fichier);
-    const dest = join(dossierPack, ligneId + '.ogg');
+    const dest = join(dossierPack, slug + '.ogg');
     try {
       await execFileP('ffmpeg', [
         '-y', '-i', src,
@@ -560,7 +591,7 @@ async function exporter(ctx, user) {
       ], { timeout: 60_000 });
       const st = await stat(dest);
       manifest.lignes[ligneId] = {
-        fichier: `${ligneId}.ogg`,
+        fichier: `${slug}.ogg`,
         taille: st.size,
         dateOriginale: prise.date,
         priseSource: prise.id,
