@@ -200,6 +200,21 @@
           "after": "🔶 *Simplification (Hugo) : ne produire que l'**objet en pâte à modeler**"
         }
       ]
+    },
+    {
+      "id": "c_msjcz93n_1",
+      "space": "docs",
+      "file": "14-production-3d-blender.md",
+      "sectionId": "h-14-production-3d-blender-app-pipeline-complet",
+      "sectionTitle": "14 — Production 3D Blender → app (pipeline complet)",
+      "quote": " Production 3D Blender",
+      "prefix": "14 —",
+      "suffix": " → app (pipeline complet)\n\n✅ = a",
+      "startOffset": 4,
+      "commentText": "Il faudrait rajouter une section, pour documenter les pré réglages exact pour la caméra de monde. je voudrais bien ajouter en plus en effet tiltshift pour donner un effet de miniature. et aussi une section sur les réglages de cycles pour qu'ils soient au plus performant",
+      "forClaude": true,
+      "createdAt": "2026-08-07T19:49:33.011Z",
+      "updatedAt": "2026-08-07T19:49:33.011Z"
     }
   ]
 }
